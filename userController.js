@@ -7,7 +7,7 @@ const createUser = async(req,res) => {
    //add a new user to the database with 
    //Name, Email and Age
 
-   alert("guhk");
+   
 
 
    const{Username,Name,Email, Password,DateOfBirth,Gender,MobileNumber,EmergencyContactFullName,EmergencyContactNumber}= req.body;
@@ -33,11 +33,13 @@ const createDoctor = async(req,res) => {
 }
 
 const createAdminstrator = async(req,res) => {
+   console.log("asdfg");
    const{Username,Password}= req.body;
    try{
       const adminstrator = await adminstratorModel.create({Username,Password});
       console.log(adminstrator);
-      res.status(200).json(adminstrator)
+      //res.status(200).json(adminstrator)
+      res.redirect('/createDoctor');
    }catch(error){
       res.status(400).json({error:error.message})
    }
@@ -51,7 +53,8 @@ const deleteDoctor = async (req, res) => {
    if (!deletedDoctor) {
       return res.status(404).json({ error: 'User not found' });
     }
-    res.status(204).send();
+   res.status(204).send();
+   
 
   }
 
@@ -79,14 +82,16 @@ const deleteAdminstrator = async (req, res) => {
 
 const getDoctor = async (req, res) => {
    //retrieve all users from the database
-   const username = req.body.username;
+   const Username = req.body.Username;
   
-   const reqdoctor = await doctorModel.findOne(username);
+   const reqdoctor = await doctorModel.findOne({ Username: Username });
    if (!reqdoctor) {
       return res.status(404).json({ error: 'Doctor not found.' });
     }
    console.log(reqdoctor);
    res.status(200).json(reqdoctor);
+   //res.status(200).json(reqdoctor);
+
   
 }
 

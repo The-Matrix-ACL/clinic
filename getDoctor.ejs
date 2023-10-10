@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EL7A2Ni Clinic</title>
-  <link rel="stylesheet" href="./stylesheets/theme.css">
+  <link rel="build" href="/theme.css">
 </head>
 
 <body>
@@ -13,22 +13,18 @@
       <h1>
       <img src="acllogo.png"alt="logo" width="150px" height="80px"> </h1>
       <hq>Welcome to EL7A2Ni Clinic</hq>
-  </header> 
-  <p>Register As Adminstrator:</p>   
-<form action="/createAdminstrator" method="post" onSubmit="handleSubmit(event)">
+  </header>    
+<form action="/getDoctor" method="get" onSubmit="handleSubmit(event)">
   <div class="centered-form">
 
     <label>
-      Username:
+      Type Doctor Username Here:
       <input type="text" name="Username" required="true" value="<%= formData.Username %>" onChange="handleChange(event)">
     </label>
 
-    <label>
-      Password:
-      <input type="text" name="Password" required="true" value="<%= formData.Password %>" onChange="handleChange(event)">
-    </label>
+    
 
-    <button type="submit" id="register">Register</button>
+    <button type="submit" id="register">Get Doctor info</button>
 
   </div>
 </form>
@@ -139,10 +135,7 @@
 </style>
 
 <script>
-  import {createAdminstrator} from './Routes/userController';
-  import theme from './stylesheets/theme.css';
- // import { useHistory } from 'react-router-dom';
-  //const history = useHistory();
+  import {getDoctor} from './Routes/userController';
   function handleChange(event) {
     console.log("1");
     const { name, value } = event.target;
@@ -155,10 +148,9 @@
     console.log("a");
     event.preventDefault();
     console.log("b");
-    alert("doneee");
     // Assuming createAdminstrator is a function defined in your client-side code
-    createAdminstrator(formData);
-   // history.push('/createDoctor');
+    getDoctor(formData);
+    alert("Doctor Been Removed");
     console.log("c");
   }
 </script>
