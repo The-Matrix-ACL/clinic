@@ -1,17 +1,18 @@
-import React from "react";
-import  Express  from "express";
-import cors from 'cors';
+const React= require("react");
+const  Express = require("express");
+const cors= require('cors');
 //import  mongoose  from "mongoose";
-import ejs from "ejs";
+const ejs = require("ejs");
+var bodyParser = require('body-parser')
 //import Createadminstrator from './Frontend/AdminstratorForm.ejs';
 //import bars from './bars'
 //import './patientRegister.css';
 //import './theme.css';
-import mongoose from "mongoose";
-import dotenv from 'dotenv';
-import path from 'path';
-import ReactDOM  from 'react-dom';
-import {createUser, createDoctor, createAdminstrator, deleteDoctor, deleteAdminstrator, deleteUser, getDoctor} from "./Routes/userController.js";
+const mongoose = require("mongoose");
+const dotenv =  require('dotenv');
+const path =  require('path');
+const ReactDOM = require('react-dom');
+const {createUser, createDoctor, createAdminstrator, deleteDoctor, deleteAdminstrator, deleteUser, getDoctor} =require("./Routes/userController.js");
 
 /*const React = require('react');
 import ReactDOM = from'react-dom';
@@ -36,8 +37,8 @@ const port = process.env.PORT || "3000";
 app.use(cors({origin: 'http://localhost:3000',  // Replace with your frontend's URL
 methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
 credentials: true,}));
-const __filename = new URL(import.meta.url).pathname;
-const __dirname = path.dirname(__filename); 
+//const __filename = new URL(import.meta.url).pathname;
+//const __dirname = path.dirname(__filename); 
 //const user = require('./Models/User.js');
 //const createadminstrator = require('./Frontend/AdminstratorForm');
 mongoose.connect(MongoURI)
@@ -75,7 +76,12 @@ app.post('/createAdminstrator',(req,res)=>{
 app.set('view engine', 'ejs');
 //app.set('views', path.join(__dirname, 'Frontend'));
 // #Routing to userController here
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+app.use(bodyParser.json());
 
+//app.engine('html', require('ejs').renderFile);
 app.use(Express.json())
 app.use(Express.urlencoded({ extended: true }));
 
@@ -94,7 +100,7 @@ app.get('/createUser', (req, res) => {
   res.render('PatientForm',{ formData: { Username: '',Name: '',Email: '',Password: '',DateOfBirth: '',Gender:'',MobileNumber:0,EmergencyContactFullName:'',EmergencyContactNumber:0 } });
 });
 
-app.get('/deleteDocto', (req, res) => {
+app.get('/deleteDoctor', (req, res) => {
   res.render('DeleteDoc',{ formData: { Username: ''} });
 });
 
@@ -106,12 +112,24 @@ app.get('/deletePatient', (req, res) => {
   res.render('DeletePatient',{ formData: { Username: ''} });
 });
 
-app.get('/getDocto', (req, res) => {
+app.get('/getDoctor', (req, res) => {
   res.render('getDoctor',{ formData: { Username: ''} });
 });
 
 app.get('/', (req, res) => {
   res.render('MainRegisterPage');
+});
+
+app.get('/prescriptions', (req, res) => {
+  res.render('prescriptions');
+});
+
+app.get('/homepageAdmin', (req, res) => {
+  res.render('homepageAdmin');
+});
+
+app.get('/homepagePatient', (req, res) => {
+  res.render('homepagePatient');
 });
 
 app.post("/addUser",createUser);
