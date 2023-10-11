@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose =require('mongoose');
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
@@ -37,7 +37,15 @@ const userSchema = new Schema({
   EmergencyContactNumber: {
     type: Number,
     required: true,
-  }
+  },
+  FamilyMembers:[{
+    Name:{type:String},
+    NationalID:{type:String},
+    Age:{type:Number},
+    Gender:{type:String},
+    Relation:{type:String}
+
+  }]
 }, { timestamps: true });
 /*
 username: String,
@@ -51,6 +59,5 @@ username: String,
     fullName: String,
     contactNumber: String,
 */ 
-
 const User = mongoose.model('User', userSchema);
-export default User;
+module.exports=User

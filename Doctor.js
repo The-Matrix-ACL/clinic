@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose= require('mongoose');
 const Schema = mongoose.Schema;
 
 const doctorSchema = new Schema({
@@ -33,7 +33,13 @@ const doctorSchema = new Schema({
   EducationalBackground: {
     type: String,
     required: true,
-  }
+  },
+  RegisteredPatients:[{
+    Name:{type:String},
+    ID:{type:String}
+
+  }]
+
   
 }, { timestamps: true });
 /*
@@ -50,4 +56,4 @@ username: String,
 */ 
 
 const Doctor = mongoose.model('Doctor', doctorSchema);
-export default Doctor;
+module.exports =Doctor

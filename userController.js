@@ -1,93 +1,36 @@
-import userModel from '../Models/User.js';
-import doctorModel from '../Models/Doctor.js';
-import adminstratorModel from '../Models/Adminstrator.js';
-import  mongoose  from 'mongoose';
+const User =require('../Models/User')
 
-const createUser = async(req,res) => {
-   //add a new user to the database with 
-   //Name, Email and Age
-
-   alert("guhk");
-
-
-   const{Username,Name,Email, Password,DateOfBirth,Gender,MobileNumber,EmergencyContactFullName,EmergencyContactNumber}= req.body;
-   console.log(req.body);
+const addFamilyInfo = async (req,res) => {
+   const {Name,NationalID,Age,Gender,Relation}=req.body
+   const {id}=req.params
    try{
-      const user = await userModel.create({Username,Name,Email, Password,DateOfBirth,Gender,MobileNumber,EmergencyContactFullName,EmergencyContactNumber});
-      console.log(user);
-      res.status(200).json(user)
-   }catch(error){
-      res.status(400).json({error:error.message})
+      const user = await User.findByIdAndUpdate(id,{$push:{FamilyMembers:{
+         Name,NationalID,Age,Gender,Relation
+      }}})
+      await res.status(200).json({user})
+   }
+   catch(err){
+      console.log(err)
    }
 }
-
-const createDoctor = async(req,res) => {
-   const{Username, Name, Email, Password, DateOfBirth, HourlyRate, Hospital, EducationalBackground}= req.body;
+const getFamilyMembers = async (req,res) => {
+   const {id} = req.params
    try{
-      const doctor = await doctorModel.create({Username, Name, Email, Password, DateOfBirth, HourlyRate, Hospital, EducationalBackground});
-      console.log(doctor);
-      res.status(200).json(doctor)
-   }catch(error){
-      res.status(400).json({error:error.message})
+      const {FamilyMembers} = await User.findById(id)
+      await res.status(200).json({FamilyMembers})
+   }
+   catch(err){
+      console.log(err)
    }
 }
+const getUsers = async (req,res) => {
 
-const createAdminstrator = async(req,res) => {
-   const{Username,Password}= req.body;
    try{
-      const adminstrator = await adminstratorModel.create({Username,Password});
-      console.log(adminstrator);
-      res.status(200).json(adminstrator)
-   }catch(error){
-      res.status(400).json({error:error.message})
+      const user = await User.find()
+      await res.status(200).json(user)
    }
-   
+   catch(err){
+      console.log(err)
+   }
 }
-
-const deleteDoctor = async (req, res) => {
-   //delete a user from the database
-   const Username = req.body.Username;
-   const deletedDoctor = await doctorModel.findOneAndDelete({Username});
-   if (!deletedDoctor) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-    res.status(204).send();
-
-  }
-
-const deleteUser = async (req, res) => {
-   //delete a user from the database
-   const Username = req.body.Username;
-   const deletedUser = await userModel.findOneAndDelete({Username});
-   if (!deletedUser) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-    res.status(204).send();
-
-}
-  
-const deleteAdminstrator = async (req, res) => {
-   //delete a user from the database
-   const Username = req.body.Username;
-   const deletedAdminstrator = await userModel.findOneAndDelete({Username});
-   if (!deletedAdminstrator) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-    res.status(204).send();
-
-}
-
-const getDoctor = async (req, res) => {
-   //retrieve all users from the database
-   const username = req.body.username;
-  
-   const reqdoctor = await doctorModel.findOne(username);
-   if (!reqdoctor) {
-      return res.status(404).json({ error: 'Doctor not found.' });
-    }
-   console.log(reqdoctor);
-   res.status(200).json(reqdoctor);
-  
-}
-
-export  {createUser,createDoctor,createAdminstrator,deleteUser,deleteDoctor,deleteAdminstrator,getDoctor};
+module.exports=  {addFamilyInfo,getUsers,getFamilyMembers};
