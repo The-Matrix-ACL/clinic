@@ -12,7 +12,7 @@ const mongoose = require("mongoose");
 const dotenv =  require('dotenv');
 const path =  require('path');
 const ReactDOM = require('react-dom');
-const {createUser, createDoctor, createAdminstrator, deleteDoctor, deleteAdminstrator, deleteUser, getDoctor} =require("./Routes/userController.js");
+const {createUser, createDoctor, createAdminstrator, deleteDoctor, deleteAdminstrator, deleteUser, getDoctor,editDoctorInfo,filterByDateOrStatus,searchForPatient, getUsers, getDoctors} =require("./Routes/userController.js");
 
 /*const React = require('react');
 import ReactDOM = from'react-dom';
@@ -132,13 +132,46 @@ app.get('/homepagePatient', (req, res) => {
   res.render('homepagePatient');
 });
 
+app.get('/updatedoctorInfo', (req, res) => {
+  res.render('updateDoctor',{ formData: { Email: '',newEmail:'',newHospital:'',newHourlyRate:0 } });
+});
+
+app.get('/filterappointmentsuser', (req, res) => {
+  res.render('FilterAppointmentsUser');
+});
+
+app.get('/filterappointmentsdoctor', (req, res) => {
+  res.render('FilterAppointmentsDoctor');
+});
+
+app.get('/homepageDoctor', (req, res) => {
+  res.render('homepageDoctor');
+});
+
+app.get('/getPatient', (req, res) => {
+  res.render('getPatient',{ formData: { Name: ''} });
+});
+
+app.get('/getallPatients', (req, res) => {
+  res.render('getallPatients');
+});
+
+app.get('/getallDoctors', (req, res) => {
+  res.render('getallDoctors');
+});
+
 app.post("/addUser",createUser);
 app.post("/createDoctor",createDoctor);
 app.post("/createAdminstrator",createAdminstrator,);
-app.delete("/deleteUser",deleteUser);
-app.delete("/deleteDoctor",deleteDoctor);
-app.delete("/deleteAdminstrator",deleteAdminstrator);
-app.get("/getDoctor",getDoctor);
+app.post("/deleteUser",deleteUser);
+app.post("/deleteDoctor",deleteDoctor);
+app.post("/deleteAdminstrator",deleteAdminstrator);
+app.post("/getDocto",getDoctor);
+app.post("/editDoctorInfo", editDoctorInfo);
+app.get('/filterbydateorstatus',filterByDateOrStatus);
+app.post("/patientsearch",searchForPatient);
+app.get("/getPatients",getUsers);
+app.get("/getDoctors",getDoctors);
 //app.post("/abc",Createadminstrator);
 
 

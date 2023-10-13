@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>EL7A2Ni Clinic</title>
-  <link rel="build" href="/theme.css">
+  <link rel="stylesheet" href="theme.css">
 </head>
 
 <body>
@@ -14,21 +14,58 @@
       <img src="acllogo.png"alt="logo" width="150px" height="80px"> </h1>
       <hq>Welcome to EL7A2Ni Clinic</hq>
   </header>    
-<form action="/getDocto" method="post" onSubmit="handleSubmit(event)">
+<form action="/editDoctorInfo" method="post" onSubmit="handleSubmit(event)">
   <div class="centered-form">
 
-    <label>
-      Type Doctor Username Here:
-      <input type="text" name="Username" required="true" value="<%= formData.Username %>" onChange="handleChange(event)">
-    </label>
-
     
+      <label>
+        Email:
+        <input type="email" name="Email" value="<%= formData.Email %>" onChange="handleChange(event)" />
+      </label>
 
-    <button type="submit" id="register">Get Doctor info</button>
+      <label>
+        New Email:
+        <input type="email" name="newEmail" value="<%= formData.newEmail %>" onChange="handleChange(event)" />
+      </label>
+
+
+      <label>
+        New Hospital:
+        <input type="text" name="newHospital" value="<%= formData.newHospital %>" onChange="handleChange(event)" />
+      </label>
+
+      <label>
+        New Hourly Rate:
+        <input type="number" name="newHourlyRate" value="<%= formData.newHourlyRate %>" onChange="handleChange(event)" />
+      </label>
+
+     
+
+    <button type="submit" id="register">Update</button>
 
   </div>
 </form>
 </body>
+
+<script>
+  import {editDoctorInfo} from './Routes/userController';
+  function handleChange(event) {
+    console.log("1");
+    const { name, value } = event.target;
+    console.log("2");
+    setFormData({ ...formData, [name]: value });
+    console.log("3");
+  }
+
+  function handleSubmit(event) {
+    console.log("a");
+    event.preventDefault();
+    console.log("b");
+    // Assuming createAdminstrator is a function defined in your client-side code
+    editDoctorInfo(formData);
+    console.log("c");
+  }
+</script>
 
 <style>
   body {
@@ -45,7 +82,7 @@
     display: none;
   }
   .centered-form {
-    display: flex;
+    display:contents;
     justify-content: center;
     align-items: center;
     height: 100vh; /* Ensure the form takes the full height of the viewport */
@@ -133,25 +170,4 @@
   cursor: pointer;
 }
 </style>
-
-<script>
-  import {getDoctor} from './Routes/userController';
-  function handleChange(event) {
-    console.log("1");
-    const { name, value } = event.target;
-    console.log("2");
-    setFormData({ ...formData, [name]: value });
-    console.log("3");
-  }
-
-  function handleSubmit(event) {
-    console.log("a");
-    event.preventDefault();
-    console.log("b");
-    // Assuming createAdminstrator is a function defined in your client-side code
-    const gett = getDoctor(formData);
-    alert(gett);
-    console.log("c");
-  }
-</script>
 </html>

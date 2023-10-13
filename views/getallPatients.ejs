@@ -14,17 +14,14 @@
       <img src="acllogo.png"alt="logo" width="150px" height="80px"> </h1>
       <hq>Welcome to EL7A2Ni Clinic</hq>
   </header>    
-<form action="/getDocto" method="post" onSubmit="handleSubmit(event)">
+<form action="/getPatients" method="get" onSubmit="handleSubmit(event)">
   <div class="centered-form">
-
-    <label>
-      Type Doctor Username Here:
-      <input type="text" name="Username" required="true" value="<%= formData.Username %>" onChange="handleChange(event)">
-    </label>
 
     
 
-    <button type="submit" id="register">Get Doctor info</button>
+    
+
+    <button type="submit" id="register">Display All patients</button>
 
   </div>
 </form>
@@ -135,7 +132,7 @@
 </style>
 
 <script>
-  import {getDoctor} from './Routes/userController';
+  import {getUsers} from './Routes/userController';
   function handleChange(event) {
     console.log("1");
     const { name, value } = event.target;
@@ -149,8 +146,8 @@
     event.preventDefault();
     console.log("b");
     // Assuming createAdminstrator is a function defined in your client-side code
-    const gett = getDoctor(formData);
-    alert(gett);
+    getUsers();
+    
     console.log("c");
   }
 </script>

@@ -14,15 +14,20 @@
       <img src="acllogo.png"alt="logo" width="150px" height="80px"> </h1>
       <hq>Welcome to EL7A2Ni Clinic</hq>
   </header> 
-  <p>Choose Your Category:</p>   
+  <p>Welcome Doctor!</p>   
 <form>
   <div class="centered-form">
+    
+    
+  </form><form action="/filterappointmentsdoctor"><button type="submit" id="register1">My Appointments</button></form>
 
-  </form><form action="/createDoctor"><button type="submit" id="register1">Doctor</button></form>
+  </form><form action="/updatedoctorInfo"><button type="submit" id="register2">Update Data</button></form>
 
-    <form action="/createAdminstrator"><button type="submit" id="register2">Adminstrator</button></form>
+  <form action="/getPatient"><button type="submit" id="register2">View Patient</button></form>
 
-    <form action="/createUser"><button type="submit" id="register3">Patient</button></form>
+  <form action="/getallPatients"><button type="submit" id="register3">View all Patients</button></form>
+
+
 
 
   </div>
@@ -30,10 +35,8 @@
 </body>
 <script>
   import index from './index.js';
-    const button1 = document.getElementById('register1');
-    const button2 = document.getElementById('register2');
-    const button3 = document.getElementById('register3');
-
+    
+    
     //button1.addEventListener('click',function(){
       
     //});
@@ -61,14 +64,15 @@
     button{
        color:white;
        background-color:cyan;
-       height: 250px;
-       width: 250px;
-       display:flexbox;
+       height: 150px;
+       width: 150px;
+       display:grid;
        stroke: black;
        stroke-width: 400px;
-       justify-content: center;
-       align-items: center;
-       font-size: larger;
+       justify-content:center;
+       align-items:center;
+       font-size:medium;
+       
        
     }
 
