@@ -46,6 +46,7 @@ const userSchema = new Schema({
     Relation:{type:String}
 
   }]
+
 }, { timestamps: true });
 /*
 username: String,

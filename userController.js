@@ -33,4 +33,5 @@ const getUsers = async (req,res) => {
       console.log(err)
    }
 }
+
 module.exports=  {addFamilyInfo,getUsers,getFamilyMembers};
