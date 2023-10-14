@@ -33,7 +33,20 @@ const doctorSchema = new Schema({
   EducationalBackground: {
     type: String,
     required: true,
-  }
+  },
+  Speciality: {
+    type: String,
+    required: true,
+  },
+  SessionPrice:{
+    type: Number,
+    required: true,
+  },
+  RegisteredPatients:[{
+    Name:{type:String},
+    ID:{type:String}
+
+  }]
   
 }, { timestamps: true });
 /*

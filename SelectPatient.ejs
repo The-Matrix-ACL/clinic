@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Patient List</title>
+</head>
+<body>
+    <h1>View Patient List</h1>
+    <button id="viewAllButton">View All Patients</button>
+    <div>
+        <label for="patientId">Enter Patient ID:</label>
+        <input type="text" id="patientId">
+        <button id="viewPatientButton">View Patient</button>
+    </div>
+    <div id="patientDetails"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const viewAllButton = document.getElementById("viewAllButton");
+            const viewPatientButton = document.getElementById("viewPatientButton");
+            const patientIdInput = document.getElementById("patientId");
+            const patientDetails = document.getElementById("patientDetails");
+
+            // Event listener for viewing all patients
+            viewAllButton.addEventListener("click", () => {
+                fetch("/api/patients/select")
+                    .then((response) => response.json())
+                    .then((data) => {
+                        displayPatients(data);
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    });
+            });
+
+            // Event listener for viewing a specific patient by ID
+            viewPatientButton.addEventListener("click", () => {
+                const patientId = patientIdInput.value;
+                fetch(`/api/patients/${patientId}`)
+                    .then((response) => response.json())
+                    .then((data) => {
+                        displayPatient(data);
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    });
+            });
+
+            // Function to display all patients
+            function displayPatients(data) {
+                patientDetails.innerHTML = "";
+                const ul = document.createElement("ul");
+                data.forEach((patient) => {
+                    const li = document.createElement("li");
+                    li.textContent = `ID: ${patient._id}, Name: ${patient.name}`;
+                    ul.appendChild(li);
+                });
+                patientDetails.appendChild(ul);
+            }
+
+            // Function to display a specific patient
+            function displayPatient(data) {
+                patientDetails.innerHTML = "";
+                if (data.message) {
+                    const p = document.createElement("p");
+                    p.textContent = data.message;
+                    patientDetails.appendChild(p);
+                } else {
+                    const p = document.createElement("p");
+                    p.textContent = `ID: ${data._id}, Name: ${data.name}`;
+                    patientDetails.appendChild(p);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filter Patients by Appointments</title>
+</head>
+<body>
+    <h1>Filter Patients by Appointments</h1>
+    <label for="appointmentsInput">Appointments:</label>
+    <input type="text" id="appointmentsInput">
+    <button id="filterButton">Filter</button>
+    <ul id="patientList"></ul>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const appointmentsInput = document.getElementById("appointmentsInput");
+            const filterButton = document.getElementById("filterButton");
+            const patientList = document.getElementById("patientList");
+
+            filterButton.addEventListener("click", () => {
+                const appointments = appointmentsInput.value;
+
+                fetch(`/api/patients/filter?appointments=${appointments}`)
+                    .then((response) => response.json())
+                    .then((data) => {
+                        patientList.innerHTML = "";
+                        if (data.message) {
+                            // Display a message if no patients match the criteria
+                            const message = document.createElement("p");
+                            message.textContent = data.message;
+                            patientList.appendChild(message);
+                        } else {
+                            data.forEach((patient) => {
+                                const li = document.createElement("li");
+                                li.textContent = patient.name;
+                                patientList.appendChild(li);
+                            });
+                        }
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View All Doctors</title>
+</head>
+<body>
+    <h1>View All Doctors</h1>
+    <button id="viewAllButton">View All Doctors</button>
+    <div id="doctorList"></div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const viewAllButton = document.getElementById("viewAllButton");
+            const doctorList = document.getElementById("doctorList");
+
+            // Event listener for viewing all doctors
+            viewAllButton.addEventListener("click", () => {
+                fetch("/api/doctors/viewall")
+                    .then((response) => response.json())
+                    .then((data) => {
+                        displayDoctors(data);
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    });
+            });
+
+            // Function to display all doctors
+            function displayDoctors(data) {
+                doctorList.innerHTML = "";
+                const ul = document.createElement("ul");
+                data.forEach((doctor) => {
+                    const li = document.createElement("li");
+                    li.textContent = `ID: ${doctor._id}, Name: ${doctor.name}, Specialty: ${doctor.specialty}, Session Price: $${doctor.SessionPrice}`;
+                    ul.appendChild(li);
+                });
+                doctorList.appendChild(ul);
+            }
+        });
+    </script>
+</body>
+</html>
