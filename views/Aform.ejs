@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 
@@ -30,4 +31,38 @@
       
     </form>
     <script src="AdminstratorForm.js"></script>
+=======
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SE Online Banking</title>
+  <link rel="stylesheet" href="theme.css">
+</head>
+<body>
+    <form onSubmit={handleSubmit}>
+      
+        <div className="centered-form">
+        
+  
+         <label>
+            Username:
+            <input type="text" name="Username" required="true" value={formData.Username} onChange={handleChange} />
+          </label>
+    
+          
+          
+         <label>
+            password:
+            <input type="text" name="Password" required="true" value={formData.Password} onChange={handleChange} />
+          </label>
+
+          <button type="submit" id="register">Register</button>
+          </div>
+      
+    </form>
+    <script src="AdminstratorForm.js"></script>
+>>>>>>> main
 </body>

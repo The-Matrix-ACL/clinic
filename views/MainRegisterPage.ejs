@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 
@@ -102,4 +103,110 @@
     color: navy;
   }
 </style>
+=======
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EL7A2Ni Clinic</title>
+  <link rel="stylesheet" href="theme.css">
+</head>
+
+<body>
+  <header>
+      <h1>
+      <img src="acllogo.png"alt="logo" width="150px" height="80px"> </h1>
+      <hq>Welcome to EL7A2Ni Clinic</hq>
+  </header> 
+  <p>Choose Your Category:</p>   
+<form>
+  <div class="centered-form">
+
+  </form><form action="/createDoctor"><button type="submit" id="register1">Doctor</button></form>
+
+    <form action="/createAdminstrator"><button type="submit" id="register2">Adminstrator</button></form>
+
+    <form action="/createUser"><button type="submit" id="register3">Patient</button></form>
+
+
+  </div>
+</form>
+</body>
+<script>
+  import index from './index.js';
+    const button1 = document.getElementById('register1');
+    const button2 = document.getElementById('register2');
+    const button3 = document.getElementById('register3');
+
+    //button1.addEventListener('click',function(){
+      
+    //});
+
+  
+    
+</script>
+
+<style>
+    
+    body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: rgb(0, 0, 0);
+    background-color: rgb(236, 236, 236);
+  }
+  head{
+    color: blue;
+  }
+  .hidden{
+    display: none;
+  }
+    
+    button{
+       color:white;
+       background-color:cyan;
+       height: 250px;
+       width: 250px;
+       display:flexbox;
+       stroke: black;
+       stroke-width: 400px;
+       justify-content: center;
+       align-items: center;
+       font-size: larger;
+       
+    }
+
+    form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+  }
+  
+  header{
+    position: relative;
+    padding-top:20px;
+    padding-left:20px;
+    padding-right:20px;
+    border-bottom: 1px solid white;
+    background-color: cyan;
+  }
+  header img{
+    padding-top: 10px;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+  nav, main {
+    padding: 20px;
+  }
+  main {
+    margin-left: 20px;
+    background-color: white;
+    color: navy;
+  }
+</style>
+>>>>>>> main
 </html>
