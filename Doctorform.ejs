@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EL7A2Ni Clinic</title>
+  <link rel="build" href="/theme.css">
+</head>
+
+<body>
+  <header>
+      <h1>
+      <img src="acllogo.png"alt="logo" width="150px" height="80px"> </h1>
+      <hq>Welcome to EL7A2Ni Clinic</hq>
+  </header>    
+<form action="/createDoctor" method="post" onSubmit="handleSubmit(event)">
+  <div class="centered-form">
+
+    <label>
+        Username:
+        <input type="text" name="Username" value="<%= formData.Username %>" onChange="handleChange(event)" />
+      </label>
+
+      
+      
+     <label>
+        Name:
+        <input type="text" name="Name" value="<%= formData.Name %>" onChange="handleChange(event)" />
+      </label>
+
+    
+
+      <label>
+        Email:
+        <input type="email" name="Email" value="<%= formData.Email %>" onChange="handleChange(event)" />
+      </label>
+
+      <label>
+        password:
+        <input type="password" name="Password" value="<%= formData.Password %>" onChange="handleChange(event)" />
+      </label>
+
+      <label>
+        Date Of Birth:
+        <input type="date" name="DateOfBirth" value="<%= formData.DateOfBirth %>" onChange="handleChange(event)" />
+      </label>
+
+      <label>
+        Hospital:
+        <input type="text" name="Hospital" value="<%= formData.Hospital %>" onChange="handleChange(event)" />
+      </label>
+
+      <label>
+        Hourly Rate:
+        <input type="number" name="HourlyRate" value="<%= formData.HourlyRate %>" onChange="handleChange(event)" />
+      </label>
+
+      <label>
+        Educational Background:
+        <input type="text" name="EducationalBackground" value="<%= formData.EducationalBackground %>" onChange="handleChange(event)" />
+      </label>
+
+    <button type="submit" id="register">Register</button>
+
+  </div>
+</form>
+</body>
+
+<script>
+  import {createDoctor} from './Routes/userController';
+  function handleChange(event) {
+    console.log("1");
+    const { name, value } = event.target;
+    console.log("2");
+    setFormData({ ...formData, [name]: value });
+    console.log("3");
+  }
+
+  function handleSubmit(event) {
+    console.log("a");
+    event.preventDefault();
+    console.log("b");
+    // Assuming createAdminstrator is a function defined in your client-side code
+    createDoctor(formData);
+    console.log("c");
+  }
+</script>
+</html>

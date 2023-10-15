@@ -12,7 +12,11 @@ const mongoose = require("mongoose");
 const dotenv =  require('dotenv');
 const path =  require('path');
 const ReactDOM = require('react-dom');
+<<<<<<< HEAD
+const {createUser, createDoctor, createAdminstrator, deleteDoctor, deleteAdminstrator, deleteUser, getDoctor,editDoctorInfo,filterByDateOrStatus,searchForPatient, getUsers, getDoctors} =require("./Routes/userController.js");
+=======
 const {createUser, createDoctor, createAdminstrator, deleteDoctor, deleteAdminstrator, deleteUser, getDoctor,editDoctorInfo,filterByDateOrStatus,searchForPatient, getUsers, getDoctors, addPackage, updatePackage, deletePackage,addFamilyInfo,getFamilyMembers, searchForDoctor, searchForDoctorspeciality, searchForDoctordate} =require("./Routes/userController.js");
+>>>>>>> main
 
 /*const React = require('react');
 import ReactDOM = from'react-dom';
@@ -52,7 +56,10 @@ mongoose.connect(MongoURI)
 .catch(err => console.log(err));
 
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> main
 //.............................................//
 
 /*app.post("/home", (req, res) => {
@@ -82,7 +89,11 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(bodyParser.json());
 
+<<<<<<< HEAD
+//app.engine('html', require('ejs').renderFile);
+=======
 //app.engine('html', require('jsx').renderFile);
+>>>>>>> main
 app.use(Express.json())
 app.use(Express.urlencoded({ extended: true }));
 
@@ -94,7 +105,11 @@ app.get('/createAdminstrator', (req, res) => {
 });
 
 app.get('/createDoctor', (req, res) => {
+<<<<<<< HEAD
+  res.render('DoctorForm',{ formData: { Username: '',Name: '',Email: '',Password: '',DateOfBirth: '',Hospital:'',HourlyRate:0,EducationalBackground:'' } });
+=======
   res.render('DoctorForm',{ formData: { Username: '',Name: '',Email: '',Password: '',DateOfBirth: '',Hospital:'',HourlyRate:0,EducationalBackground:'',Speciality:'' } });
+>>>>>>> main
 });
 
 app.get('/createUser', (req, res) => {
@@ -161,6 +176,8 @@ app.get('/getallDoctors', (req, res) => {
   res.render('getallDoctors');
 });
 
+<<<<<<< HEAD
+=======
 app.get('/addPackage', (req, res) => {
   res.render('addPackage',{ formData: { Username: '',HealthPackage:''} });
 });
@@ -193,6 +210,7 @@ app.get('/searchDoctordate', (req, res) => {
   res.render('searchDoctordate',{formData: {Avaliable:''}});
 });
 
+>>>>>>> main
 app.post("/addUser",createUser);
 app.post("/createDoctor",createDoctor);
 app.post("/createAdminstrator",createAdminstrator,);
@@ -205,6 +223,8 @@ app.get('/filterbydateorstatus',filterByDateOrStatus);
 app.post("/patientsearch",searchForPatient);
 app.get("/getPatients",getUsers);
 app.get("/getDoctors",getDoctors);
+<<<<<<< HEAD
+=======
 app.post("/addPackage",addPackage);
 app.post("/updatePackage",updatePackage);
 app.post("/deletePackage",deletePackage);
@@ -213,7 +233,160 @@ app.post("/getFamilyMember",getFamilyMembers);
 app.post("/doctorSearch",searchForDoctor);
 app.post("/doctorSearchspeciality",searchForDoctorspeciality);
 app.post("/doctorSearchdate",searchForDoctordate);
+>>>>>>> main
 //app.post("/abc",Createadminstrator);
 
 
 
+<<<<<<< HEAD
+/*ReactDOM.render(
+  '<Adminstratorform />' ,
+  document.getElementById('App')
+);*/
+
+/*function App(){
+  const PatientRegistration = () => {
+    const [formData, setFormData] = useState({
+      username: '',
+      name: '',
+      email: '',
+      password: '',
+      dob: '',
+      gender: '',
+      mobileNumber: '',
+      emergencyContact: {
+        fullName: '',
+        contactNumber: '',
+      },
+    });
+  
+    const handleChange = (e) => {
+      const { name, value } = e.target;
+      setFormData({ ...formData, [name]: value });
+    };
+  
+    const handleEmergencyContactChange = (e) => {
+      const { name, value } = e.target;
+      setFormData({
+        ...formData,
+        emergencyContact: { ...formData.emergencyContact, [name]: value },
+      });
+    };
+    //var register = document.getElementById("register");
+    //register.addEventListener("click", function(e){
+
+    
+    const handleSubmit = async (e) => {
+      alert("consst");
+      e.preventDefault();
+      try {
+        const response = await fetch('http://localhost:3000', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+        alert("tryyy");
+        if (response.ok) {
+          console.log('Registration successful!');
+          alert("ifff")
+          // Handle success, e.g., redirect to a success page
+        } else {
+          console.error('Registration failed.');
+          alert(response.status);
+          // Handle failure, e.g., show an error message
+        }
+      } catch (error) {
+        console.error('Error during registration:', error);
+        alert("catchhh");
+        // Handle network or other errors
+      }
+    };
+  
+  //});*/
+    
+    
+/*function App(){  
+    return (
+      <div className="centered-form">
+      <form>
+
+       <label>
+          Username:
+          <input type="text" name="username" value={formData.username} onChange={handleChange} />
+        </label>
+  
+        
+        
+       <label>
+          name:
+          <input type="text" name="name" value={formData.name} onChange={handleChange} />
+        </label>
+
+      
+
+        <label>
+          email:
+          <input type="email" name="email" value={formData.email} onChange={handleChange} />
+        </label>
+
+        <label>
+          password:
+          <input type="password" name="password" value={formData.password} onChange={handleChange} />
+        </label>
+
+        <label>
+          Date Of Birth:
+          <input type="date" name="dob" value={formData.dob} onChange={handleChange} />
+        </label>
+
+        <label>
+          Gender:
+           
+          <input type="radio" id ="male" name="gender" value={"male"} onChange={handleChange} />
+          <label for="male">Male</label>
+          <input type="radio" id ="female" name="gender" value={"female"} onChange={handleChange} />
+          <label for="female">Female</label>
+        </label>
+
+        <label>
+          Mobile Number:
+          <input type="number" name="mobileNumber" value={formData.mobileNumber} onChange={handleChange} />
+        </label>
+  
+  
+        <label>
+          Emergency Contact Full Name:
+          <input
+            type="text"
+            name="fullName"
+            value={formData.emergencyContact.fullName}
+            onChange={handleEmergencyContactChange}
+          />
+        </label>
+  
+        <label>
+          Emergency Contact Mobile Number:
+          <input
+            type="number"
+            name="contactNumber"
+            value={formData.emergencyContact.contactNumber}
+            onChange={handleEmergencyContactChange}
+          />
+        </label>
+  
+        <button type="submit" id="register" onClick={handleSubmit}>Register</button>
+      </form>
+      </div>
+    ); 
+  
+    };
+
+
+
+
+
+export default App;*/
+=======
+>>>>>>> main
