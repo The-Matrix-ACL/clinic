@@ -134,6 +134,7 @@ const PatientForm = () => {
       </label>
       <br />
       <button type="submit"  onClick={() => window.location.href=`/homepagePatient`}>Register</button>
+      <a href="http://localhost:3000/loginpatient">Already have an Account</a>
     </form>
   );
 };

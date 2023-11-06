@@ -6,8 +6,9 @@ require('dotenv').config();
 // add MONGO_URI in .env file
 //Check db connection links in README file
 const MongoURI = 'mongodb+srv://thematrix:thematrix@el7a2nidb.lrjz9fm.mongodb.net/?retryWrites=true&w=majority';
-const {createUser, createDoctor, createAdminstrator, deleteDoctor, deleteAdminstrator, deleteUser, getDoctor,editDoctorInfo,filterByDateOrStatus,searchForPatient, getUsers, getDoctors, addPackage, updatePackage, deletePackage,addFamilyInfo,getFamilyMembers, searchForDoctor, searchForDoctorspeciality, searchForDoctordate}= require('./Controller/userController')
-
+const {createUser, createDoctor, createAdminstrator, deleteDoctor, deleteAdminstrator, deleteUser, getDoctor,editDoctorInfo,filterByDateOrStatus,searchForPatient, getUsers, getDoctors, addPackage, updatePackage, deletePackage,addFamilyInfo,getFamilyMembers, searchForDoctor, searchForDoctorspeciality, searchForDoctordate, addHealthRecords, Loginuser,changepassworduser}= require('./Controller/userController')
+const {Login, changepasswordadmin} = require('./Controller/adminController');
+const {Logindoc, changepassworddoctor} = require('./Controller/doctorController');
 
 //App variables
 const app = express();
@@ -53,6 +54,13 @@ app.get("/getFamilyMember",getFamilyMembers);
 app.get("/doctorSearch",searchForDoctor);
 app.get("/doctorSearchspeciality",searchForDoctorspeciality);
 app.get("/doctorSearchdate",searchForDoctordate);
+app.put("/addHealthRecords",addHealthRecords);
+app.get("/loginadmin",Login);
+app.get("/logindoctor",Logindoc);
+app.get("/loginuser",Loginuser);
+app.put("/changepasswordpatient", changepassworduser);
+app.put("/changepassworddoctor", changepassworddoctor);
+app.put("/changepasswordadmin", changepasswordadmin);
 
 /*
                                                     End of your code

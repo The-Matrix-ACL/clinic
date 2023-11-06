@@ -2,6 +2,7 @@ const userModel = require('../Models/User.js');
 const doctorModel = require('../Models/Doctor.js');
 const adminstratorModel = require('../Models/Adminstrator.js');
 const  mongoose  = require('mongoose');
+const fs = require('fs');
 
 //var id;
 
@@ -9,16 +10,17 @@ const createUser = async(req,res) => {
    //add a new user to the database with 
    //Name, Email and Age
 
-   const randomrecords = generateRandomHealthRecords();
+   //const randomrecords = generateRandomHealthRecords();
 
 
    const{Username,Name,Email, Password,DateOfBirth,Gender,MobileNumber,EmergencyContactFullName,EmergencyContactNumber}= req.body;
    console.log(req.body);
    try{
-      const user = await userModel.create({Username,Name,Email, Password,DateOfBirth,Gender,MobileNumber,EmergencyContactFullName,EmergencyContactNumber,HealthRecords:randomrecords});
+      const user = await userModel.create({Username,Name,Email, Password,DateOfBirth,Gender,MobileNumber,EmergencyContactFullName,EmergencyContactNumber});
       console.log(user);
       //res.status(200).json(user)
-      res.redirect('/homepagePatient');
+      //res.redirect('/homepagePatient');
+      //HealthRecords:randomrecords
    }catch(error){
       res.status(400).json({error:error.message})
    }
@@ -95,17 +97,14 @@ const deleteAdminstrator = async (req, res) => {
 
 const getDoctor = async (req, res) => {
    //retrieve all users from the database
-   const Username = req.body.Username;
-  
-   const reqdoctor = await doctorModel.findOne({ Username: Username });
-   if (!reqdoctor) {
-      return res.status(404).json({ error: 'Doctor not found.' });
-    }
-   console.log(reqdoctor);
-   
-   res.status(200).json(reqdoctor);
-   //res.status(200).json(reqdoctor);
-
+   const userId = req.query.userId;
+   // check if userId is not empty
+   if(userId){
+   const result = await  doctorModel.find({Username:new  mongoose.Types.ObjectId(userId)}).populate('Username');
+   res.status(200).json(result)
+   }else{
+       res.status(400).json({error:"userId is required"})
+   }
   
 }
 
@@ -360,6 +359,52 @@ const searchForDoctordate = async (req, res) => {
   res.status(200).json(patient);
 }
 
+const addHealthRecords = async(req,res) => {
+  const {Username,document} = req.body;
+  console.log(document);
+userModel.findOneAndUpdate({Username:Username},{$push:{HealthRecords:
+  document
+}})
+.then ((err, item) => {
+    if (err) {
+        console.log(err);
+    }
+    else {
+        // item.save();
+        res.status(200).json(document);
+    }
+});
+}
+
+const Loginuser = async(req,res) => 
+{
+    const {Username,Password} = req.body;
+    const reqdoctor = await userModel.findOne({ Username: Username , Password: Password });
+   if (!reqdoctor) {
+      return res.status(404).json({ error: 'No Account With this Username and Password were found!.' });
+    }
+   console.log(reqdoctor);
+   
+   res.status(200).json(reqdoctor._id);
+}
+
+const changepassworduser = async (req, res) => {
+  const { Username, Password, newPassword} = req.body;
+  const updateFields = {};
+  updateFields.Password = newPassword;
+  
+  const updatedDoctor = await userModel.findOneAndUpdate(
+    {Username: Username},
+    updateFields,
+    { new: true }
+  );
+  if (!updatedDoctor) {
+    return res.status(404).json({ error: 'User not found' });
+  }
+  console.log(updatedDoctor);
+  res.status(200).json(updatedDoctor);
+};
 
 
-module.exports ={createUser,createDoctor,createAdminstrator,deleteUser,deleteDoctor,deleteAdminstrator,getDoctor,editDoctorInfo,filterByDateOrStatus,searchForPatient,getUsers,getDoctors,addPackage,updatePackage,deletePackage,addFamilyInfo,getFamilyMembers,searchForDoctor,searchForDoctorspeciality,searchForDoctordate};
+
+module.exports ={createUser,createDoctor,createAdminstrator,deleteUser,deleteDoctor,deleteAdminstrator,getDoctor,editDoctorInfo,filterByDateOrStatus,searchForPatient,getUsers,getDoctors,addPackage,updatePackage,deletePackage,addFamilyInfo,getFamilyMembers,searchForDoctor,searchForDoctorspeciality,searchForDoctordate,addHealthRecords,Loginuser,changepassworduser};

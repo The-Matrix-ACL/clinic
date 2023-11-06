@@ -16,11 +16,11 @@ const AdminstratorForm = () => {
   };
 
   const handleSubmit = async (event) => {
-    event.preventDefault();
+    
 
     try {
-      const response = await fetch('http://localhost:8000/createAdminstrator', {
-        method: 'POST',
+      const response = await fetch('http://localhost:8000/loginadmin', {
+        method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -34,6 +34,7 @@ const AdminstratorForm = () => {
     } catch (error) {
       console.error('Error submitting form:', error);
     }
+    event.preventDefault();
   };
 
   return (
@@ -60,8 +61,7 @@ const AdminstratorForm = () => {
           </label>
           <br />
 
-          <button type="submit" onClick={() => window.location.href=`/homepageAdmin`}>Register</button>
-          <a href="http://localhost:3000/loginadmin">Already have an Account</a>
+          <button type="submit" onClick={() => window.location.href=`/homepageAdmin`}>Login</button>
       </form><img src="./acllogo.png"alt="logo" width="150px" height="80px"></img></>
   );
 };

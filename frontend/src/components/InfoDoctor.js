@@ -34,7 +34,7 @@ const BlogList = () => {
         /*
         get the blogs from the backend  
         */     
-        await axios.get(`http://localhost:8000/doctorSearch?userId=${userId}`).then(
+        await axios.get(`http://localhost:8000/getDocto?userId=${userId}`).then(
             (res) => { 
                 const authors = res.data
                 console.log(authors)

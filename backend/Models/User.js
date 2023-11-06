@@ -2,17 +2,9 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const healthRecordsSchema = new mongoose.Schema({
-  height: {
-    type: Number,
-    
-  },
-  bloodType: {
-    type: String,
-    
-  },
-  avgBloodPressure: {
-    type: Number,
-    
+  document: {
+    data: Buffer,
+    type: String  
   },
 });
 

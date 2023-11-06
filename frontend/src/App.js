@@ -16,6 +16,13 @@ import ListDoctorsAdmin from './components/ListDoctorsAdmin';
 import AdminHomepage from './components/homepageAdmin';
 import PatientHomepage from './components/homepagePatient';
 import DoctorHomepage from './components/homepageDoctor';
+import HealthRecordsAdd from './components/HealthRecordsAdd';
+import Loginadmin from './components/LoginAdmin';
+import Logindoctor from './components/LoginDoctor';
+import Loginpatient from './components/LoginPatient';
+import Updatepassadmin from './components/Updatepasswordadmin';
+import Updatepassdoctor from './components/Updatepassworddoctor';
+import Updatepasspatient from './components/Updatepasswordpatient';
 
 
 function App() {
@@ -55,6 +62,20 @@ function App() {
         element={<PatientHomepage/>}/>
         <Route path="/homepagedoctor"
         element={<DoctorHomepage/>}/>
+        <Route path="/addhealthrecords"
+        element={<HealthRecordsAdd/>}/>
+        <Route path="/loginadmin"
+        element={<Loginadmin/>}/>
+        <Route path="/logindoctor"
+        element={<Logindoctor/>}/>
+        <Route path="/loginpatient"
+        element={<Loginpatient/>}/>
+        <Route path="/updatepasswordadmin"
+        element={<Updatepassadmin/>}/>
+         <Route path="/updatepassworddoctor"
+        element={<Updatepassdoctor/>}/>
+         <Route path="/updatepasswordpatient"
+        element={<Updatepasspatient/>}/>
       </Routes>
       </BrowserRouter>
     </div>
