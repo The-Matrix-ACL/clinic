@@ -23,6 +23,12 @@ import Loginpatient from './components/LoginPatient';
 import Updatepassadmin from './components/Updatepasswordadmin';
 import Updatepassdoctor from './components/Updatepassworddoctor';
 import Updatepasspatient from './components/Updatepasswordpatient';
+import Email from './components/Email'
+import Emailadmin from './components/Emailadmin'
+import Emaildoctor from './components/Emaildoctor'
+import ResetPassword from './components/ResetPassword'
+import ResetPasswordDoctor from './components/ResetPasswordDoctor'
+import ResetPasswordAdmin from './components/ResetPasswordAdmin'
 
 
 function App() {
@@ -76,6 +82,18 @@ function App() {
         element={<Updatepassdoctor/>}/>
          <Route path="/updatepasswordpatient"
         element={<Updatepasspatient/>}/>
+        <Route path="/email"
+        element={<Email/>}/>
+        <Route path="/emailadmin"
+        element={<Emailadmin/>}/>
+        <Route path="/emaildoctor"
+        element={<Emaildoctor/>}/>
+        <Route path="/resetpassword"
+        element={<ResetPassword/>}/>
+        <Route path="/resetpassworddoctor"
+        element={<ResetPasswordDoctor/>}/>
+        <Route path="/resetpasswordadmin"
+        element={<ResetPasswordAdmin/>}/>
       </Routes>
       </BrowserRouter>
     </div>

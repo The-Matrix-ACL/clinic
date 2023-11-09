@@ -4,7 +4,7 @@ const DoctorForm = () => {
   const [formData, setFormData] = useState({
     Username: '',
     Password: '',
-    Name: '',Email: '',DateOfBirth: '',Hospital:'',HourlyRate:0,EducationalBackground:'',Speciality:''
+    Name: '',Email: '',DateOfBirth: '',Hospital:'',HourlyRate:0,EducationalBackground:'',Speciality:'',ID:'',MedicalLicense:'',MedicalDegree:''
   });
 
   const handleChange = (event) => {
@@ -133,7 +133,40 @@ const DoctorForm = () => {
         />
       </label>
       <br />
-      <button type="submit"  onClick={() => window.location.href=`/homepageDoctor`}>Register</button>
+      <label>
+        ID:
+        <input
+          type="text"
+          name="ID"
+          required
+          value={formData.ID}
+          onChange={handleChange}
+        />
+      </label>
+      <br />
+      <label>
+        Medical License:
+        <input
+          type="file"
+          name="MedicalLicense"
+          required
+          value={formData.MedicalLicense}
+          onChange={handleChange}
+        />
+      </label>
+      <br />
+      <label>
+        Medical Degree:
+        <input
+          type="file"
+          name="MedicalDegree"
+          required
+          value={formData.MedicalDegree}
+          onChange={handleChange}
+        />
+      </label>
+      <br />
+      <button type="submit"  onClick={() => window.alert("Submission Completed,Wating For Approval From The Adminstrator")}>Register</button>
       <a href="http://localhost:3000/logindoctor">Already have an Account</a>
     </form>
   );

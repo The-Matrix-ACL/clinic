@@ -16,12 +16,12 @@ const AdminstratorForm = () => {
   };
 
   const handleSubmit = async (event) => {
-    
+    event.preventDefault();
 
     try {
         
-        const response =  fetch('http://localhost:8000/logindoctor', {
-        method: 'GET',
+        const response = await fetch('http://localhost:8000/logindoctor', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -30,19 +30,22 @@ const AdminstratorForm = () => {
 
       // Handle the response as needed
       console.log(response);
-      window.alert(response);
+      //window.alert(response);
       //history.push('/filter');
-      window.location.href="http://localhost:3000/homepageDoctor"
+      window.alert(response.status);
+      if(response.ok){
+        window.location.href = '/homepagedoctor'
+      }
     } catch (error) {
       console.error('Error submitting form:', error);
     }
-    event.preventDefault();
+    
     
   };
 
   return (
     
-    <><form action="/createAdminstrator" onSubmit={handleSubmit}>
+    <><form  onSubmit={handleSubmit}>
           <label>
               Username:
               <input
@@ -65,6 +68,7 @@ const AdminstratorForm = () => {
           <br />
 
           <button type="submit" >Login</button>
+          <a href="http://localhost:3000/emaildoctor">Forgot Your Password?</a>
       </form><img src="./acllogo.png"alt="logo" width="150px" height="80px"></img></>
   );
 };

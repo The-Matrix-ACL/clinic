@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const doctorSchema = new Schema({
+const requestSchema = new Schema({
   Username: {
     type: String,
     required: true,
@@ -55,20 +55,7 @@ const doctorSchema = new Schema({
     data:Buffer
   }
   
-  
 }, { timestamps: true });
-/*
-username: String,
-  name: String,
-  email: String,
-  password: String,
-  dob: Date,
-  gender: String,
-  mobileNumber: String,
-  emergencyContact: {
-    fullName: String,
-    contactNumber: String,
-*/ 
 
-const Doctor = mongoose.model('Doctor', doctorSchema);
-module.exports= Doctor;
+const Request = mongoose.model('Request', requestSchema);
+module.exports= Request;

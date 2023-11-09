@@ -26,7 +26,9 @@ const BlogList = () => {
 
     const [authors,setAuthors] = useState([]);
     const params = new URLSearchParams(window.location.search);
-    const userId = params.get('userId');
+    //window.alert(params);
+    const userId = params.get('Username');
+    window.alert(userId)
     console.log(userId);
  
 
@@ -34,10 +36,11 @@ const BlogList = () => {
         /*
         get the blogs from the backend  
         */     
-        await axios.get(`http://localhost:8000/getDocto?userId=${userId}`).then(
+        await axios.get(`http://localhost:8000/getDocto`).then(
             (res) => { 
                 const authors = res.data
                 console.log(authors)
+                //window.alert(authors)
                 setAuthors(authors)
                 
             }

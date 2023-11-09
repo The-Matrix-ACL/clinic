@@ -29,7 +29,7 @@ const DoctorsList = () => {
   const [filteredAuthors, setFilteredAuthors] = useState([]);
 
   const getAuthors = async () => {
-    await axios.get('http://localhost:8000/getDoctors').then(
+    await axios.get('http://localhost:8000/getRequests').then(
       (res) => {
         const authors = res.data;
         console.log(authors);
@@ -46,6 +46,58 @@ const DoctorsList = () => {
     );
     setFilteredAuthors(filteredList);
   };
+
+  const handleAccept = async (e) => {
+    e.preventDefault();
+    const doctor = e.target.value;
+    window.alert(doctor)
+    //window.alert(mongoose.Types.ObjectId.isValid(doctor))
+    //if (mongoose.Types.ObjectId.isValid(doctor)){
+      try {
+        const response = await fetch(`http://localhost:8000/acceptdoc?userId=${doctor}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({userId: doctor}),
+        });
+  
+        // Handle the response as needed
+        console.log(response);
+        window.alert(response.status)
+        
+      } catch (error) {
+        console.error('Error submitting form:', error);
+      }
+    
+    
+  }
+
+  const handleReject = async (e) => {
+    e.preventDefault();
+    const doctor = e.target.value;
+    window.alert(doctor)
+    //window.alert(mongoose.Types.ObjectId.isValid(doctor))
+    //if (mongoose.Types.ObjectId.isValid(doctor)){
+      try {
+        const response = await fetch(`http://localhost:8000/rejectdoc?userId=${doctor}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({userId: doctor}),
+        });
+  
+        // Handle the response as needed
+        console.log(response);
+        window.alert(response.status)
+        
+      } catch (error) {
+        console.error('Error submitting form:', error);
+      }
+    
+    
+  }
 
   return (
     <div className="UsersList">
@@ -70,11 +122,15 @@ const DoctorsList = () => {
         <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
           <TableHead>
             <TableRow>
+            <StyledTableCell align="center"></StyledTableCell>
+            <StyledTableCell align="center"></StyledTableCell>
               <StyledTableCell align="center">Name</StyledTableCell>
               <StyledTableCell align="center">Email</StyledTableCell>
               <StyledTableCell align="center">Session Price</StyledTableCell>
               <StyledTableCell align="center">Speciality</StyledTableCell>
               <StyledTableCell align="center">Username</StyledTableCell>
+              <StyledTableCell align="center">Medical License</StyledTableCell>
+              <StyledTableCell align="center">Medical Degree</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -88,14 +144,18 @@ const DoctorsList = () => {
                     width: "100%"
                   },
                 }}
-                //onClick={() => window.location.href = `/filter9?${author._id}`}
+                
                 key={author._id}
               >
+                <TableCell align="center"><Button value={author._id} onClick={handleAccept}>Accept</Button></TableCell>
+                <TableCell align="center"><Button value={author._id} onClick={handleReject}>Reject</Button></TableCell>
                 <TableCell align="center">{author.Name}</TableCell>
                 <TableCell align="center">{author.Email}</TableCell>
                 <TableCell align="center">{author.SessionPrice}</TableCell>
                 <TableCell align="center">{author.Speciality}</TableCell>
                 <TableCell align="center">{author.Username}</TableCell>
+                <TableCell align="center">{author.MedicalLicense}</TableCell>
+                <TableCell align="center">{author.MedicalDegree}</TableCell>
               </TableRow>
             ))}
           </TableBody>

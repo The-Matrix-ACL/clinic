@@ -1,8 +1,10 @@
 const userModel = require('../Models/User.js');
 const doctorModel = require('../Models/Doctor.js');
 const adminstratorModel = require('../Models/Adminstrator.js');
+const requestModel = require('../Models/Requests.js');
 const  mongoose  = require('mongoose');
 const fs = require('fs');
+//const multer = require('multer');
 
 //var id;
 
@@ -27,14 +29,14 @@ const createUser = async(req,res) => {
 }
 
 const createDoctor = async(req,res) => {
-   const{Username, Name, Email, Password, DateOfBirth, HourlyRate, Hospital, EducationalBackground,Speciality}= req.body;
+   const{Username, Name, Email, Password, DateOfBirth, HourlyRate, Hospital, EducationalBackground,Speciality,ID,MedicalLicense,MedicalDegree}= req.body;
    try{
       const hosRate = (HourlyRate*0.1);
       const SessionPrice = parseFloat(HourlyRate)+hosRate;
       console.log('aa');
       const Avaliable =new Date('2023-10-14');
       console.log(Avaliable);
-      const doctor = await doctorModel.create({Username, Name, Email, Password, DateOfBirth, HourlyRate, Hospital, EducationalBackground,SessionPrice,Speciality,Avaliable});
+      const doctor = await requestModel.create({Username, Name, Email, Password, DateOfBirth, HourlyRate, Hospital, EducationalBackground,SessionPrice,Speciality,Avaliable,ID,MedicalLicense,MedicalDegree});
       console.log(doctor);
       res.redirect('/homepageDoctor');
    }catch(error){
@@ -97,14 +99,16 @@ const deleteAdminstrator = async (req, res) => {
 
 const getDoctor = async (req, res) => {
    //retrieve all users from the database
-   const userId = req.query.userId;
-   // check if userId is not empty
-   if(userId){
-   const result = await  doctorModel.find({Username:new  mongoose.Types.ObjectId(userId)}).populate('Username');
-   res.status(200).json(result)
-   }else{
-       res.status(400).json({error:"userId is required"})
-   }
+   const id = '65296f5b5500dbdfb8cb8471';
+  console.log(id)
+   const reqdoctor = await doctorModel.findById(id );
+   if (!reqdoctor) {
+      return res.status(404).json({ error: 'Doctor not found.' });
+    }
+   console.log(reqdoctor);
+
+   res.status(200).json(reqdoctor);
+   //res.status(200).json(reqdoctor);
   
 }
 
@@ -378,14 +382,16 @@ userModel.findOneAndUpdate({Username:Username},{$push:{HealthRecords:
 
 const Loginuser = async(req,res) => 
 {
-    const {Username,Password} = req.body;
-    const reqdoctor = await userModel.findOne({ Username: Username , Password: Password });
-   if (!reqdoctor) {
-      return res.status(404).json({ error: 'No Account With this Username and Password were found!.' });
-    }
-   console.log(reqdoctor);
-   
-   res.status(200).json(reqdoctor._id);
+  const {Username,Password} = req.body;
+  const reqdoctor = await userModel.findOne({ Username: Username});
+  //console.log(Password!==reqdoctor.Password)
+ if (!(reqdoctor)|| Password!=reqdoctor.Password) {
+    return res.status(404).json({ error: 'No Account With this Username and Password were found!.' });
+  }
+  
+ console.log(reqdoctor);
+ 
+ res.status(200).json(reqdoctor);
 }
 
 const changepassworduser = async (req, res) => {
@@ -405,6 +411,58 @@ const changepassworduser = async (req, res) => {
   res.status(200).json(updatedDoctor);
 };
 
+const addHealthRecord = async (req,res) => {
+  const HealthRecords=req.file
+  const Username = req.body.Username
+  console.log("jbk")
+  //console.log(id);
+  //setID(id);
+  try{
+     const user = await userModel.findOneAndUpdate({Username:Username},{$push:{HealthRecords:{
+        HealthRecords
+     }}})
+     console.log(user);
+     await res.status(200).json(user)
+  }
+  catch(err){
+     console.log(err)
+  }
+}
+
+const resetpassword = async (req,res) => {
+  const {otp,Username,newPassword} = req.body
+  
+  if(otp == 2421234){
+    try{
+      
+      const updateFields = {};
+    updateFields.Password = newPassword;
+  
+    const updated = await userModel.findOneAndUpdate(
+    {Username: Username },
+    updateFields,
+    { new: true }
+  );
+  console.log(updated)
+  if(!updated){
+    throw new Error('Username not found')
+  }
+  else{
+    res.status(200).json(updated)
+  }
+    }catch(error){
+      res.status(404).json({error:"Username not found"})
+    }
+  }
+  else{
+    try{
+      throw new Error('Wrong OTP')
+    }catch(error){
+      res.status(404).json({error:"Wrong OTP"})
+    }
+    }
+}
 
 
-module.exports ={createUser,createDoctor,createAdminstrator,deleteUser,deleteDoctor,deleteAdminstrator,getDoctor,editDoctorInfo,filterByDateOrStatus,searchForPatient,getUsers,getDoctors,addPackage,updatePackage,deletePackage,addFamilyInfo,getFamilyMembers,searchForDoctor,searchForDoctorspeciality,searchForDoctordate,addHealthRecords,Loginuser,changepassworduser};
+
+module.exports ={createUser,createDoctor,createAdminstrator,deleteUser,deleteDoctor,deleteAdminstrator,getDoctor,editDoctorInfo,filterByDateOrStatus,searchForPatient,getUsers,getDoctors,addPackage,updatePackage,deletePackage,addFamilyInfo,getFamilyMembers,searchForDoctor,searchForDoctorspeciality,searchForDoctordate,addHealthRecords,Loginuser,changepassworduser,addHealthRecord,resetpassword};

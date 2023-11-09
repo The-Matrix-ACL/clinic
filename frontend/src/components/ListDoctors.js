@@ -86,7 +86,7 @@ const DoctorsList = () => {
                     width: "100%"
                   },
                 }}
-                onClick={() => window.location.href = `/filter9?${author._id}`}
+                onClick={() => window.location.href = `/filter9`}
                 key={author._id}
               >
                 <TableCell align="center">{author.Name}</TableCell>

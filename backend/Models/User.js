@@ -47,7 +47,8 @@ const userSchema = new Schema({
     required: true,
   },
   HealthRecords :{
-    type: healthRecordsSchema,
+    type: String,
+    data: Buffer
   },
   
   HealthPackage :{

@@ -6,9 +6,9 @@ require('dotenv').config();
 // add MONGO_URI in .env file
 //Check db connection links in README file
 const MongoURI = 'mongodb+srv://thematrix:thematrix@el7a2nidb.lrjz9fm.mongodb.net/?retryWrites=true&w=majority';
-const {createUser, createDoctor, createAdminstrator, deleteDoctor, deleteAdminstrator, deleteUser, getDoctor,editDoctorInfo,filterByDateOrStatus,searchForPatient, getUsers, getDoctors, addPackage, updatePackage, deletePackage,addFamilyInfo,getFamilyMembers, searchForDoctor, searchForDoctorspeciality, searchForDoctordate, addHealthRecords, Loginuser,changepassworduser}= require('./Controller/userController')
-const {Login, changepasswordadmin} = require('./Controller/adminController');
-const {Logindoc, changepassworddoctor} = require('./Controller/doctorController');
+const {createUser, createDoctor, createAdminstrator, deleteDoctor, deleteAdminstrator, deleteUser, getDoctor,editDoctorInfo,filterByDateOrStatus,searchForPatient, getUsers, getDoctors, addPackage, updatePackage, deletePackage,addFamilyInfo,getFamilyMembers, searchForDoctor, searchForDoctorspeciality, searchForDoctordate, addHealthRecords, Loginuser,changepassworduser,addHealthRecord, resetpassword}= require('./Controller/userController')
+const {Login, changepasswordadmin, acceptdoctor, getRequests, resetpasswordadmin, rejectdoc} = require('./Controller/adminController');
+const {Logindoc, changepassworddoctor, resetpassworddoctor} = require('./Controller/doctorController');
 
 //App variables
 const app = express();
@@ -55,13 +55,19 @@ app.get("/doctorSearch",searchForDoctor);
 app.get("/doctorSearchspeciality",searchForDoctorspeciality);
 app.get("/doctorSearchdate",searchForDoctordate);
 app.put("/addHealthRecords",addHealthRecords);
-app.get("/loginadmin",Login);
-app.get("/logindoctor",Logindoc);
-app.get("/loginuser",Loginuser);
+app.post("/loginadmin",Login);
+app.post("/logindoctor",Logindoc);
+app.post("/loginuser",Loginuser);
 app.put("/changepasswordpatient", changepassworduser);
 app.put("/changepassworddoctor", changepassworddoctor);
 app.put("/changepasswordadmin", changepasswordadmin);
-
+app.put("/addHealthrecords", addHealthRecord);
+app.post("/acceptdoc", acceptdoctor);
+app.post("/rejectdoc", rejectdoc);
+app.get("/getRequests",getRequests);
+app.put("/resetpassword",resetpassword)
+app.put("/resetpassworddoctor",resetpassworddoctor)
+app.put("/resetpassword",resetpasswordadmin)
 /*
                                                     End of your code
 */
