@@ -47,11 +47,11 @@ const doctorSchema = new Schema({
     type:String
   },
   MedicalLicense:{
-    type:String,
+    dtype:String,
     data:Buffer
   },
   MedicalDegree:{
-    type:String,
+    dtype:String,
     data:Buffer
   }
   

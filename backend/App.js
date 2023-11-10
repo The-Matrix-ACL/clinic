@@ -1,7 +1,10 @@
 // External variables
 const express = require("express");
+
 const mongoose = require('mongoose');
 const cors = require('cors');
+const multer = require('multer');
+const upload = multer();
 require('dotenv').config();
 // add MONGO_URI in .env file
 //Check db connection links in README file
@@ -35,7 +38,7 @@ app.get("/home", (req, res) => {
 
 app.use(express.json())
 app.post("/addUser",createUser);
-app.post("/createDoctor",createDoctor);
+app.post("/createDoctor",upload.array('MedicalLicense'),createDoctor);
 app.post("/createAdminstrator",createAdminstrator);
 app.delete("/deleteUser",deleteUser);
 app.delete("/deleteDoctor",deleteDoctor);
@@ -61,13 +64,15 @@ app.post("/loginuser",Loginuser);
 app.put("/changepasswordpatient", changepassworduser);
 app.put("/changepassworddoctor", changepassworddoctor);
 app.put("/changepasswordadmin", changepasswordadmin);
-app.put("/addHealthrecords", addHealthRecord);
+app.post("/addHealthrecords",upload.array('HealthRecords'), addHealthRecord);
 app.post("/acceptdoc", acceptdoctor);
 app.post("/rejectdoc", rejectdoc);
 app.get("/getRequests",getRequests);
 app.put("/resetpassword",resetpassword)
 app.put("/resetpassworddoctor",resetpassworddoctor)
 app.put("/resetpassword",resetpasswordadmin)
+
+
 /*
                                                     End of your code
 */

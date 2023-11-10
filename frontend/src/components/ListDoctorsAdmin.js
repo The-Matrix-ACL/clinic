@@ -129,8 +129,7 @@ const DoctorsList = () => {
               <StyledTableCell align="center">Session Price</StyledTableCell>
               <StyledTableCell align="center">Speciality</StyledTableCell>
               <StyledTableCell align="center">Username</StyledTableCell>
-              <StyledTableCell align="center">Medical License</StyledTableCell>
-              <StyledTableCell align="center">Medical Degree</StyledTableCell>
+              
             </TableRow>
           </TableHead>
           <TableBody>
@@ -154,8 +153,7 @@ const DoctorsList = () => {
                 <TableCell align="center">{author.SessionPrice}</TableCell>
                 <TableCell align="center">{author.Speciality}</TableCell>
                 <TableCell align="center">{author.Username}</TableCell>
-                <TableCell align="center">{author.MedicalLicense}</TableCell>
-                <TableCell align="center">{author.MedicalDegree}</TableCell>
+                
               </TableRow>
             ))}
           </TableBody>

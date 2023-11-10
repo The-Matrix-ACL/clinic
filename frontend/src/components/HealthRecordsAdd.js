@@ -2,28 +2,35 @@ import React, { useState } from 'react';
 
 const FamilyMemberForm = () => {
   const [formData, setFormData] = useState({
-    
-    Username: '',Name:'',NationalID:0,Age:0,Gender:'',Relation:''
+    HealthRecords: null,
+    Username: '',
   });
 
   const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData({ ...formData, [name]: value });
+    const { name, value, files } = event.target;
+    // For file input, use the first file in the array
+    const file = files && files.length > 0 ? files[0] : null;
+
+    setFormData({
+      ...formData,
+      [name]: file ? file : value,
+    });
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     try {
+      const data = new FormData();
+      data.append('HealthRecords', formData.HealthRecords);
+      window.alert(formData.HealthRecords)
+      data.append('Username', formData.Username);
+
       const response = await fetch('http://localhost:8000/addHealthRecords', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
+        method: 'POST',
+        body: data,
       });
 
-      // Handle the response as needed
       console.log(response);
     } catch (error) {
       console.error('Error submitting form:', error);
@@ -31,13 +38,12 @@ const FamilyMemberForm = () => {
   };
 
   return (
-    
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} encType="multipart/form-data">
       <div>
-          <label for="image">Upload Image</label>
-          <input type="file" id="image" name="image" value={formData.obj} required />
-        </div>
-        
+        <label>Upload Document</label>
+        <input type="file" name="HealthRecords" onChange={handleChange} required />
+      </div>
+
       <br />
       <label>
         Username:
@@ -50,8 +56,8 @@ const FamilyMemberForm = () => {
         />
       </label>
       <br />
-      
-      <button type="submit">Add Family Member</button>
+
+      <button type="submit">Add Health Records</button>
     </form>
   );
 };

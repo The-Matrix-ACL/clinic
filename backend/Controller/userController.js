@@ -4,7 +4,8 @@ const adminstratorModel = require('../Models/Adminstrator.js');
 const requestModel = require('../Models/Requests.js');
 const  mongoose  = require('mongoose');
 const fs = require('fs');
-//const multer = require('multer');
+const multer = require('multer');
+const upload = multer();
 
 //var id;
 
@@ -29,14 +30,15 @@ const createUser = async(req,res) => {
 }
 
 const createDoctor = async(req,res) => {
-   const{Username, Name, Email, Password, DateOfBirth, HourlyRate, Hospital, EducationalBackground,Speciality,ID,MedicalLicense,MedicalDegree}= req.body;
+   const{Username, Name, Email, Password, DateOfBirth, HourlyRate, Hospital, EducationalBackground,Speciality,ID}= req.body;
+   const MedicalLicense = req.files
    try{
       const hosRate = (HourlyRate*0.1);
       const SessionPrice = parseFloat(HourlyRate)+hosRate;
-      console.log('aa');
+      console.log(MedicalLicense);
       const Avaliable =new Date('2023-10-14');
       console.log(Avaliable);
-      const doctor = await requestModel.create({Username, Name, Email, Password, DateOfBirth, HourlyRate, Hospital, EducationalBackground,SessionPrice,Speciality,Avaliable,ID,MedicalLicense,MedicalDegree});
+      const doctor = await requestModel.create({Username, Name, Email, Password, DateOfBirth, HourlyRate, Hospital, EducationalBackground,SessionPrice,Speciality,Avaliable,ID,MedicalLicense:{dtype:MedicalLicense[0].mimetype , data:MedicalLicense[0].buffer}});
       console.log(doctor);
       res.redirect('/homepageDoctor');
    }catch(error){
@@ -412,17 +414,34 @@ const changepassworduser = async (req, res) => {
 };
 
 const addHealthRecord = async (req,res) => {
-  const HealthRecords=req.file
-  const Username = req.body.Username
+  
   console.log("jbk")
   //console.log(id);
   //setID(id);
   try{
-     const user = await userModel.findOneAndUpdate({Username:Username},{$push:{HealthRecords:{
-        HealthRecords
-     }}})
-     console.log(user);
-     await res.status(200).json(user)
+    const HealthRecords  = req.files;
+    //console.log(HealthRecords)
+    const Username = req.body.Username
+
+    if (!HealthRecords) {
+      console.log("jbk2")
+      return res.status(400).json({ error: 'No document provided' });
+    }
+
+    // Assuming you want to store the document as a Buffer
+    const documentData = HealthRecords[0].buffer;
+    console.log(documentData)
+    const documenttype =HealthRecords[0].mimetype;
+    console.log("aaa"+documenttype)
+    const result =await userModel.findOneAndUpdate({Username:Username},{$push:{HealthRecords:{data: documentData,dtype:documenttype}}})
+    console.log(result)
+    
+    // Add the new health record
+    //result.HealthRecords.push({ document: { data: documentData, type: HealthRecords[0].mimetype } });
+    //console.log(result)
+    //await result.save();
+    console.log("jbk4")
+    res.status(200).json({ message: 'Document uploaded successfully' });
   }
   catch(err){
      console.log(err)

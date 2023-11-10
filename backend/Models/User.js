@@ -46,10 +46,13 @@ const userSchema = new Schema({
     type: Number,
     required: true,
   },
-  HealthRecords :{
-    type: String,
-    data: Buffer
-  },
+  HealthRecords :
+    [ {
+      data: Buffer,
+      dtype: String,
+       type: Array
+    }]
+  ,
   
   HealthPackage :{
     type: String,
