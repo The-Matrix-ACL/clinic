@@ -1,15 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const healthRecordsSchema = new mongoose.Schema({
-  document: {
-    data: Buffer,
-    type: String  
-  },
-});
-
-
-const userSchema = new Schema({
+const doctorSchema = new Schema({
   Username: {
     type: String,
     required: true,
@@ -30,41 +22,40 @@ const userSchema = new Schema({
     type: Date,
     required: true,
   },
-  Gender: {
+  Hospital: {
     type: String,
     required: true,
   },
-  MobileNumber: {
+  HourlyRate: {
     type: Number,
     required: true,
   },
-  EmergencyContactFullName: {
+  EducationalBackground: {
     type: String,
     required: true,
   },
-  EmergencyContactNumber: {
+  SessionPrice: {
     type: Number,
-    required: true,
   },
-  HealthRecords :
-    [ {
-      data: Buffer,
-      dtype: String,
-       type: Array
-    }]
-  ,
+  Speciality:{
+    type: String,
+  },
+  Available:[{
+    type:Date,
+  }],
+  ID:{
+    type:String
+  },
+  MedicalLicense:{
+    dtype:String,
+    data:Buffer
+  },
+  MedicalDegree:{
+    dtype:String,
+    data:Buffer
+  }
   
-  HealthPackage :{
-    type: String,
-  },
-  FamilyMembers:[{
-    Name:{type:String},
-    NationalID:{type:String},
-    Age:{type:Number},
-    Gender:{type:String},
-    Relation:{type:String}
-
-  }]
+  
 }, { timestamps: true });
 /*
 username: String,
@@ -79,5 +70,5 @@ username: String,
     contactNumber: String,
 */ 
 
-const User = mongoose.model('User', userSchema);
-module.exports= User;
+const Doctor = mongoose.model('Doctor', doctorSchema);
+module.exports= Doctor;
