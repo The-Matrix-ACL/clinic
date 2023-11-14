@@ -1,34 +1,34 @@
-// HealthPackagesList.js
-
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const HealthPackagesList = () => {
+const ViewHealthPackage = () => {
   const [healthPackages, setHealthPackages] = useState([]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('http://localhost:8000/viewHealthPackages');
+    // Make an API request to fetch health packages
+    axios.get('http://localhost:8000/viewHealthPackages')
+      .then(response => {
         setHealthPackages(response.data);
-      } catch (error) {
+      })
+      .catch(error => {
         console.error('Error fetching health packages:', error);
-      }
-    };
-
-    fetchData();
-  }, []);
+      });
+  }, []); // Empty dependency array ensures the effect runs once when the component mounts
 
   return (
     <div>
       <h2>Health Packages</h2>
       <ul>
-        {healthPackages.map((pkg, index) => (
-          <li key={index}>{pkg.name} - {pkg.description}</li>
+        {healthPackages.map(pkg => (
+          <li key={pkg._id}>
+            <strong>{pkg.name}</strong>
+            <p>Description: {pkg.description}</p>
+            <p>Price: {pkg.price}</p>
+          </li>
         ))}
       </ul>
     </div>
   );
 };
 
-export default HealthPackagesList;
+export default ViewHealthPackage;

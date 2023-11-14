@@ -5,6 +5,7 @@ const requestModel = require('../Models/Requests.js');
 const  mongoose  = require('mongoose');
 const fs = require('fs');
 const User = require('../Models/User.js');
+const healthPackageModel = require('../Models/HealthPackage.js');
 //const multer = require('multer');
 
 //var id;
@@ -282,7 +283,7 @@ const addFamilyInfo = async (req,res) => {
   setID(id);
   try{
      const user = await userModel.findOneAndUpdate({Username:Username},{$push:{FamilyMembers:{
-        Name,NationalID,Age,Gender,Relation
+        Username,Name,NationalID,Age,Gender,Relation
      }}})
      console.log(user);
      await res.status(200).json(user)
@@ -466,40 +467,34 @@ const resetpassword = async (req,res) => {
 
 const viewHealthPackages = async (req, res) => {
   try {
-    const healthPackages = [
-      {
-        name: 'Silver Package',
-        description: 'Patient pays 3600 LE per year and gets 40% off any doctors session price and 20% off any medicin ordered from pharmacy platform and 10% discount on the subscribtion of any of his family members in any package.',
-        price: 3600,
-      },
-      {
-        name: 'Gold Package',
-        description: 'Patient pays 6000 LE per year and gets 60% off any doctors session price and 30% off any medicin ordered from pharmacy platform and 15% discount on the subscribtion of any of his family members in any package.',
-        price: 6000,
-      },
-      {
-        name: 'Platinum Package',
-        description: 'Patient pays 9000 LE per year and gets 80% off any doctors session price and 40% off any medicin ordered from pharmacy platform and 20% discount on the subscribtion of any of his family members in any package.',
-        price: 9000,
-      }
-    ];
+    // Fetch all health packages from the database
+    const healthPackages = await healthPackageModel.find();
 
-    // Send the health packages as a response
+    if (!healthPackages || healthPackages.length === 0) {
+      return res.status(404).json({ error: 'No health packages found' });
+    }
+
+    // Return the health packages
     res.status(200).json(healthPackages);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: 'Internal server error.' });
   }
-}
+};
 
 const SubToHealthPackage = async (req, res) => {
   try {
-    const healthPackagesResponse = await axios.get('http://localhost:8000/viewHealthPackages');
-    const healthPackages = healthPackagesResponse.data;
+    const { Username, HealthPackage, FamilyMembers } = req.body;
 
-    const { Username, PackageName, FamilyMembers } = req.body;
+    // Check if the specified health package exists in the database
+    const existingHealthPackage = await healthPackageModel.findOne({ name: HealthPackage });
+
+    if (!existingHealthPackage) {
+      return res.status(404).json({ error: 'Health package not found' });
+    }
 
     // Retrieve the user from the database
-    const user = await userModel.findOne({ Username });
+    const user = await userModel.findOne({Username:Username});
 
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
@@ -510,36 +505,44 @@ const SubToHealthPackage = async (req, res) => {
       return res.status(400).json({ error: 'User already subscribed to a health package' });
     }
 
-    // Find the selected health package
-    const selectedPackage = healthPackages.find(pkg => pkg.name === PackageName);
-
-    if (!selectedPackage) {
-      return res.status(400).json({ error: 'Invalid health package name' });
-    }
-
     // Update the user's health package information
     const updatedUser = await userModel.findOneAndUpdate(
       { Username: Username },
-      { HealthPackage: selectedPackage },
+      { HealthPackage: HealthPackage },
       { new: true }
     );
 
     // Subscribe family members to the selected health package
     if (FamilyMembers && FamilyMembers.length > 0) {
       for (const familyMember of FamilyMembers) {
-        const familyMemberUser = await userModel.findOneAndUpdate(
-          { Username: familyMember.Username },
-          { HealthPackage: selectedPackage },
+        // Check if the family member exists
+        const familyMemberUser = await userModel.findOne({ Name: familyMember.Name });
+
+        if (!familyMemberUser) {
+          return res.status(404).json({ error: `Family member with the name ${familyMember.Name} not found` });
+        }
+
+        // Check if the family member already has a health package
+        if (familyMemberUser.HealthPackage) {
+          return res.status(400).json({ error: `Family member ${familyMember.Name} already subscribed to a health package` });
+        }
+
+        // Update the family member's health package information
+        await userModel.findOneAndUpdate(
+          { Name: familyMember.Name },
+          { HealthPackage: HealthPackage },
           { new: true }
         );
-        
       }
     }
 
+   
     res.status(200).json(updatedUser);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: 'Internal server error.' });
   }
+
 };
 
 const payForHealthPackage = async (req, res) => {
@@ -547,7 +550,7 @@ const payForHealthPackage = async (req, res) => {
     const { Username, PaymentMethod } = req.body;
 
     // Check if the user exists
-    const user = await userModel.findOne({ Username });
+    const user = await userModel.findOne({ Username: Username });
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }

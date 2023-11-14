@@ -4,35 +4,62 @@ import axios from 'axios';
 const PaymentForm = () => {
   const [username, setUsername] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('cash');
+  const [creditCardNumber, setCreditCardNumber] = useState('');
+  const [expirationDate, setExpirationDate] = useState('');
+  const [cvv, setCvv] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
+      // Create a payload based on the selected payment method
+      let paymentPayload;
+
+      if (paymentMethod === 'cash') {
+        paymentPayload = {
+          Username: username,
+          PaymentMethod: paymentMethod,
+        };
+      } else if (paymentMethod === 'credit') {
+        paymentPayload = {
+          Username: username,
+          PaymentMethod: paymentMethod,
+          CreditCard: {
+            Number: creditCardNumber,
+            ExpirationDate: expirationDate,
+            CVV: cvv,
+          },
+        };
+      }
+
       // Make an API call to the payForHealthPackage endpoint
-      const response = await axios.post('http://localhost:8000/payForHealthPackage', {
-        Username: username,
-        PaymentMethod: paymentMethod,
-      });
+      const response = await axios.post('http://localhost:8000/paymentform', paymentPayload);
 
       // Handle the response
       console.log(response.data);
 
-      if (paymentMethod === 'cash') {
-        setSuccessMessage('Payment successful!');
-      } else if (paymentMethod === 'credit') {
-        // Redirect to the credit card information page
-        window.location.href = '/credit-card-info'; // Replace with the actual URL of the credit card information page
+      if (response.data.success) {
+        setSuccessMessage('Successful!');
+        setErrorMessage('');
+      } else {
+        setSuccessMessage('');
+        setErrorMessage(response.data.message || 'Payment failed. Please check your input and try again.');
       }
     } catch (error) {
       // Handle errors, you may want to display an error message to the user
       console.error('Error:', error.message);
+      setSuccessMessage('');
+      setErrorMessage('An error occurred. Please check your input and try again.');
     }
 
     // Reset form fields
     setUsername('');
     setPaymentMethod('cash');
+    setCreditCardNumber('');
+    setExpirationDate('');
+    setCvv('');
   };
 
   return (
@@ -61,10 +88,45 @@ const PaymentForm = () => {
           <option value="credit">Credit Card</option>
         </select>
 
-        <button type="submit">Submit Payment</button>
-      </form>
+        {paymentMethod === 'credit' && (
+          <div>
+            <label htmlFor="creditCardNumber">Credit Card Number:</label>
+            <input
+              type="text"
+              id="creditCardNumber"
+              name="creditCardNumber"
+              value={creditCardNumber}
+              onChange={(e) => setCreditCardNumber(e.target.value)}
+              required
+            />
 
-      {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+            <label htmlFor="expirationDate">Expiration Date:</label>
+            <input
+              type="text"
+              id="expirationDate"
+              name="expirationDate"
+              value={expirationDate}
+              onChange={(e) => setExpirationDate(e.target.value)}
+              required
+            />
+
+            <label htmlFor="cvv">CVV:</label>
+            <input
+              type="text"
+              id="cvv"
+              name="cvv"
+              value={cvv}
+              onChange={(e) => setCvv(e.target.value)}
+              required
+            />
+          </div>
+        )}
+
+        <button type="submit">Submit Payment</button>
+
+        {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
+        {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+      </form>
     </div>
   );
 };

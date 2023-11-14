@@ -5,8 +5,8 @@ const SubscribeHealthPackage = () => {
   const [healthPackages, setHealthPackages] = useState([]);
   const [formData, setFormData] = useState({
     Username: '',
-    PackageName: '',
-    FamilyMembers: [],
+    HealthPackage: '',
+    FamilyMembers: [{ Name: '' }], // Initialize with one family member
   });
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -34,7 +34,7 @@ const SubscribeHealthPackage = () => {
 
   const handleFamilyMemberInputChange = (index, e) => {
     const newFamilyMembers = [...formData.FamilyMembers];
-    newFamilyMembers[index][e.target.name] = e.target.value;
+    newFamilyMembers[index].Name = e.target.value;
 
     setFormData({
       ...formData,
@@ -42,31 +42,61 @@ const SubscribeHealthPackage = () => {
     });
   };
 
-  // ... (previous code)
+  const addFamilyMember = () => {
+    setFormData({
+      ...formData,
+      FamilyMembers: [...formData.FamilyMembers, { Name: '' }],
+    });
+  };
 
-const handleSubscribe = async () => {
+  const removeFamilyMember = (index) => {
+    const newFamilyMembers = [...formData.FamilyMembers];
+    newFamilyMembers.splice(index, 1);
+
+    setFormData({
+      ...formData,
+      FamilyMembers: newFamilyMembers,
+    });
+  };
+
+  const handleSubscribe = async () => {
+    // Filter out empty family member names
+    const nonEmptyFamilyMembers = formData.FamilyMembers.filter(
+      (familyMember) => familyMember.Name.trim() !== ''
+    );
+
     try {
-      const response = await axios.post('http://localhost:8000/SubToHealthPackage', formData);
+      const response = await axios.post(
+        'http://localhost:8000/subscribetohealthpackages',
+        {
+          ...formData,
+          FamilyMembers: nonEmptyFamilyMembers,
+        }
+      );
       console.log('Subscription successful:', response.data);
-  
-      setSuccessMessage('Subscription successful! Redirecting to payment page...');
+
+      setSuccessMessage(
+        'Subscription successful! Redirecting to the payment page...'
+      );
       setErrorMessage('');
-  
+
       // After a successful subscription, you can redirect the user to the payment page
       // You may replace '/payment' with the actual route for your payment page
       setTimeout(() => {
         window.location.href = '/paymentform';
       }, 3000); // Redirect after 3 seconds (adjust as needed)
     } catch (error) {
-      console.error('Subscription error:', error.response ? error.response.data : error.message);
-  
+      console.error(
+        'Subscription error:',
+        error.response ? error.response.data : error.message
+      );
+
       setSuccessMessage('');
-      setErrorMessage('Subscription failed. Please check your input and try again.');
+      setErrorMessage(
+        'Subscription failed. Please check your input and try again.'
+      );
     }
   };
-  
- 
-  
 
   return (
     <div>
@@ -79,11 +109,11 @@ const handleSubscribe = async () => {
         <br />
         <label>
           Health Package:
-          <select name="PackageName" value={formData.PackageName} onChange={handleInputChange}>
+          <select name="HealthPackage" value={formData.HealthPackage} onChange={handleInputChange}>
             <option value="">Select a package</option>
             {healthPackages.map((pkg, index) => (
               <option key={index} value={pkg.name}>
-                {pkg.name} 
+                {pkg.name}
               </option>
             ))}
           </select>
@@ -94,24 +124,37 @@ const handleSubscribe = async () => {
           {formData.FamilyMembers.map((familyMember, index) => (
             <div key={index}>
               <label>
-                Member {index + 1} Username:
+                Member {index + 1} Name:
                 <input
                   type="text"
-                  name="Username"
-                  value={familyMember.Username || ''}
+                  name="Name"
+                  value={familyMember.Name || ''}
                   onChange={(e) => handleFamilyMemberInputChange(index, e)}
                 />
               </label>
+              {formData.FamilyMembers.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => removeFamilyMember(index)}
+                >
+                  Remove Member
+                </button>
+              )}
               <br />
             </div>
           ))}
+          <button type="button" onClick={addFamilyMember}>
+            Add Family Member
+          </button>
         </div>
         <br />
         <button type="button" onClick={handleSubscribe}>
           Subscribe
         </button>
 
-        {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+        {successMessage && (
+          <p style={{ color: 'green' }}>{successMessage}</p>
+        )}
         {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
       </form>
     </div>
