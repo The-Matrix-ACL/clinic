@@ -7,7 +7,7 @@ const AdminstratorForm = () => {
  
     const [formData, setFormData] = useState({
     Username: '',
-    Password: '',
+    FollowUp: '',
   });
 
   const handleChange = (event) => {
@@ -19,8 +19,7 @@ const AdminstratorForm = () => {
     event.preventDefault();
 
     try {
-        
-        const response = await fetch('http://localhost:8000/logindoctor', {
+      const response = await fetch('http://localhost:8000/followup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -30,24 +29,18 @@ const AdminstratorForm = () => {
 
       // Handle the response as needed
       console.log(response);
-      //window.alert(response);
       //history.push('/filter');
-      window.alert(response.status);
-      if(response.ok){
-        window.location.href = `/Contract?Username=${response.body.Username}`
-      }
+      //window.location.href="http://localhost:8000/createAdminstrator"
     } catch (error) {
       console.error('Error submitting form:', error);
     }
-    
-    
   };
 
   return (
     
     <><form  onSubmit={handleSubmit}>
           <label>
-              Username:
+              type patient Username:
               <input
                   type="text"
                   name="Username"
@@ -57,18 +50,18 @@ const AdminstratorForm = () => {
           </label>
           <br />
           <label>
-              Password:
+              Followup:
               <input
-                  type="password"
-                  name="Password"
+                  type="date"
+                  name="FollowUp"
                   required
-                  value={formData.Password}
+                  value={formData.FollowUp}
                   onChange={handleChange} />
           </label>
           <br />
 
-          <button type="submit" >Login</button>
-          <a href="http://localhost:3000/emaildoctor">Forgot Your Password?</a>
+          <button type="submit" onClick={() => window.alert("FollowUp added successufly")}>Submit</button>
+         
       </form><img src="./acllogo.png"alt="logo" width="150px" height="80px"></img></>
   );
 };

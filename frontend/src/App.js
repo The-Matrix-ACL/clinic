@@ -1,9 +1,11 @@
 import './App.css';
+//import './components/chat.css'
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import CreateAdmin from './components/FormAdminstrator';
 import CreateDoctor from './components/FormDoctor';
 import CreatePatient from './components/FormPatient';
 import FamilyMemberadd from './components/FamilyMemberAdd';
+import FamilyMemberpatient from './components/FamilyMemberpatient';
 import UpdateDoctor from './components/UpdateDoctor';
 import DeleteDoctor from './components/DeleteDoctor';
 import DeleteAdmin from './components/DeleteAdminstrator';
@@ -24,27 +26,55 @@ import Updatepassadmin from './components/Updatepasswordadmin';
 import Updatepassdoctor from './components/Updatepassworddoctor';
 import Updatepasspatient from './components/Updatepasswordpatient';
 import Email from './components/Email'
+import Followup from './components/Followup'
 import Emailadmin from './components/Emailadmin'
+import ViewHealthPackage from './components/viewHealthPackage';
+import SubscribeToHealthPkg from './components/SubscribeToHealthPkg'
+import PaymentForm1 from './components/PaymentForm1'
 import Emaildoctor from './components/Emaildoctor'
 import ResetPassword from './components/ResetPassword'
+import ResetPasswordPatient from './components/resetPasswordPatient'
 import ResetPasswordDoctor from './components/ResetPasswordDoctor'
 import ResetPasswordAdmin from './components/ResetPasswordAdmin'
+import PaymentForm from './components/PaymentForm'
+import Wallet from './components/Wallet'
+import { loadStripe } from '@stripe/stripe-js';
+import { Elements } from '@stripe/react-stripe-js';
+import HealthRecordsremove from './components/HealthRecordsremove';
+import Contract from './components/Contract';
+import SelectTimeSlot from './components/Addavaliable';
+import DoctorScheduler from './components/Viewappointments';
+import HealthRecords from './components/HealthRecords';
+import WalletViewer from './components/WalletViewer';
+//import io from "socket.io-client";
+//import Chat from "./components/Chat";
+const stripePromise = loadStripe("pk_test_51K8pKeAHoHtEwtN5PmpH89COOO1E8kd0TT27PiU2NovDU5RPHP20Q2EXUjzstNx6yhBMwir9egTX1tCwO3D3ebvD00QujcIxos");
 
+//const socket = io.connect("http://localhost:5001");
 
 
 function App() {
+  
+  
+  
   return (
     <div className="App">
+
+
+
       <BrowserRouter>
       <Routes>
         <Route path="/AdminForm"
         element={<CreateAdmin/>}/>
+        
         <Route path="/DoctorForm"
         element={<CreateDoctor/>}/>
         <Route path="/PatientForm"
         element={<CreatePatient/>}/>
         <Route path="/addFamilyMember"
         element={<FamilyMemberadd/>}/>
+        <Route path="/addFamilyMemberpatient"
+        element={<FamilyMemberpatient/>}/>
         <Route path="/UpdateDoctor"
         element={<UpdateDoctor/>}/>
         <Route path="/DeleteDoctor"
@@ -71,6 +101,8 @@ function App() {
         element={<DoctorHomepage/>}/>
         <Route path="/addhealthrecords"
         element={<HealthRecordsAdd/>}/>
+        <Route path="/removehealthrecords"
+        element={<HealthRecordsremove/>}/>
         <Route path="/loginadmin"
         element={<Loginadmin/>}/>
         <Route path="/logindoctor"
@@ -85,16 +117,42 @@ function App() {
         element={<Updatepasspatient/>}/>
         <Route path="/email"
         element={<Email/>}/>
+        <Route path="/followup"
+        element={<Followup/>}/>
         <Route path="/emailadmin"
         element={<Emailadmin/>}/>
         <Route path="/emaildoctor"
         element={<Emaildoctor/>}/>
         <Route path="/resetpassword"
-        element={<ResetPassword/>}/>
+        element={<ResetPasswordPatient/>}/>
         <Route path="/resetpassworddoctor"
         element={<ResetPasswordDoctor/>}/>
+         <Route path="/viewhealthpackages"
+        element={<ViewHealthPackage/>}/>
+        <Route path="/subscribetohealthpackage"
+        element={<SubscribeToHealthPkg/>}/>
+        <Route path="/paymentform"
+        element={<PaymentForm/>}/>
         <Route path="/resetpasswordadmin"
         element={<ResetPasswordAdmin/>}/>
+        <Route path="/Contract"
+        element={<Contract/>}/>
+        <Route path="/viewappointments"
+        element={<DoctorScheduler/>}/>
+        <Route path="/addslot"
+        element={<SelectTimeSlot/>}/>
+        <Route path="/getWalletCredit"
+        element={<Wallet/>}/>
+        <Route path="/viewWallet"
+        element={<WalletViewer/>}/>
+        <Route path="/getHealthRecords"
+        element={<HealthRecords/>}/>
+        <Route path="/payment" element={
+          <Elements stripe={stripePromise}>
+              <PaymentForm/>
+          </Elements>
+          
+          }/>
       </Routes>
       </BrowserRouter>
     </div>

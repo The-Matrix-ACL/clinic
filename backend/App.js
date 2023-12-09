@@ -2,22 +2,41 @@
 const express = require("express");
 
 const mongoose = require('mongoose');
+//const http = require("http");
+//const { Server } = require("socket.io");
 const cors = require('cors');
 const multer = require('multer');
+const session = require('express-session');
 const upload = multer();
 require('dotenv').config();
 // add MONGO_URI in .env file
 //Check db connection links in README file
 const MongoURI = 'mongodb+srv://thematrix:thematrix@el7a2nidb.lrjz9fm.mongodb.net/?retryWrites=true&w=majority';
-const {createUser, createDoctor, createAdminstrator, deleteDoctor, deleteAdminstrator, deleteUser, getDoctor,editDoctorInfo,filterByDateOrStatus,searchForPatient, getUsers, getDoctors, addPackage, updatePackage, deletePackage,addFamilyInfo,getFamilyMembers, searchForDoctor, searchForDoctorspeciality, searchForDoctordate, addHealthRecords, Loginuser,changepassworduser,addHealthRecord, resetpassword}= require('./Controller/userController')
-const {Login, changepasswordadmin, acceptdoctor, getRequests, resetpasswordadmin, rejectdoc} = require('./Controller/adminController');
-const {Logindoc, changepassworddoctor, resetpassworddoctor} = require('./Controller/doctorController');
-
+const {createUser, createDoctor, createAdminstrator, deleteDoctor, deleteAdminstrator, deleteUser, getDoctor,editDoctorInfo,filterByDateOrStatus,searchForPatient, getUsers, getDoctors, addPackage, updatePackage, deletePackage,addFamilyInfo,getFamilyMembers, searchForDoctor, searchForDoctorspeciality, searchForDoctordate, addHealthRecords, Loginuser,changepassworduser,addHealthRecord, resetpassword, getHealthRecords, removeHealthRecords, addfamilymemberpatient, getTimeSlots, reserveTimeSlot, addavaliabletime, getWalletCredit, payWithWallet, getappointments}= require('./Controller/userController')
+const {Login, changepasswordadmin, acceptdoctor, getRequests, resetpasswordadmin, rejectdoc, addHealthPackage, requestOTP} = require('./Controller/adminController');
+const {Logindoc, changepassworddoctor, resetpassworddoctor, addSlots, Followup, chat, allchat} = require('./Controller/doctorController');
+const {createBlog, getBlogs, editBlog} = require('./Controller/userControllerold');
 //App variables
 const app = express();
 app.use(cors());
+
+
+
+
+
+
+
+
 const port = process.env.PORT || "8000";
 const user = require('./Models/User');
+const { filterBlog } = require("./Controller/userControllerold");
+const { verify } = require("jsonwebtoken");
+app.use(session({
+  secret: 'AAsdfg15',
+  resave: false,
+  saveUninitialized: false,
+}));
+// #Importing the userController
 // #Importing the userController
 
 
@@ -36,9 +55,15 @@ app.get("/home", (req, res) => {
     res.status(200).send("You have everything installed!");
   });
 
+  const uploadFields = [
+    {
+      name: 'MedicalLicense'
+    },
+    {name: 'MedicalDegree'}
+  ]
 app.use(express.json())
 app.post("/addUser",createUser);
-app.post("/createDoctor",upload.array('MedicalLicense'),createDoctor);
+app.post("/createDoctor",upload.fields(uploadFields),createDoctor);
 app.post("/createAdminstrator",createAdminstrator);
 app.delete("/deleteUser",deleteUser);
 app.delete("/deleteDoctor",deleteDoctor);
@@ -71,6 +96,43 @@ app.get("/getRequests",getRequests);
 app.put("/resetpassword",resetpassword)
 app.put("/resetpassworddoctor",resetpassworddoctor)
 app.put("/resetpassword",resetpasswordadmin)
+app.post("/followup",Followup)
+app.post("/addhealthpackage",addHealthPackage)
+app.post("/gethealthrecords",getHealthRecords)
+app.post("/removehealthrecords",removeHealthRecords)
+app.post('/addfamilymemberpatient',addfamilymemberpatient)
+app.put("/addSlots",addSlots);
+app.get("/getTimeSlots/:Username",getTimeSlots);
+app.post("/reserveTimeSlot",reserveTimeSlot);
+app.put("/addavaliabletime",addavaliabletime);
+app.post("/createblog",createBlog);
+app.post("/filterblog",filterBlog);
+app.get("/getblogs",getBlogs);
+app.post("/createUser",createUser);
+app.put("/editblog/:blogId",editBlog);
+app.put("/verify",verify);
+app.post("/requestOTP",requestOTP)
+app.get("chat/:userId",allchat);
+app.post('/chat',chat)
+app.get("/getappointments",getappointments);
+app.post("/getWalletCredit", getWalletCredit);
+app.post('/payWithWallet',payWithWallet );
+app.post('/payment', async (req, res) => {
+  try {
+      const { amount, token } = req.body;
+
+      const charge = await stripe.charges.create({
+          amount: amount, // Amount in cents
+          currency: 'usd',
+          source: token,
+          description: 'Test payment',
+      });
+
+      res.status(200).send({ success: charge });
+  } catch (error) {
+      res.status(500).send({ error: error.message });
+  }
+});
 
 
 /*

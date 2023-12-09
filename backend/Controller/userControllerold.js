@@ -75,11 +75,13 @@ const editBlog = async(req, res) => {
     3- update the blog with the new title and body
     4- send the updated blog as a response
     */
-    const blogId = req.params.id;
+    const blogId = req.params.blogId;
     const{title,body} = req.body;
+    console.log(blogId);
 
     try{
-        const blog =  await new blogModel.findByIdAndUpdate(blogId,{title,body},{new:true});
+        const blog =  await blogModel.findByIdAndUpdate(blogId,{title,body},{new:true});
+        console.log(blog)
         res.status(200).json(blog)
     }
     catch(error){

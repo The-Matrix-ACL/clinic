@@ -1,6 +1,7 @@
 const adminstratorModel = require('../Models/Doctor.js');
 const  mongoose  = require('mongoose');
 const doctorModel = require('../Models/Doctor.js');
+const userModel = require('../Models/User.js');
 
 const Logindoc = async(req,res) => 
 {
@@ -67,4 +68,56 @@ const changepassworddoctor = async (req, res) => {
       }
   }  
 
-module.exports = {Logindoc,changepassworddoctor,resetpassworddoctor};
+  const addSlots = async(req,res) =>{
+    const{Username,Available} = req.body
+
+    const date=new Date(Available)
+    console.log(date)
+    try{
+      const doctor = await doctorModel.findOneAndUpdate({Username:Username},{$push:{Available:
+         date
+      }})
+      console.log(doctor);
+      res.status(200).json(doctor)
+   }
+   catch(err){
+      console.log(err)
+   }
+
+
+
+  }
+  const Followup = async(req,res) =>{
+    const {Username,FollowUp} = req.body
+    const date = new Date(FollowUp)
+    const result = await userModel.findOneAndUpdate({Username:Username},{FollowUp:date})
+    console.log(result)
+    res.status(200).json(result)
+  }
+
+  const chatData = {
+    'user1': [
+      { senderName: 'user1', message: 'Hello there!' },
+      { senderName: 'user2', message: 'Hi! How are you?' },
+    ],
+    'user2': [
+      { senderName: 'user2', message: 'Hey! What\'s up?' },
+      { senderName: 'user1', message: 'Not much, just chilling.' },
+    ],
+  };
+  
+  const allchat = (req, res) => {
+    const userId = req.params.userId;
+    res.json(chatData[0] || []);
+  };
+  
+  const chat = (req, res) => {
+    const { userId, message } = req.body;
+    if (!chatData[userId]) {
+      chatData[userId] = [];
+    }
+    chatData[userId].push({ senderName: 'You', message });
+    res.json(chatData[userId]);
+  };
+
+module.exports = {Logindoc,changepassworddoctor,resetpassworddoctor,addSlots,Followup,allchat,chat};

@@ -2,10 +2,13 @@ const userModel = require('../Models/User.js');
 const doctorModel = require('../Models/Doctor.js');
 const adminstratorModel = require('../Models/Adminstrator.js');
 const requestModel = require('../Models/Requests.js');
+const appointmentsModel = require('../Models/Appointments.js');
 const  mongoose  = require('mongoose');
 const fs = require('fs');
 const multer = require('multer');
 const upload = multer();
+
+
 
 //var id;
 
@@ -31,16 +34,18 @@ const createUser = async(req,res) => {
 
 const createDoctor = async(req,res) => {
    const{Username, Name, Email, Password, DateOfBirth, HourlyRate, Hospital, EducationalBackground,Speciality,ID}= req.body;
-   const MedicalLicense = req.files
+   const {MedicalLicense,MedicalDegree} = req.files
+   
    try{
       const hosRate = (HourlyRate*0.1);
       const SessionPrice = parseFloat(HourlyRate)+hosRate;
-      console.log(MedicalLicense);
-      const Avaliable =new Date('2023-10-14');
+      //console.log(MedicalLicense);
+      const Avaliable =new Date('2023-11-14');
       console.log(Avaliable);
-      const doctor = await requestModel.create({Username, Name, Email, Password, DateOfBirth, HourlyRate, Hospital, EducationalBackground,SessionPrice,Speciality,Avaliable,ID,MedicalLicense:{dtype:MedicalLicense[0].mimetype , data:MedicalLicense[0].buffer}});
-      console.log(doctor);
-      res.redirect('/homepageDoctor');
+      const doctor = await requestModel.create({Username, Name, Email, Password, DateOfBirth, HourlyRate, Hospital, EducationalBackground,SessionPrice,Speciality,Avaliable,ID,MedicalLicense:{dtype:MedicalLicense[0].mimetype , data:MedicalLicense[0].buffer},MedicalDegree:{dtype:MedicalDegree[0].mimetype , data:MedicalDegree[0].buffer}});
+      console.log(doctor.MedicalDegree);
+      res.status(200).json(doctor)
+      //res.redirect('/homepageDoctor');
    }catch(error){
       res.status(400).json({error:error.message})
    }
@@ -482,6 +487,139 @@ const resetpassword = async (req,res) => {
     }
 }
 
+const getHealthRecords = async (req, res) => {
+  //retrieve all users from the database
+  const Username = req.body.Username
+  const doctors = await userModel.findOne({Username:Username});
+  console.log(doctors)
+  res.status(200).json(doctors);
+ }
+
+ const removeHealthRecords = async (req, res) => {
+  const userId = req.query.userId;
+  //const updateFields = {};
+  //updateFields.HealthPackage = newHealthPackage;
+  
+  const updatedUser = await userModel.findOneAndUpdate(
+    {_id: userId },
+    {$set :{HealthRecords:null}},
+    { new: true }
+  );
+  if (!updatedUser) {
+    return res.status(404).json({ error: 'User not found' });
+  }
+  console.log(updatedUser);
+  res.status(200).json(updatedUser);
+};
+
+const addavaliabletime = async (req, res) => {
+  /*const userId = req.query.userId;
+  const {Username} = req.params.Username
+  
+  const result = await  doctorModel.findOne({_id:userId});
+  console.log(result+"csd")
+  
+  const user = await userModel.findOneAndUpdate({Username:Username},{$push :{Reserved:result.Avaliable[0]}},
+    { new: true })
+    console.log(user)
+
+  await doctorModel.findOneAndUpdate({_id:userId},{$push :{reserved:user.Username}},
+    { new: true })
+    res.status(200).json(user)*/
+    const Username = req.body.Username
+    const Avaliable =new Date('2023-11-14');
+    const result = await userModel.findOneAndUpdate({Username:Username},{$push :{Reserved:Avaliable}},
+      { new: true })
+      res.status(200).json(result)
+};
+
+const addfamilymemberpatient = async (req,res) => {
+  const{Username,Email,Relation} = req.body //username of the patient and email of the patient that will be a family member to the patient that we took its username
+  const familypatient = await userModel.findOne({Email:Email}) //the patient that will be a family member
+  
+  if(familypatient){
+    const patient = await userModel.findOneAndUpdate({Username:Username},{$push:{FamilyMembers:{
+      Name:familypatient.Name,Age:familypatient.Age,Gender:familypatient.Gender,Relation:Relation
+   }}}) //adds the familypatient to his familymembers
+   console.log(patient)
+   res.status(200).json(patient)
+
+  }
+  else{
+    res.status(404).json({error: 'Patient not found'})
+  }
+}
+
+const getTimeSlots = async (req,res) => {
+  const {Username} = req.params;
+  try{
+
+     const doctor = await doctorModel.findOne({Username:Username})
+     await res.status(200).json(doctor.Available)
+  }
+  catch(err){
+     console.log(err)
+  }
+}
+const reserveTimeSlot = async (req,res) =>{
+  const{Dusername,Pusername,Did,Pid,PFamilyMemberName,PFamilyMemberID,ADate} = req.body;
+  const date=new Date(ADate)
+
+  try{
+    const appointment = await appointmentsModel.create({DName:Dusername,PName:Pusername,Did,Pid,PFamilyMemberName,PFamilyMemberID,AppointmentDate:date})
+    await res.status(200).json(appointment)
+  }
+  catch(err){
+    res.status(404).json({error:err})
+ }
+}
+
+const getWalletCredit = async (req, res) => {
+  const Username = req.body.username; // Retrieve username from request body
+  console.log(Username);
+  try {
+      console.log("start");
+      console.log(Username);
+      console.log("end");
+      const user = await userModel.findOne({ Username: Username }); // Use the retrieved username
+      console.log(user)
+      await res.status(200).json(user);
+  } catch (err) {
+      console.log(err);
+  }
+};
+const payWithWallet = async (req, res) => {
+  try {
+    const { amount, username } = req.body; 
+      const user = await userModel.findOne({ Username: username });
+
+      if (!user) {
+          return res.status(404).json({ message: "User not found" });
+      }
+
+      if (user.WalletCredit < amount) {
+          return res.status(400).json({ message: "Insufficient wallet credit" });
+      }
+      user.WalletCredit -= amount;
+      const updatedUser = await user.save();
+      res.status(200).json({success: true,newWalletCredit: updatedUser.WalletCredit});
+  } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: "An error occurred while processing your request" });
+  }
+};
+
+const getappointments = async (req,res) =>
+{
+  const user1 = await userModel.find({
+    $or: [{ Username: "rec" }, { Username: "MazenPatient" }],
+  });
+  //const user2 = await userModel.findOne({ Username: "mazenget" });
+  console.log(user1);
+  res.status(200).json(user1);
+}
 
 
-module.exports ={createUser,createDoctor,createAdminstrator,deleteUser,deleteDoctor,deleteAdminstrator,getDoctor,editDoctorInfo,filterByDateOrStatus,searchForPatient,getUsers,getDoctors,addPackage,updatePackage,deletePackage,addFamilyInfo,getFamilyMembers,searchForDoctor,searchForDoctorspeciality,searchForDoctordate,addHealthRecords,Loginuser,changepassworduser,addHealthRecord,resetpassword};
+
+
+module.exports ={createUser,createDoctor,createAdminstrator,deleteUser,deleteDoctor,deleteAdminstrator,getDoctor,editDoctorInfo,filterByDateOrStatus,searchForPatient,getUsers,getDoctors,addPackage,updatePackage,deletePackage,addFamilyInfo,getFamilyMembers,searchForDoctor,searchForDoctorspeciality,searchForDoctordate,addHealthRecords,Loginuser,changepassworduser,addHealthRecord,resetpassword,getHealthRecords,removeHealthRecords,addfamilymemberpatient,getTimeSlots,reserveTimeSlot,addavaliabletime,getWalletCredit,payWithWallet,getappointments};

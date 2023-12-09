@@ -26,6 +26,11 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    /* position: absolute;
+    width: 502.02px;
+    height: 1380px;
+    left: 451.98px;
+    top: 288px; */
     
   }
   
@@ -100,3 +105,10 @@
   border-radius: 4px;
   cursor: pointer;
 }
+
+/* formBounds */
+
+
+
+
+

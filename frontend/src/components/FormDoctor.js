@@ -4,24 +4,31 @@ const DoctorForm = () => {
   const [formData, setFormData] = useState({
     Username: '',
     Password: '',
-    Name: '',Email: '',DateOfBirth: '',Hospital:'',HourlyRate:0,EducationalBackground:'',Speciality:'',ID:'',MedicalLicense:'',MedicalDegree:''
+    Name: '',Email: '',DateOfBirth: '',Hospital:'',HourlyRate:0,EducationalBackground:'',Speciality:'',ID:'',MedicalLicense:null,MedicalDegree:null
   });
 
   const handleChange = (event) => {
-    const { name, value } = event.target;
-    setFormData({ ...formData, [name]: value });
+    const { name, value, type, files } = event.target;
+
+    // Check if the input is a file input
+    const inputValue = type === 'file' ? files[0] : value;
+
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: inputValue,
+    }));
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+    const data = new FormData();
+    for (const key in formData) {
+      data.append(key, formData[key]);
+    }
     try {
       const response = await fetch('http://localhost:8000/createDoctor', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
+        body: data
       });
 
       // Handle the response as needed
@@ -33,7 +40,7 @@ const DoctorForm = () => {
 
   return (
     
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} encType='multipart/form-data'>
       <label>
         Username:
         <input
@@ -150,7 +157,7 @@ const DoctorForm = () => {
           type="file"
           name="MedicalLicense"
           required
-          value={formData.MedicalLicense}
+          
           onChange={handleChange}
         />
       </label>
@@ -161,7 +168,7 @@ const DoctorForm = () => {
           type="file"
           name="MedicalDegree"
           required
-          value={formData.MedicalDegree}
+          
           onChange={handleChange}
         />
       </label>

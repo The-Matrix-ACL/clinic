@@ -48,14 +48,24 @@ const userSchema = new Schema({
   },
   HealthRecords :
     [ {
-      data: Buffer,
-      dtype: String,
-       type: Array
+      data: {type:Buffer},
+      dtype: {type:String},
+       
     }]
   ,
+  Reserved :[{
+    type:Date
+  }],
+  FollowUp :{
+    type: Date
+  },
   
   HealthPackage :{
     type: String,
+  },
+  WalletCredit: {
+    type: Number,
+    default: 100, // Default value set to 100
   },
   FamilyMembers:[{
     Name:{type:String},

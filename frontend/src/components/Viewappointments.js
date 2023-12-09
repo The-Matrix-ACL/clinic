@@ -63,7 +63,7 @@ const DoctorsList = () => {
   };
 
   const getAuthors = async () => {
-    await axios.get('http://localhost:8000/getDoctors').then(
+    await axios.get('http://localhost:8000/getappointments').then(
       (res) => {
         const authors = res.data;
         console.log(authors);
@@ -89,13 +89,10 @@ const DoctorsList = () => {
           margin="normal"
           padding="normal"
         >
-          Load Doctors
+          Load Appointments
         </Button>
       </Box>
-      <label for="Username">
-          type your Username
-          <input type="text" name="Username" value={formData.Username} onChange={handleChange} />
-        </label>
+      
       <Input
         type="text"
         placeholder="Search by Name"
@@ -109,8 +106,8 @@ const DoctorsList = () => {
             <TableRow>
               <StyledTableCell align="center">Name</StyledTableCell>
               <StyledTableCell align="center">Email</StyledTableCell>
-              <StyledTableCell align="center">Session Price</StyledTableCell>
-              <StyledTableCell align="center">Avaliable</StyledTableCell>
+              <StyledTableCell align="center">Username</StyledTableCell>
+              <StyledTableCell align="center">Reserved</StyledTableCell>
               <StyledTableCell align="center"></StyledTableCell>
             </TableRow>
           </TableHead>
@@ -130,9 +127,11 @@ const DoctorsList = () => {
               >
                 <TableCell align="center">{author.Name}</TableCell>
                 <TableCell align="center">{author.Email}</TableCell>
-                <TableCell align="center">{author.SessionPrice}</TableCell>
-                <TableCell align="center">{author.Avaliable[0]}</TableCell>
-                <TableCell align="center"><Button value={author.Username} name='Username' onClick={() => window.location.href=`/payment`}>Reserve</Button></TableCell>
+                <TableCell align="center">{author.Username}</TableCell>
+                <TableCell align="center">{author.DateOfBirth}</TableCell>
+                <TableCell align="center"><Button value={author.Username} name='Username' onClick={() => window.location.href=`https://us05web.zoom.us/j/8011145782?pwd=6qQZprzfr11od523tbsaZ8bL4IMdLg.1
+
+`}>Chat</Button></TableCell>
               </TableRow>
             ))}
           </TableBody>

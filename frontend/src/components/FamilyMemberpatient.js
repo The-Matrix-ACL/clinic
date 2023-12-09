@@ -1,10 +1,9 @@
-
 import React, { useState } from 'react';
 
 const FamilyMemberForm = () => {
   const [formData, setFormData] = useState({
     
-    Username: '',Name:'',NationalID:0,Age:0,Gender:'',Relation:''
+    Username: '',Email:'',Relation:''
   });
 
   const handleChange = (event) => {
@@ -16,8 +15,8 @@ const FamilyMemberForm = () => {
     event.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:8000/addFamilyMember', {
-        method: 'PUT',
+      const response = await fetch('http://localhost:8000/addfamilymemberpatient', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -35,7 +34,7 @@ const FamilyMemberForm = () => {
     
     <form onSubmit={handleSubmit}>
       <label>
-        Username:
+        type your Username here:
         <input
           type="text"
           name="Username"
@@ -46,49 +45,17 @@ const FamilyMemberForm = () => {
       </label>
       <br />
       <label>
-        Name:
+        type the patient email here:
         <input
-          type="text"
-          name="Name"
+          type="email"
+          name="Email"
           required
-          value={formData.Name}
+          value={formData.Email}
           onChange={handleChange}
         />
       </label>
       <br />
-      <label>
-        National ID:
-        <input
-          type='number'
-          name="NationalID"
-          required
-          value={formData.NationalID}
-          onChange={handleChange}
-        />
-      </label>
-      <br />
-      <label>
-        Age:
-        <input
-          type="text"
-          name="Age"
-          required
-          value={formData.Age}
-          onChange={handleChange}
-        />
-      </label>
-      <br />
-      <label>
-        Gender:
-        <input
-          type="text"
-          name="Gender"
-          required
-          value={formData.Gender}
-          onChange={handleChange}
-        />
-      </label>
-      <br />
+      
       <label>
         Relation:
         <input
@@ -102,7 +69,6 @@ const FamilyMemberForm = () => {
       <br />
       
       <button type="submit">Add Family Member</button>
-      <a href="http://localhost:3000/addFamilyMemberpatient">The family member have an account here</a>
     </form>
   );
 };

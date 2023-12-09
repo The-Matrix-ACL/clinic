@@ -40,9 +40,9 @@ const doctorSchema = new Schema({
   Speciality:{
     type: String,
   },
-  Avaliable :{
+  Avaliable :[{
     type:Date,
-  },
+  }],
   ID:{
     type:String
   },
@@ -53,7 +53,11 @@ const doctorSchema = new Schema({
   MedicalDegree:{
     dtype:String,
     data:Buffer
-  }
+  },
+  reserved:
+    {
+       type:String
+    }
   
   
 }, { timestamps: true });
