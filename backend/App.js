@@ -12,7 +12,7 @@ require('dotenv').config();
 // add MONGO_URI in .env file
 //Check db connection links in README file
 const MongoURI = 'mongodb+srv://thematrix:thematrix@el7a2nidb.lrjz9fm.mongodb.net/?retryWrites=true&w=majority';
-const {createUser, createDoctor, createAdminstrator, deleteDoctor, deleteAdminstrator, deleteUser, getDoctor,editDoctorInfo,filterByDateOrStatus,searchForPatient, getUsers, getDoctors, addPackage, updatePackage, deletePackage,addFamilyInfo,getFamilyMembers, searchForDoctor, searchForDoctorspeciality, searchForDoctordate, addHealthRecords, Loginuser,changepassworduser,addHealthRecord, resetpassword, getHealthRecords, removeHealthRecords, addfamilymemberpatient, getTimeSlots, reserveTimeSlot, addavaliabletime, getWalletCredit, payWithWallet, getappointments}= require('./Controller/userController')
+const {createUser, createDoctor, createAdminstrator, deleteDoctor, deleteAdminstrator, deleteUser, getDoctor,editDoctorInfo,filterByDateOrStatus,searchForPatient, getUsers, getDoctors, addPackage, updatePackage, deletePackage,addFamilyInfo,getFamilyMembers, searchForDoctor, searchForDoctorspeciality, searchForDoctordate, addHealthRecords, Loginuser,changepassworduser,addHealthRecord, resetpassword, getHealthRecords, removeHealthRecords, addfamilymemberpatient, getTimeSlots, reserveTimeSlot, addavaliabletime, getWalletCredit, payWithWallet, getappointments, createnotification, getnotificationsuser, getnotificationsdoctor}= require('./Controller/userController')
 const {Login, changepasswordadmin, acceptdoctor, getRequests, resetpasswordadmin, rejectdoc, addHealthPackage, requestOTP} = require('./Controller/adminController');
 const {Logindoc, changepassworddoctor, resetpassworddoctor, addSlots, Followup, chat, allchat} = require('./Controller/doctorController');
 const {createBlog, getBlogs, editBlog} = require('./Controller/userControllerold');
@@ -114,7 +114,10 @@ app.put("/verify",verify);
 app.post("/requestOTP",requestOTP)
 app.get("chat/:userId",allchat);
 app.post('/chat',chat)
-app.get("/getappointments",getappointments);
+app.post("/getappointments",getappointments);
+app.post("/createnotification",createnotification);
+app.post("/getnotificationsuser",getnotificationsuser)
+app.post("/getnotificationsdoctor",getnotificationsdoctor)
 app.post("/getWalletCredit", getWalletCredit);
 app.post('/payWithWallet',payWithWallet );
 app.post('/payment', async (req, res) => {

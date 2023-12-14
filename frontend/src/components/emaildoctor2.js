@@ -10,7 +10,7 @@ const MailInbox = () => {
   const [authors, setAuthors] = useState([]);
 
   const getAuthors = async () => {
-    await axios.post('http://localhost:8000/getnotificationsuser',{docid:userId}).then(
+    await axios.post('http://localhost:8000/getnotificationsdoctor',{docid:userId}).then(
       (res) => {
         const authors = res.data;
         console.log(authors);

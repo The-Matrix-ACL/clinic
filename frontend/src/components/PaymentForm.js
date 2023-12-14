@@ -3,8 +3,15 @@ import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import StripeCheckout from 'react-stripe-checkout';
 
 const PaymentForm = () => {
+
+    const params = new URLSearchParams(window.location.search);
+    const userId = params.get('docid');
+    const userId2 = params.get('docid2');
+    //window.alert(userId);
+    //window.alert(userId2);
+
     const handleToken = async (token, addresses) => {
-        const response = await fetch('/payment', {
+        const response = await fetch('http://localhost:8000/payment', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -31,7 +38,7 @@ const PaymentForm = () => {
                 amount={1000}
                 name="Your Product Name"
             />
-            <button type="submit" onClick={() => window.location.href = `/getWalletCredit`}>Wallet</button>
+            <button type="submit" onClick={() => window.location.href = `/getWalletCredit?docid=${userId}`}>Wallet</button>
         </div>
         
     );

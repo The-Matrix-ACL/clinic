@@ -5,7 +5,7 @@ const  mongoose  = require('mongoose');
 const healthPackageModel = require('../Models/HealthPackage.js');
 
 const nodemailer = require("nodemailer");
-const OTP = require("../Models/OTP.js");
+const OTP = require("../Models/OTP1.js");
 
 const Patient = require('../Models/User.js');
 
@@ -135,10 +135,10 @@ const changepasswordadmin = async (req, res) => {
       const otpValidity = await verifyOTP({ email, otp });
       if (otpValidity) {
         const modifiedPatient = await Patient.findOneAndUpdate(
-          { email },
+          { Email:email },
           { password: newPassword }
         );
-        console.log("=> " + modifiedPatient);
+        console.log(otpValidity);
       }
       res.status(200).json({ valid: otpValidity });
     } catch (error) {
@@ -153,13 +153,13 @@ const changepasswordadmin = async (req, res) => {
       if (!(email && otp)) {
         throw Error("Provide values for Email and OTP");
       }
-      const matchedOTPRecord = await OTP.findOne({ email });
+      const matchedOTPRecord = await OTP.findOne({ email:email });
       if (!matchedOTPRecord) {
         throw Error("No OTP Record Found");
       }
       const { expiresAt } = matchedOTPRecord;
       if (expiresAt < Date.now()) {
-        await OTP.deleteOne({ email });
+        await OTP.deleteOne({ email:email });
         throw Error("OTP has expired. Please request another one");
       }
       const otpInRecord = matchedOTPRecord.otp;

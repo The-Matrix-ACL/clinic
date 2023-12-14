@@ -14,7 +14,7 @@ const Logindoc = async(req,res) =>
     
    console.log(reqdoctor);
    
-    res.status(200).json(reqdoctor);
+    res.status(200).json({docid:reqdoctor._id});
 }
 
 const changepassworddoctor = async (req, res) => {

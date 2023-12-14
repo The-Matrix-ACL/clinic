@@ -168,10 +168,11 @@ const PatientForm = () => {
         },
         body: JSON.stringify(formData),
       });
-
+      const responseData = await response.json();
+      const {docid} = responseData;
       // Handle the response as needed
       console.log(response);
-      window.location.href=`/homepagePatient`;
+      window.location=`/homepagePatient?docid=${docid}`;
     } catch (error) {
       console.error('Error submitting form:', error);
     }
@@ -201,7 +202,7 @@ const PatientForm = () => {
                             <div className="sign-up">
                                 <div className="overlap-3">
                                     <div className="rectangle-3" />
-                                    <button className="p">Sign Up As A Doctor</button>
+                                    <button className="p" onClick={()=> window.location.href =`/DoctorForm`}>Sign Up As A Doctor</button>
                                 </div>
                             </div>
                         </div>
@@ -211,26 +212,26 @@ const PatientForm = () => {
                             
                             
                             <div className="emergency-contact">
-                                <img className="line" alt="Line" src="Line 1.svg" />
+                                <img className="line" alt="Line" src="Line1.svg" />
                                 <div className="overlap-5">
-                                    <img className="line-2" alt="Line" src="Line 1.svg" />
+                                    <img className="line-2" alt="Line" src="Line1.svg" />
                                     <div className="text-wrapper-4">Emergency Contact</div>
                                 </div>
                             </div>
                             
                             <div className="form-bounds">
-                            <form onSubmit={() => window.location.href=`/homepagePatient`}>
+                            <form >
                                 <div className="overlap-group-wrapper">
                                     <div className="overlap-group-3">
-                                        <div className="rectangle-4" />
-                                        <button className="text-wrapper-5" type="submit" onClick={handleSubmit} >Sign Up</button>
+                                        <div className="rectangle-4" onClick={() => window.location.href=`/homepagePatient?docid=${docid}`}/>
+                                        <button className="text-wrapper-5" type="submit" onSubmit={handleSubmit} onClick={() => window.location.href=`/homepagePatient?docid=${docid}`}>Sign Up</button>
                                     </div>
                                 </div>
                                 
                         
-                                <img className="line-3" alt="Line" src="Line 1.svg" />
+                                <img className="line-3" alt="Line" src="Line1.svg" />
                                 <div className="overlap-6">
-                                    <img className="line-4" alt="Line" src="Line 1.svg" />
+                                    <img className="line-4" alt="Line" src="Line1.svg" />
                                     <div className="text-wrapper-6">Sign Up</div>
                                 </div>
                                 </form>
@@ -239,49 +240,49 @@ const PatientForm = () => {
                             <div className="mobile-no">
                             <p>Number</p>
                                <div className="div-wrapper">
-                                <input type="number" name="EmergencyContactNumber" value={formData.EmergencyContactNumber} onChange={handleChange}/>
+                                <input type="number" name="EmergencyContactNumber" required value={formData.EmergencyContactNumber} onChange={handleChange}/>
                                </div>
                             </div>
                             <div className="name">
                             <p>Full Name</p>
                                 <div className="div-wrapper">
-                                <input type="text" name="EmergencyContactFullName" value={formData.EmergencyContactFullName} onChange={handleChange}/>
+                                <input type="text" name="EmergencyContactFullName" required value={formData.EmergencyContactFullName} onChange={handleChange}/>
                                 </div>
                             </div>
                             <div className="overlap-wrapper">
                             <p>Mobile Number</p>
                                 <div className="div-wrapper">
-                                <input type="number" name="MobileNumber" value={formData.MobileNumber} onChange={handleChange}/>
+                                <input type="number" name="MobileNumber" required value={formData.MobileNumber} onChange={handleChange}/>
                                 </div>
                             </div>
                             <div className="gender">
                             <p>Gender</p>
                                 <div className="div-wrapper">
-                                <input type="text" name="Gender" value={formData.Gender} onChange={handleChange}/>
+                                <input type="text" name="Gender" required value={formData.Gender} onChange={handleChange}/>
                                 </div>
                             </div>
                             <div className="dob">
                             <p>Date Of Birth</p>
                                 <div className="div-wrapper">
-                                <input type="date" name="DateOfBirth" value={formData.DateOfBirth} onChange={handleChange}/>
+                                <input type="date" name="DateOfBirth" required value={formData.DateOfBirth} onChange={handleChange}/>
                                 </div>
                             </div>
                             <div className="password">
                             <p>Password</p>
                                 <div className="div-wrapper">
-                                <input type="password" name="Password" value={formData.Password} onChange={handleChange}/>
+                                <input type="password" name="Password" required value={formData.Password} onChange={handleChange}/>
                                 </div>
                             </div>
                             <div className="email">
                             <p>Email</p>
                                 <div className="div-wrapper">
-                                <input type="email" name="Email" value={formData.Email} onChange={handleChange}/>
+                                <input type="email" name="Email" required value={formData.Email} onChange={handleChange}/>
                                 </div>
                             </div>
                             <div className="name-2">
                               <p>Name</p>
                                 <div className="div-wrapper">
-                                <input type="text" name="Name" value={formData.Name} onChange={handleChange}/>
+                                <input type="text" name="Name"  required value={formData.Name} onChange={handleChange}/>
                                     
                                 </div>
                             </div>
@@ -289,14 +290,16 @@ const PatientForm = () => {
                             <div className="username" >
                               <p>Username</p>
                                 <div className="div-wrapper">
-                                <input type="text" name="Username" value={formData.Username} onChange={handleChange}/>
+                                <input type="text" name="Username" required value={formData.Username} onChange={handleChange}/>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            <a href="http://localhost:3000/loginpatient">Already have an Account</a>
         </div>
+        
     );
 };
 

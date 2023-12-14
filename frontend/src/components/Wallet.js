@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
 function Wallet() {
+
+    const params = new URLSearchParams(window.location.search);
+    const userId = params.get('docid');
+
     const [walletCredit, setWalletCredit] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -14,7 +18,7 @@ function Wallet() {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ username: username }),
+            body: JSON.stringify({ _id: userId }),
         })
         .then(response => response.json())
         .then(data => {
@@ -35,7 +39,7 @@ function Wallet() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ amount: Number(paymentAmount),username: username })
+            body: JSON.stringify({ amount: Number(paymentAmount),_id: userId })
         })
         .then(response => response.json())
         .then(data => {
@@ -57,12 +61,7 @@ function Wallet() {
     return (
         <div>
             <h2>Wallet Credit: ${walletCredit}</h2>
-            <input 
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="Enter username" 
-            />
+            
             <button onClick={fetchWalletCredit}>Check Wallet Credit</button>
             <input 
                 type="number" 

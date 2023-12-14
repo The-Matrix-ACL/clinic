@@ -24,14 +24,17 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 const { useState } = require("react");
 
 const DoctorsList = () => {
+  
   const [authors, setAuthors] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredAuthors, setFilteredAuthors] = useState([]);
+
 
   const [formData, setFormData] = useState({
     Username: ''
     
   });
+    
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -39,22 +42,23 @@ const DoctorsList = () => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = async (event) => {
+  const handlenotification = async (event) => {
     event.preventDefault();
     
     const doctor = event.target.value;
     window.alert("Reservation completed with "+ doctor)
     try {
-      const response = await fetch('http://localhost:8000/addavaliabletime', {
-        method: 'PUT',
+      const response = await fetch('http://localhost:8000/createnotification', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({userid:userId,doctorid:doctor,subject:"Sceduling Appointment",content:"Appointment with has been successfully booked with "}),
       });
 
       // Handle the response as needed
       console.log(response);
+      window.location.href=`/payment?docid=${userId}&docid2=${doctor}`
       //history.push('/filter');
       //window.location.href="http://localhost:8000/createAdminstrator"
     } catch (error) {
@@ -76,10 +80,13 @@ const DoctorsList = () => {
     const query = e.target.value;
     setSearchQuery(query);
     const filteredList = authors.filter(author =>
-      author.Name.toLowerCase().includes(query.toLowerCase())
+      author.Speciality.toLowerCase().includes(query.toLowerCase())
     );
     setFilteredAuthors(filteredList);
   };
+
+  const params = new URLSearchParams(window.location.search);
+  const userId = params.get('docid');
 
   return (
     <div className="UsersList">
@@ -92,13 +99,10 @@ const DoctorsList = () => {
           Load Doctors
         </Button>
       </Box>
-      <label for="Username">
-          type your Username
-          <input type="text" name="Username" value={formData.Username} onChange={handleChange} />
-        </label>
+     
       <Input
         type="text"
-        placeholder="Search by Name"
+        placeholder="Search by Speciality"
         value={searchQuery}
         onChange={handleSearch}
       />
@@ -109,6 +113,7 @@ const DoctorsList = () => {
             <TableRow>
               <StyledTableCell align="center">Name</StyledTableCell>
               <StyledTableCell align="center">Email</StyledTableCell>
+              <StyledTableCell align="center">Speciality</StyledTableCell>
               <StyledTableCell align="center">Session Price</StyledTableCell>
               <StyledTableCell align="center">Avaliable</StyledTableCell>
               <StyledTableCell align="center"></StyledTableCell>
@@ -127,12 +132,14 @@ const DoctorsList = () => {
                 }}
                 
                 key={author._id}
+                onClick={() => window.location.href=`/payment?docid=${userId}&docid2=${author._id}`}
               >
                 <TableCell align="center">{author.Name}</TableCell>
                 <TableCell align="center">{author.Email}</TableCell>
+                <TableCell align="center">{author.Speciality}</TableCell>
                 <TableCell align="center">{author.SessionPrice}</TableCell>
                 <TableCell align="center">{author.Avaliable[0]}</TableCell>
-                <TableCell align="center"><Button value={author.Username} name='Username' onClick={() => window.location.href=`/payment`}>Reserve</Button></TableCell>
+                <TableCell align="center"><Button value={author._id} value2 ={author.Username} name='Username' type='submit' onClick={handlenotification} onSubmit={() => window.location.href=`/payment?docid=${userId}&docid2=${author._id}`}>Reserve</Button></TableCell>
               </TableRow>
             ))}
           </TableBody>

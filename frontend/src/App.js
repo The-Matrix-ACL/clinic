@@ -32,6 +32,7 @@ import ViewHealthPackage from './components/viewHealthPackage';
 import SubscribeToHealthPkg from './components/SubscribeToHealthPkg'
 import PaymentForm1 from './components/PaymentForm1'
 import Emaildoctor from './components/Emaildoctor'
+import Emaildoctor2 from './components/emaildoctor2'
 import ResetPassword from './components/ResetPassword'
 import ResetPasswordPatient from './components/resetPasswordPatient'
 import ResetPasswordDoctor from './components/ResetPasswordDoctor'
@@ -123,6 +124,8 @@ function App() {
         element={<Emailadmin/>}/>
         <Route path="/emaildoctor"
         element={<Emaildoctor/>}/>
+        <Route path="/emaildoctor2"
+        element={<Emaildoctor2/>}/>
         <Route path="/resetpassword"
         element={<ResetPasswordPatient/>}/>
         <Route path="/resetpassworddoctor"

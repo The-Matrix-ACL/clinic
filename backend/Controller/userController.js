@@ -2,11 +2,14 @@ const userModel = require('../Models/User.js');
 const doctorModel = require('../Models/Doctor.js');
 const adminstratorModel = require('../Models/Adminstrator.js');
 const requestModel = require('../Models/Requests.js');
+const notificationModel = require('../Models/Notifications.js');
 const appointmentsModel = require('../Models/Appointments.js');
 const  mongoose  = require('mongoose');
 const fs = require('fs');
 const multer = require('multer');
 const upload = multer();
+
+const nodemailer = require("nodemailer");
 
 
 
@@ -396,9 +399,9 @@ const Loginuser = async(req,res) =>
     return res.status(404).json({ error: 'No Account With this Username and Password were found!.' });
   }
   
- console.log(reqdoctor);
+ console.log(reqdoctor._id);
  
- res.status(200).json(reqdoctor);
+ res.status(201).json({docid:reqdoctor._id});
 }
 
 const changepassworduser = async (req, res) => {
@@ -575,13 +578,13 @@ const reserveTimeSlot = async (req,res) =>{
 }
 
 const getWalletCredit = async (req, res) => {
-  const Username = req.body.username; // Retrieve username from request body
-  console.log(Username);
+  const _id = req.body._id; // Retrieve username from request body
+  //console.log(Username);
   try {
       console.log("start");
-      console.log(Username);
+      //console.log(Username);
       console.log("end");
-      const user = await userModel.findOne({ Username: Username }); // Use the retrieved username
+      const user = await userModel.findOne({ _id: _id }); // Use the retrieved username
       console.log(user)
       await res.status(200).json(user);
   } catch (err) {
@@ -590,8 +593,8 @@ const getWalletCredit = async (req, res) => {
 };
 const payWithWallet = async (req, res) => {
   try {
-    const { amount, username } = req.body; 
-      const user = await userModel.findOne({ Username: username });
+    const { amount, _id } = req.body; 
+      const user = await userModel.findOne({ _id: _id });
 
       if (!user) {
           return res.status(404).json({ message: "User not found" });
@@ -609,17 +612,104 @@ const payWithWallet = async (req, res) => {
   }
 };
 
-const getappointments = async (req,res) =>
+const getappointments = async (req, res) => {
+  const userid = req.body.userid;
+  console.log(userid);
+
+  const user = await notificationModel.find({ doctorid: userid, isdoctor: true,Status:'Active' });
+
+  if (user.length > 0) {
+    const user1Ids = user.map(notification => notification.userid);
+    const user1 = await userModel.find({ _id: { $in: user1Ids } });
+    console.log(user1 + 'b');
+    return res.status(200).json(user1);
+  } else {
+    const user2 = await notificationModel.find({ userid: userid, isuser: true,Status:'Active' });
+    
+    if (user2.length > 0) {
+      const user2Ids = user2.map(notification => notification.doctorid);
+      const user3 = await doctorModel.find({ _id: { $in: user2Ids } });
+      console.log(user3 + 'd');
+      return res.status(200).json(user3);
+    } else {
+      return res.status(404).json("User not found");
+    }
+  }
+}
+const createnotification = async (req,res) =>
 {
-  const user1 = await userModel.find({
-    $or: [{ Username: "rec" }, { Username: "MazenPatient" }],
-  });
-  //const user2 = await userModel.findOne({ Username: "mazenget" });
-  console.log(user1);
-  res.status(200).json(user1);
+  const {userid,doctorid,subject,content} = req.body;
+  const user = await userModel.findOne({_id:userid});
+  const doctor = await doctorModel.findOne({_id:doctorid});
+  const username = user.Username;
+  console.log(username);
+  const doctorname = doctor.Username;
+  console.log(doctorname);
+  var status = "Active";
+  if(subject==="Appointment Cancelled"){
+    await notificationModel.findOneAndDelete({userid:userid,doctorid:doctorid,isuser:true});
+    await notificationModel.findOneAndDelete({userid:userid,doctorid:doctorid,isdoctor:true});
+    const deleted = await notificationModel.findOne({userid:userid,doctorid:doctorid,isdoctor:true});
+    console.log(deleted+'e');
+    status = "Cancelled"
+  }
+  const notification = await notificationModel.create({userid:userid , doctorid:doctorid , sender:doctorname,subject:subject,content:content +doctorname,isuser:true,Status:status});
+  const notification2 = await notificationModel.create({userid:userid , doctorid:doctorid , sender:username,subject:subject,content:content +username,isdoctor:true,Status:status});
+  console.log(notification);
+  console.log(notification2);
+  const mailOptions = {
+    from: "el7a2niYaMeleegy@hotmail.com",
+    to: "mazendarwish69@gmail.com",
+    subject:subject,
+    html: `<p>${content}</p><p style="color:tomato; font-size:25px; letter-spacing:2px;">${username +" & "+doctorname}</p>`,
+  };
+  await sendEmail(mailOptions);
+  res.status(200).json([notification,notification2]);
+}
+
+
+let transporter = nodemailer.createTransport({
+  host: "smtp-mail.outlook.com",
+  auth: {
+    user: "el7a2niYaMeleegy@hotmail.com",
+    pass: "PASSWORD12345678",
+  },
+});
+
+const sendEmail = async (mailOption) => {
+  try {
+    await transporter.sendMail(mailOption);
+    return;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getnotificationsuser = async (req,res) =>
+{
+  const docid = req.body.docid;
+  
+
+  const user = await notificationModel.find({userid:docid,isuser:true}) 
+  console.log(user);
+  res.status(200).json(user);
+
+}
+
+const getnotificationsdoctor = async (req,res) =>
+{
+  const docid = req.body.docid;
+  
+
+  const user = await notificationModel.find({doctorid:docid,isdoctor:true}) 
+  console.log(user);
+  res.status(200).json(user);
+
 }
 
 
 
 
-module.exports ={createUser,createDoctor,createAdminstrator,deleteUser,deleteDoctor,deleteAdminstrator,getDoctor,editDoctorInfo,filterByDateOrStatus,searchForPatient,getUsers,getDoctors,addPackage,updatePackage,deletePackage,addFamilyInfo,getFamilyMembers,searchForDoctor,searchForDoctorspeciality,searchForDoctordate,addHealthRecords,Loginuser,changepassworduser,addHealthRecord,resetpassword,getHealthRecords,removeHealthRecords,addfamilymemberpatient,getTimeSlots,reserveTimeSlot,addavaliabletime,getWalletCredit,payWithWallet,getappointments};
+
+
+module.exports ={createUser,createDoctor,createAdminstrator,deleteUser,deleteDoctor,deleteAdminstrator,getDoctor,editDoctorInfo,filterByDateOrStatus,searchForPatient,getUsers,getDoctors,addPackage,updatePackage,deletePackage,addFamilyInfo,getFamilyMembers,searchForDoctor,searchForDoctorspeciality,searchForDoctordate,addHealthRecords,Loginuser,changepassworduser,addHealthRecord,resetpassword,getHealthRecords,removeHealthRecords,addfamilymemberpatient,getTimeSlots,reserveTimeSlot,addavaliabletime,getWalletCredit,payWithWallet,getappointments,createnotification,getnotificationsuser,getnotificationsdoctor};

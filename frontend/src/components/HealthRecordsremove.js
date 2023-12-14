@@ -10,6 +10,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Input from '@mui/material/Input';
+import HealthRecords from './HealthRecords';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -26,19 +27,23 @@ const { useState } = require("react");
 const DoctorsList = () => {
   const [authors, setAuthors] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [filename, setfilename] = useState("");
   const [filteredAuthors, setFilteredAuthors] = useState([]);
   const [formData, setFormData] = useState({
     Username: '',
     
   });
-
+  //var filename =""; 
   const getAuthors = async (e) => {
     e.preventDefault();
     const emailInput = document.getElementById("Username");
     await axios.post('http://localhost:8000/gethealthrecords',{Username:emailInput.value}).then(
       (res) => {
         const authors = res.data;
-        window.alert(authors._id);
+
+        window.alert(authors.HealthRecords[0].dtype +" loaded sucessfuly");
+        const  filename = authors.HealthRecords[0].dtype;
+        setfilename(filename);
         setAuthors(authors);
         
       }
@@ -97,6 +102,9 @@ const DoctorsList = () => {
         <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
           <TableHead>
             <TableRow>
+            
+            <StyledTableCell align="center">Name</StyledTableCell>
+
             <StyledTableCell align="center"></StyledTableCell>
             
               <StyledTableCell align="center">File Name</StyledTableCell>
@@ -111,16 +119,16 @@ const DoctorsList = () => {
                 sx={{
                   "&:hover": {
                     cursor: "pointer",
-                    backgroundColor: "#f5f5f5",
+                    backgroundColor: "#000080",
                     width: "100%"
                   },
                 }}
                 
                 key={authors._id}
               >
-
+                <TableCell align="center">{authors.Name}</TableCell>
                 <TableCell align="center"><Button value={authors._id} onClick={handleReject}>Remove</Button></TableCell>
-                <TableCell align="center">{authors.HealthRecords[0].dtype}</TableCell>
+                <TableCell align="center">{filename}</TableCell>
                 
                 
               </TableRow>

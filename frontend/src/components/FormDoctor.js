@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './style.css'
 
 const DoctorForm = () => {
   const [formData, setFormData] = useState({
@@ -38,9 +39,36 @@ const DoctorForm = () => {
     }
   };
 
+  
+
   return (
+    <>
+
+    <div className="bot-bar2">
+    <div className="overlap-group">
+        <div className="rectangle2" />
+        <img className="acllogo2" alt="Acllogo" src="acllogo.png" />
+        <p className="text-wrapper2">© el7a2ni clinics and pharmacy 2023</p>
+    </div>
+    </div>
+
+    <div className="nav-bar2">
+        <div className="overlap-2">
+            <div className="rectangle-22" />
+            <div className="logo">
+                <div className="overlap-group-2">
+                    <img className="img2" alt="Acllogo" src="acllogo.png" />
+                    <div className="text-wrapper-22">clinic</div>
+                    <div className="logo-btn" />
+                </div>
+            </div>
+  </div>
+</div>
     
-    <form onSubmit={handleSubmit} encType='multipart/form-data'>
+    
+    
+    <form onSubmit={handleSubmit}  encType='multipart/form-data'>
+      <div className="formdoc">
       <label>
         Username:
         <input
@@ -175,7 +203,10 @@ const DoctorForm = () => {
       <br />
       <button type="submit"  onClick={() => window.alert("Submission Completed,Wating For Approval From The Adminstrator")}>Register</button>
       <a href="http://localhost:3000/logindoctor">Already have an Account</a>
+      </div>
     </form>
+    
+    </>
   );
 };
 

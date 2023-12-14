@@ -10,6 +10,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Input from '@mui/material/Input';
+//import datetime from './ResceduleButton'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -24,6 +25,10 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 const { useState } = require("react");
 
 const DoctorsList = () => {
+
+  const params = new URLSearchParams(window.location.search);
+  const userId = params.get('docid');
+
   const [authors, setAuthors] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredAuthors, setFilteredAuthors] = useState([]);
@@ -43,18 +48,67 @@ const DoctorsList = () => {
     event.preventDefault();
     
     const doctor = event.target.value;
-    window.alert("Reservation completed with "+ doctor)
+    //window.alert("Reservation completed with "+ doctor)
     try {
-      const response = await fetch('http://localhost:8000/addavaliabletime', {
-        method: 'PUT',
+      const response = await fetch('http://localhost:8000/createnotification', {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({userid:doctor,doctorid:userId,subject:"Chat Request",content:"there is a request to make a live meeting with you ,invitation id: 8011145782'+' pass: weYr3F By: "}),
       });
 
       // Handle the response as needed
       console.log(response);
+      window.location.href=`/payment?docid=${userId}&docid2=${doctor}`
+      //history.push('/filter');
+      //window.location.href="http://localhost:8000/createAdminstrator"
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    }
+  };
+
+  const handleReschedule = async (event) => {
+    event.preventDefault();
+    
+    const doctor = event.target.value;
+    //window.alert("Reservation completed with "+ doctor)
+    try {
+      const response = await fetch('http://localhost:8000/createnotification', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({userid:doctor,doctorid:userId,subject:"Appointment Rescedule",content:"Your Appointment have been Resceduled to Date: "+date+" By: "}),
+      });
+
+      // Handle the response as needed
+      console.log(response);
+      window.location.href=`/payment?docid=${userId}&docid2=${doctor}`
+      //history.push('/filter');
+      //window.location.href="http://localhost:8000/createAdminstrator"
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    }
+  };
+
+  const handleCancel = async (event) => {
+    event.preventDefault();
+    
+    const doctor = event.target.value;
+    //window.alert("Reservation completed with "+ doctor)
+    try {
+      const response = await fetch('http://localhost:8000/createnotification', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({userid:userId,doctorid:doctor,subject:"Appointment Cancelled",content:"Your Appointment have been Canceled With: "}),
+      });
+
+      // Handle the response as needed
+      console.log(response);
+      window.alert("Cancellation Completed")
       //history.push('/filter');
       //window.location.href="http://localhost:8000/createAdminstrator"
     } catch (error) {
@@ -63,7 +117,7 @@ const DoctorsList = () => {
   };
 
   const getAuthors = async () => {
-    await axios.get('http://localhost:8000/getappointments').then(
+    await axios.post('http://localhost:8000/getappointments',{userid:userId}).then(
       (res) => {
         const authors = res.data;
         console.log(authors);
@@ -108,6 +162,9 @@ const DoctorsList = () => {
               <StyledTableCell align="center">Email</StyledTableCell>
               <StyledTableCell align="center">Username</StyledTableCell>
               <StyledTableCell align="center">Reserved</StyledTableCell>
+              <StyledTableCell align="center">Status</StyledTableCell>
+              <StyledTableCell align="center"></StyledTableCell>
+              <StyledTableCell align="center"></StyledTableCell>
               <StyledTableCell align="center"></StyledTableCell>
             </TableRow>
           </TableHead>
@@ -124,14 +181,18 @@ const DoctorsList = () => {
                 }}
                 
                 key={author._id}
+                
               >
                 <TableCell align="center">{author.Name}</TableCell>
                 <TableCell align="center">{author.Email}</TableCell>
                 <TableCell align="center">{author.Username}</TableCell>
                 <TableCell align="center">{author.DateOfBirth}</TableCell>
-                <TableCell align="center"><Button value={author.Username} name='Username' onClick={() => window.location.href=`https://us05web.zoom.us/j/8011145782?pwd=6qQZprzfr11od523tbsaZ8bL4IMdLg.1
+                <TableCell align="center">{author.Status}</TableCell>
+                <TableCell align="center"><Button value={author._id} name='Username' onClick={handleReschedule}>Reschedule</Button></TableCell>
+                <TableCell align="center"><Button value={author._id} name='Username' onClick={handleCancel}>Cancel</Button></TableCell>
+                {author.Status!=='Cancelled' && (<TableCell align="center" onClick={() => window.location.href=`https://us05web.zoom.us/j/8011145782?pwd=6qQZprzfr11od523tbsaZ8bL4IMdLg.1
 
-`}>Chat</Button></TableCell>
+`}><Button value={author._id} name='Username' onClick={handleSubmit}>Chat</Button></TableCell>)}
               </TableRow>
             ))}
           </TableBody>

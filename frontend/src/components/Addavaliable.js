@@ -31,6 +31,12 @@ const UpdateDoctorForm = () => {
   };
 
   return (
+<>
+    {/* Header */}
+    <div style={{ backgroundColor: '#4584ff', width: '100%', padding: '10px', display: 'flex', alignItems: 'center' }}>
+    <img src="acllogo.png" alt="Logo" style={{ marginRight: '10px' ,width:'200px'}} />
+    <h1>El7a2ni Clinic</h1>
+  </div>
     
     <form onSubmit={handleSubmit}>
       <label>
@@ -47,13 +53,20 @@ const UpdateDoctorForm = () => {
       
       <label>
         Avaliable:
-        <input type="date"  name="avaliable" value={formData.avaliable} onChange={handleChange}/>
+        <input type="date"  name="Avaliable" value={formData.Avaliable} onChange={handleChange}/>
       </label>
       <br />
       
       
       <button type="submit">Add slot</button>
     </form>
+
+    {/* Footer */}
+    <div style={{ backgroundColor: '#4584ff', width: '100%', padding: '10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between',bottom:'1000px' }}>
+        <img src="acllogo.png" alt="Footer Logo" style={{ marginRight: '10px' ,width:'200px'}} />
+        <p style={{ marginRight: '10px',left:'-1000px'}}>© el7a2ni clinics and pharmacy 2023</p>
+      </div>
+    </>
   );
 };
 
