@@ -45,8 +45,16 @@ import HealthRecordsremove from './components/HealthRecordsremove';
 import Contract from './components/Contract';
 import SelectTimeSlot from './components/Addavaliable';
 import DoctorScheduler from './components/Viewappointments';
+import DoctorScheduler2 from './components/viewappointments2';
 import HealthRecords from './components/HealthRecords';
 import WalletViewer from './components/WalletViewer';
+
+import DoctorAppointments from './components/DoctorAppointments';
+import DoctorPrescriptions from './components/DoctorPrescriptions';
+import PatientPrescriptions from './components/PatientPrescriptions';
+
+import RescheduleButton from './components/ResceduleButton';
+import RescheduleButton2 from './components/ResceduleButton2';
 //import io from "socket.io-client";
 //import Chat from "./components/Chat";
 const stripePromise = loadStripe("pk_test_51K8pKeAHoHtEwtN5PmpH89COOO1E8kd0TT27PiU2NovDU5RPHP20Q2EXUjzstNx6yhBMwir9egTX1tCwO3D3ebvD00QujcIxos");
@@ -142,6 +150,8 @@ function App() {
         element={<Contract/>}/>
         <Route path="/viewappointments"
         element={<DoctorScheduler/>}/>
+        <Route path="/viewappointments2"
+        element={<DoctorScheduler2/>}/>
         <Route path="/addslot"
         element={<SelectTimeSlot/>}/>
         <Route path="/getWalletCredit"
@@ -150,6 +160,16 @@ function App() {
         element={<WalletViewer/>}/>
         <Route path="/getHealthRecords"
         element={<HealthRecords/>}/>
+        <Route path="/drapp"
+        element={<DoctorAppointments/>}/>
+        <Route path="/drpre"
+        element={<DoctorPrescriptions/>}/>
+        <Route path="/patientpre"
+        element={<PatientPrescriptions/>}/>
+        <Route path="/reschedule"
+        element={<RescheduleButton/>}/>
+        <Route path="/reschedule2"
+        element={<RescheduleButton2/>}/>
         <Route path="/payment" element={
           <Elements stripe={stripePromise}>
               <PaymentForm/>

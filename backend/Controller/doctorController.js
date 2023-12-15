@@ -2,6 +2,8 @@ const adminstratorModel = require('../Models/Doctor.js');
 const  mongoose  = require('mongoose');
 const doctorModel = require('../Models/Doctor.js');
 const userModel = require('../Models/User.js');
+const prescriptionModel = require('../Models/Prescriptions.js')
+const appointmentsModel = require('../Models/Appointments.js')
 
 const Logindoc = async(req,res) => 
 {
@@ -18,12 +20,12 @@ const Logindoc = async(req,res) =>
 }
 
 const changepassworddoctor = async (req, res) => {
-    const { Username, Password, newPassword} = req.body;
+    const { userid, Password, newPassword} = req.body;
     const updateFields = {};
     updateFields.Password = newPassword;
     
     const updatedDoctor = await doctorModel.findOneAndUpdate(
-        {Username: Username},
+        {_id: Username},
       updateFields,
       { new: true }
     );
@@ -88,9 +90,9 @@ const changepassworddoctor = async (req, res) => {
 
   }
   const Followup = async(req,res) =>{
-    const {Username,FollowUp} = req.body
+    const {userid,FollowUp} = req.body
     const date = new Date(FollowUp)
-    const result = await userModel.findOneAndUpdate({Username:Username},{FollowUp:date})
+    const result = await userModel.findOneAndUpdate({_id:userid},{FollowUp:date})
     console.log(result)
     res.status(200).json(result)
   }
@@ -120,4 +122,51 @@ const changepassworddoctor = async (req, res) => {
     res.json(chatData[userId]);
   };
 
-module.exports = {Logindoc,changepassworddoctor,resetpassworddoctor,addSlots,Followup,allchat,chat};
+
+  const getDrApp = async(req,res) =>{
+    const {Did} = req.params
+    try{
+      const app = await appointmentsModel.find({Did})    
+      res.status(200).json(app)
+
+    }
+    catch{
+      res.status(400).json({"Message":"Cannot Find Appointments"})
+    }
+  }
+
+  const rescheduleApp = async(req,res) =>{
+    const {appID,AppointmentDate,Did} = req.body
+    try{
+      const app = await appointmentsModel.findOneAndUpdate({_id:appID,Did},{AppointmentDate})
+      res.status(200).json(app)
+
+    }
+    catch{
+      res.status(400).json({"Message":"Cannot Change Appointment Date"})
+    }
+  }
+  const addPres = async(req,res) =>{
+    const {DName,PName,Did,Pid,AppointmentID,Prescription,AppointmentDate} = req.body
+    try{
+      const pres = await prescriptionModel.create({DName,PName,Did,Pid,AppointmentID,Prescription,AppointmentDate})
+      res.status(200).json(pres)
+    }
+    catch(err){
+      res.status(400).json(err)
+    }
+  }
+const viewDrPres = async(req,res) =>{
+  const {Did} = req.params
+  try{
+    const pres = await prescriptionModel.find({Did})
+    res.status(200).json(pres)
+  }
+  catch{
+    res.status(400).json({"Message":"Cannot Find Prescriptions"})
+  }
+
+
+}
+
+module.exports = {Logindoc,changepassworddoctor,resetpassworddoctor,addSlots,Followup,allchat,chat,rescheduleApp,getDrApp,addPres,viewDrPres};

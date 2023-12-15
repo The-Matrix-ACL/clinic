@@ -59,6 +59,14 @@ function Wallet() {
 
 
     return (
+        <>
+        
+        {/* Header */}
+    <div style={{ backgroundColor: '#4584ff', width: '100%', padding: '10px', display: 'flex', alignItems: 'center' }}>
+    <img src="acllogo.png" alt="Logo" style={{ marginRight: '10px' ,width:'200px'}} />
+    <h1>El7a2ni Clinic</h1>
+    </div>
+        
         <div>
             <h2>Wallet Credit: ${walletCredit}</h2>
             
@@ -68,11 +76,30 @@ function Wallet() {
                 value={paymentAmount} 
                 onChange={(e) => setPaymentAmount(e.target.value)} 
                 placeholder="Enter amount" 
+                style={{
+                    borderRadius: '5px', // Adjust the border radius as needed
+                    borderColor: 'navy', // Navy border color
+                    padding: '8px', // Adjust padding as needed
+                  }}
             />
-            <button onClick={handlePayment}>Pay</button>
+            <button style={{ backgroundColor: '#4584ff'}} onClick={handlePayment}>Pay</button>
             {isLoading && <div>Loading...</div>}
             {error && <div>Error: {error}</div>}
         </div>
+
+        {/* Page Content */}
+ <div style={{ backgroundImage: 'url("background.jpg")', backgroundSize: 'cover', height: '500px' }}>
+ {/* Add your main content here */}
+</div>
+
+
+{/* Footer */}
+<div style={{ backgroundColor: '#4584ff', width: '100%', padding: '10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <img src="acllogo.png" alt="Footer Logo" style={{ marginRight: '10px' ,width:'200px'}} />
+        <p style={{ marginRight: '10px',left:'-1000px'}}>© el7a2ni clinics and pharmacy 2023</p>
+      </div>
+
+</>
     );
 }
 

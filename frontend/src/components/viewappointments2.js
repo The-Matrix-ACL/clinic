@@ -59,7 +59,7 @@ const DoctorsList = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({userid:userId,doctorid:doctor,subject:"Chat Request",content:"there is a request to make a live meeting with you ,invitation id: 8011145782'+' pass: weYr3F By: "}),
+        body: JSON.stringify({userid:doctor,doctorid:userId,subject:"Chat Request",content:"there is a request to make a live meeting with you ,invitation id: 8011145782'+' pass: weYr3F By: "}),
       });
 
       // Handle the response as needed
@@ -87,7 +87,7 @@ const DoctorsList = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({userid:userId,doctorid:doctor,subject:"Followup Request",content:"there is a request to make a Followup between you and "}),
+        body: JSON.stringify({userid:doctor,doctorid:userId,subject:"Followup Request",content:"there is a request to make a Followup between you and "}),
       });
 
       // Handle the response as needed
@@ -143,7 +143,7 @@ const DoctorsList = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({userid:userId,doctorid:doctor,subject:"Appointment Cancelled",content:"Your Appointment have been Canceled With: "}),
+        body: JSON.stringify({userid:doctor,doctorid:userId,subject:"Appointment Cancelled",content:"Your Appointment have been Canceled With: "}),
       });
 
       // Handle the response as needed
@@ -179,7 +179,7 @@ const DoctorsList = () => {
     <>
     {/* Header */}
      <div style={{ backgroundColor: '#4584ff', width: '100%', padding: '10px', display: 'flex', alignItems: 'center' }}>
-     <img src="back.png" alt="Logo" style={{ marginRight: '10px' ,width:'50px'}} onClick={()=>window.location.href=`/homepagepatient?docid=${userId}`}/>
+     <img src="back.png" alt="Logo" style={{ marginRight: '10px' ,width:'50px'}} onClick={()=>window.location.href=`/homepagedoctor?docid=${userId}`}/>
      <img src="acllogo.png" alt="Logo" style={{ marginRight: '10px' ,width:'200px'}} />
      <h1>El7a2ni Clinic</h1>
      </div>
@@ -234,8 +234,8 @@ const DoctorsList = () => {
                 <TableCell align="center">{author.Email}</TableCell>
                 <TableCell align="center">{author.Username}</TableCell>
                 <TableCell align="center">{author.DateOfBirth}</TableCell>
-                {!(author.Gender) && <TableCell align="center"><Button value={author._id} name='Username' onClick={handlefollowup}>Request Followup</Button></TableCell>}
-                <TableCell align="center"><Button value={author._id} name='Username' onClick={()=>{window.location.href=`/reschedule?docid=${userId}&docid2=${author._id}`}}>Reschedule</Button></TableCell>
+                
+                <TableCell align="center"><Button value={author._id} name='Username' onClick={()=>{window.location.href=`/reschedule2?docid2=${author._id}&docid=${userId}`}}>Reschedule</Button></TableCell>
                 <TableCell align="center"><Button value={author._id} name='Username' onClick={handleCancel}>Cancel</Button></TableCell>
                 {author.Status!=='Cancelled' && (<TableCell align="center" onClick={() => window.location.href=`https://us05web.zoom.us/j/8011145782?pwd=6qQZprzfr11od523tbsaZ8bL4IMdLg.1
 

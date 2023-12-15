@@ -27,6 +27,30 @@ const MailInbox = () => {
     
   ];
 
+  const handlereject = async (event) => {
+    event.preventDefault();
+    
+    const doctor = event.target.value;
+    //window.alert("Reservation completed with "+ doctor)
+    try {
+      const response = await fetch('http://localhost:8000/createnotification', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({userid:doctor,doctorid:userId,subject:"Followup Reject",content:"The Followup request have been Rejected by: "}),
+      });
+
+      // Handle the response as needed
+      console.log(response);
+      window.alert("Cancellation Completed")
+      //history.push('/filter');
+      //window.location.href="http://localhost:8000/createAdminstrator"
+    } catch (error) {
+      console.error('Error submitting form:', error);
+    }
+  };
+
   const showMessage = (messageId) => {
     const message = authors.find((msg) => msg._id === messageId);
     setSelectedMessage(message);
@@ -59,6 +83,10 @@ const MailInbox = () => {
           <div>{selectedMessage.content}</div>
           {selectedMessage.subject === 'Chat Request' && (<a href="https://app.zoom.us/wc/join">Accept Invitation</a>)}
           
+          {selectedMessage.subject === 'Followup Request' && (<><a href={`/followup?docid=${userId}&docid2=${selectedMessage.userid}`}>Accept</a><button value={selectedMessage.userid} onClick={handlereject}>Reject</button></>)}
+ 
+
+
         </div>
       )}
     </div>

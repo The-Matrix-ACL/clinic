@@ -55,11 +55,15 @@ const AdminstratorForm = () => {
     
     {/* Header */}
     <div style={{ backgroundColor: '#4584ff', width: '100%', padding: '10px', display: 'flex', alignItems: 'center' }}>
+    <img src="back.png" alt="Logo" style={{ marginRight: '10px' ,width:'50px'}} onClick={()=>window.location.href=`/DoctorForm`}/>
     <img src="acllogo.png" alt="Logo" style={{ marginRight: '10px' ,width:'200px'}} />
     <h1>El7a2ni Clinic</h1>
     </div>
     <>
-    <form  onSubmit={handleSubmit}>
+    <div style={{ backgroundImage: 'url("background.jpg")', backgroundSize: 'cover', height: '500px' }}>
+ {/* Add your main content here */}
+
+ <form  onSubmit={handleSubmit}>
           <label>
               Username:
               <input
@@ -67,7 +71,12 @@ const AdminstratorForm = () => {
                   name="Username"
                   required
                   value={formData.Username}
-                  onChange={handleChange} />
+                  onChange={handleChange} 
+                  style={{
+                    borderRadius: '5px', // Adjust the border radius as needed
+                    borderColor: 'navy', // Navy border color
+                    padding: '8px', // Adjust padding as needed
+                  }}/>
           </label>
           <br />
           <label>
@@ -77,13 +86,21 @@ const AdminstratorForm = () => {
                   name="Password"
                   required
                   value={formData.Password}
-                  onChange={handleChange} />
+                  onChange={handleChange} 
+                  style={{
+                    borderRadius: '5px', // Adjust the border radius as needed
+                    borderColor: 'navy', // Navy border color
+                    padding: '8px', // Adjust padding as needed
+                  }}/>
           </label>
           <br />
 
           <button type="submit" >Login</button>
-          <a href="http://localhost:3000/emaildoctor">Forgot Your Password?</a>
+          <a href="http://localhost:3000/resetpassworddoctor">Forgot Your Password?</a>
       </form><img src="./acllogo.png"alt="logo" width="150px" height="80px"></img>
+
+      
+</div>
       </>
        {/* Footer */}
     <div style={{ backgroundColor: '#4584ff', width: '100%', padding: '10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between',bottom:'1000px' }}>

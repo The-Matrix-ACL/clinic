@@ -13,7 +13,7 @@ import Input from '@mui/material/Input';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.black,
+    backgroundColor: '#4584ff',
     color: theme.palette.common.white,
   },
   [`&.${tableCellClasses.body}`]: {
@@ -44,23 +44,33 @@ const DoctorsList = () => {
 
   const handlenotification = async (event) => {
     event.preventDefault();
-    
+  
     const doctor = event.target.value;
-    window.alert("Reservation completed with "+ doctor)
+    window.alert("Reservation completed with " + doctor);
+  
     try {
-      const response = await fetch('http://localhost:8000/createnotification', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({userid:userId,doctorid:doctor,subject:"Sceduling Appointment",content:"Appointment with has been successfully booked with "}),
-      });
-
-      // Handle the response as needed
-      console.log(response);
-      window.location.href=`/payment?docid=${userId}&docid2=${doctor}`
-      //history.push('/filter');
-      //window.location.href="http://localhost:8000/createAdminstrator"
+      const date = new Date('2023-12-12');
+      window.alert(date);
+  
+      // Use Promise.all to execute both fetch requests concurrently
+      await Promise.all([
+        fetch('http://localhost:8000/createnotification', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ userid: userId, doctorid: doctor, subject: "Scheduling Appointment", content: "Appointment has been successfully booked with " }),
+        }),
+        fetch('http://localhost:8000/reserveTimeSlot', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ Pid: userId, Did: doctor, ADate: "2023-11-11" }),
+        }),
+      ]);
+  
+      // Continue with the rest of your code or handle responses as needed
     } catch (error) {
       console.error('Error submitting form:', error);
     }
@@ -80,7 +90,7 @@ const DoctorsList = () => {
     const query = e.target.value;
     setSearchQuery(query);
     const filteredList = authors.filter(author =>
-      author.Speciality.toLowerCase().includes(query.toLowerCase())
+      author.Name.toLowerCase().includes(query.toLowerCase())
     );
     setFilteredAuthors(filteredList);
   };
@@ -89,6 +99,16 @@ const DoctorsList = () => {
   const userId = params.get('docid');
 
   return (
+
+    <>
+        
+    {/* Header */}
+<div style={{ backgroundColor: '#4584ff', width: '100%', padding: '10px', display: 'flex', alignItems: 'center' }}>
+<img src="back.png" alt="Logo" style={{ marginRight: '10px' ,width:'50px'}} onClick={()=>window.location.href=`/homepagepatient?docid=${userId}`}/>
+<img src="acllogo.png" alt="Logo" style={{ marginRight: '10px' ,width:'200px'}} />
+<h1>El7a2ni Clinic</h1>
+</div>
+
     <div className="UsersList">
       <Box sx={{ marginBottom: 2 }}>
         <Button variant="contained"
@@ -102,7 +122,7 @@ const DoctorsList = () => {
      
       <Input
         type="text"
-        placeholder="Search by Speciality"
+        placeholder="Search by Name"
         value={searchQuery}
         onChange={handleSearch}
       />
@@ -138,7 +158,7 @@ const DoctorsList = () => {
                 <TableCell align="center">{author.Email}</TableCell>
                 <TableCell align="center">{author.Speciality}</TableCell>
                 <TableCell align="center">{author.SessionPrice}</TableCell>
-                <TableCell align="center">{author.Avaliable[0]}</TableCell>
+                <TableCell align="center">{author.DateOfBirth}</TableCell>
                 <TableCell align="center"><Button value={author._id} value2 ={author.Username} name='Username' type='submit' onClick={handlenotification} onSubmit={() => window.location.href=`/payment?docid=${userId}&docid2=${author._id}`}>Reserve</Button></TableCell>
               </TableRow>
             ))}
@@ -146,6 +166,7 @@ const DoctorsList = () => {
         </Table>
       </TableContainer>
     </div>
+    </>
   );
 };
 

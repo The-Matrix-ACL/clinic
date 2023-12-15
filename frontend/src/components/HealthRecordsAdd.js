@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 
 const FamilyMemberForm = () => {
+
+  const params = new URLSearchParams(window.location.search);
+    const userId = params.get('docid');
+
   const [formData, setFormData] = useState({
-    HealthRecords: null,
-    Username: '',
+    HealthRecords: [],
+    userid: '',
   });
 
   const handleChange = (event) => {
@@ -24,7 +28,7 @@ const FamilyMemberForm = () => {
       const data = new FormData();
       data.append('HealthRecords', formData.HealthRecords);
       window.alert(formData.HealthRecords)
-      data.append('Username', formData.Username);
+      data.append('userid', userId);
 
       const response = await fetch('http://localhost:8000/addHealthRecords', {
         method: 'POST',
@@ -38,6 +42,15 @@ const FamilyMemberForm = () => {
   };
 
   return (
+    <>
+    {/* Header */}
+<div style={{ backgroundColor: '#4584ff', width: '100%', padding: '10px', display: 'flex', alignItems: 'center' }}>
+<img src="acllogo.png" alt="Logo" style={{ marginRight: '10px' ,width:'200px'}} />
+<h1>El7a2ni Clinic</h1>
+</div>
+  {/* Page Content */}
+  <div style={{ backgroundImage: 'url("background.jpg")', backgroundSize: 'cover', height: '500px' }}>
+ {/* Add your main content here */}
     <form onSubmit={handleSubmit} encType="multipart/form-data">
       <div>
         <label>Upload Document</label>
@@ -45,20 +58,18 @@ const FamilyMemberForm = () => {
       </div>
 
       <br />
-      <label>
-        Username:
-        <input
-          type="text"
-          name="Username"
-          required
-          value={formData.Username}
-          onChange={handleChange}
-        />
-      </label>
+      
       <br />
 
-      <button type="submit">Add Health Records</button>
+      <button style={{ backgroundColor: '#4584ff'}} type="submit">Add Health Records</button>
     </form>
+    </div>
+     {/* Footer */}
+     <div style={{ backgroundColor: '#4584ff', width: '100%', padding: '10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <img src="acllogo.png" alt="Footer Logo" style={{ marginRight: '10px' ,width:'200px'}} />
+        <p style={{ marginRight: '10px',left:'-1000px'}}>© el7a2ni clinics and pharmacy 2023</p>
+      </div>
+    </>
   );
 };
 

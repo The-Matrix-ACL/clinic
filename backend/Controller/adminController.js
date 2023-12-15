@@ -24,12 +24,12 @@ const Login = async(req,res) =>
 }
 
 const changepasswordadmin = async (req, res) => {
-    const { Username, Password, newPassword} = req.body;
+    const { userid, Password, newPassword} = req.body;
     const updateFields = {};
     updateFields.Password = newPassword;
     
     const updatedDoctor = await adminstratorModel.findOneAndUpdate(
-      {Username: Username },
+      {_id: userid },
       updateFields,
       { new: true }
     );
@@ -134,10 +134,12 @@ const changepasswordadmin = async (req, res) => {
       let { email, otp, newPassword } = req.body;
       const otpValidity = await verifyOTP({ email, otp });
       if (otpValidity) {
-        const modifiedPatient = await Patient.findOneAndUpdate(
+        const user =Patient.findOneAndUpdate(
           { Email:email },
-          { password: newPassword }
+          { Password: newPassword }
         );
+
+        
         console.log(otpValidity);
       }
       res.status(200).json({ valid: otpValidity });

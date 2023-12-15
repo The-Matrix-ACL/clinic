@@ -14,7 +14,7 @@ import HealthRecords from './HealthRecords';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.black,
+    backgroundColor: '#4584ff',
     color: theme.palette.common.white,
   },
   [`&.${tableCellClasses.body}`]: {

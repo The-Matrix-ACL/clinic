@@ -3,11 +3,15 @@ import React, { useState } from 'react';
 //import { ImgHTMLAttributes } from 'react';
 import './theme.css';
 const AdminstratorForm = () => {
+
+  const params = new URLSearchParams(window.location.search);
+  const userIdreal = params.get('docid2');
+  const userId = params.get('docid');
    // const history = useHistory();
  
     const [formData, setFormData] = useState({
-    Username: '',
-    FollowUp: '',
+   
+    DateOfBirth: '',
   });
 
   const handleChange = (event) => {
@@ -19,12 +23,14 @@ const AdminstratorForm = () => {
     event.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:8000/followup', {
-        method: 'POST',
+      const date = new Date(formData.DateOfBirth)
+      window.alert(date)
+      const response = await fetch('http://localhost:8000/reschedule', {
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({userid:userIdreal,docid:userId,DateOfBirth:date}),
       });
 
       // Handle the response as needed
@@ -39,23 +45,14 @@ const AdminstratorForm = () => {
   return (
     
     <><form  onSubmit={handleSubmit}>
-          <label>
-              type patient Username:
-              <input
-                  type="text"
-                  name="Username"
-                  required
-                  value={formData.Username}
-                  onChange={handleChange} />
-          </label>
-          <br />
+          
           <label>
               Followup:
               <input
                   type="date"
-                  name="FollowUp"
+                  name="DateOfBirth"
                   required
-                  value={formData.FollowUp}
+                  value={formData.DateOfBirth}
                   onChange={handleChange} />
           </label>
           <br />

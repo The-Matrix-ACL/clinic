@@ -172,7 +172,14 @@ const PatientForm = () => {
       const {docid} = responseData;
       // Handle the response as needed
       console.log(response);
-      window.location=`/homepagePatient?docid=${docid}`;
+      if(response.ok){
+        window.alert("Sign Up Successful!");
+        window.location.href = `/homepagePatient?docid=${docid}`
+      }
+      else{
+        window.alert("No User With this Username and Password found")
+      }
+      //window.location=`/homepagePatient?docid=${docid}`;
     } catch (error) {
       console.error('Error submitting form:', error);
     }
