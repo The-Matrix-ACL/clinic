@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+//import Prescriptions from '../../../src/Models/Prescriptions';
 
 const DoctorPrescriptions = () => {
     const params = new URLSearchParams(window.location.search);
     const userId = params.get('docid');
     const [prescriptions, setPrescriptions] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [pres, setPres] = useState(false);
+    const [preid, setpreid] = useState();
+    const[FormData,setFormData] = useState({Did:userId,Prescription:'',newPrescription:''});
 
     useEffect(() => {
         const fetchDoctorPrescriptions = async () => {
@@ -22,6 +26,26 @@ const DoctorPrescriptions = () => {
         fetchDoctorPrescriptions();
     }, []);
 
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((FormData) => ({ ...FormData, [name]: value }));
+    };
+    const handlePrescriptionSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.put('http://localhost:8000/editdrpres', FormData);
+            window.alert('Prescription added:', response.data.Prescription);
+            // Handle success, reset the form, or navigate to another page if needed
+   
+                
+                setPres(false)
+         
+        } catch (error) {
+            console.error('Error adding prescription:', error);
+            // Handle error, show an error message to the user, etc.
+        }
+    };
+
     return (
         <>
         {/* Header */}
@@ -32,8 +56,7 @@ const DoctorPrescriptions = () => {
         <h1>El7a2ni Clinic</h1>
         </div>
          {/* Page Content */}
-  <div style={{ backgroundImage: 'url("background.jpg")', backgroundSize: 'cover', height: '500px' }}>
- {/* Add your main content here */}
+  
         <div>
             <h2>Doctor Prescriptions</h2>
             {loading ? (
@@ -46,17 +69,41 @@ const DoctorPrescriptions = () => {
                             <p>Appointment Date : {prescription.AppointmentDate}</p>
                             <p>Prescription: {prescription.Prescription}</p>
                             <p>Status: {prescription.Status}</p>
+                            <button style={{ backgroundColor: '#4584ff'}} type="submit" name="Prescription" value={prescription.Prescription} onClick={()=>{
+            
+            setFormData({ ...FormData, Prescription: prescription.Prescription });;setPres(true);;setpreid(prescription._id)
+        }}>Edit Prescription</button>
+        {pres && preid === prescription._id &&
+        <form onSubmit={handlePrescriptionSubmit}>
+        <label htmlFor="Prescription">Prescription:</label>
+            <textarea
+                
+                name="newPrescription"
+                rows="4"
+                cols="50"
+                value={FormData.newPrescription}
+                onChange={handleInputChange}
+                
+            />
+
+            <button style={{ backgroundColor: '#4584ff'}} type="submit">Update Prescription</button>
+        </form>
+
+        }
                         </li>
                     ))}
                 </ul>
-            )}
+                
+            )
+            }
+               
         </div>
-        </div>
+        
          {/* Footer */}
-    <div style={{ backgroundColor: '#4584ff', width: '100%', padding: '10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between',bottom:'1000px' }}>
+    <footer style={{ backgroundColor: '#4584ff', width: '100%', padding: '10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between',bottom:'1000px' }}>
         <img src="acllogo.png" alt="Footer Logo" style={{ marginRight: '10px' ,width:'200px'}} />
         <p style={{ marginRight: '10px',left:'-1000px'}}>© el7a2ni clinics and pharmacy 2023</p>
-      </div>
+      </footer>
         </>
     );
 };

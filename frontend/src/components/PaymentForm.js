@@ -34,6 +34,7 @@ const PaymentForm = () => {
         <>
         {/* Header */}
         <div style={{ backgroundColor: '#4584ff', width: '100%', padding: '10px', display: 'flex', alignItems: 'center' }}>
+        <img src="back.png" alt="Logo" style={{ marginRight: '10px' ,width:'50px'}} onClick={()=>window.location.href=`/ListDoctors?docid=${userId}`}/>
         <img src="acllogo.png" alt="Logo" style={{ marginRight: '10px' ,width:'200px'}} />
         <h1>El7a2ni Clinic</h1>
         </div>
@@ -47,7 +48,7 @@ const PaymentForm = () => {
                 amount={1000}
                 name="Your Product Name"
             />
-            <button type="submit" onClick={() => window.location.href = `/getWalletCredit?docid=${userId}`}>Wallet</button>
+            <button type="submit" onClick={() => window.location.href = `/getWalletCredit?docid=${userId}&docid2=${userId2}`}>Wallet</button>
         </div>
         </div>
                {/* Footer */}

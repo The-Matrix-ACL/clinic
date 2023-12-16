@@ -1,6 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
+
+const PrescriptionItem = ({ prescription }) => (
+    <div>
+      <p>Doctor Name : {prescription.DName}</p>
+      <p>Appointment Date : {prescription.AppointmentDate}</p>
+      <p>Prescription: {prescription.Prescription}</p>
+      <p>Status: {prescription.Status}</p>
+    </div>
+  );
+
 const PatientPrescriptions = () => {
 
     const params = new URLSearchParams(window.location.search);
@@ -8,6 +18,8 @@ const PatientPrescriptions = () => {
 
     const [prescriptions, setPrescriptions] = useState([]);
     const [loading, setLoading] = useState(true);
+
+    
 
     useEffect(() => {
         const fetchPatientPrescriptions = async () => {
@@ -23,6 +35,8 @@ const PatientPrescriptions = () => {
 
         fetchPatientPrescriptions();
     }, []);
+
+   
 
     return (
         <>
@@ -45,6 +59,7 @@ const PatientPrescriptions = () => {
                             <p>Appointment Date : {prescription.AppointmentDate}</p>
                             <p>Prescription: {prescription.Prescription}</p>
                             <p>Status: {prescription.Status}</p>
+               
                         </li>
                     ))}
                 </ul>

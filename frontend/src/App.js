@@ -55,6 +55,9 @@ import PatientPrescriptions from './components/PatientPrescriptions';
 
 import RescheduleButton from './components/ResceduleButton';
 import RescheduleButton2 from './components/ResceduleButton2';
+
+import Resetpassword from './components/resetPassworddoctor1'
+import Resetpassword2 from './components/ResetPasswordDoctor'
 //import io from "socket.io-client";
 //import Chat from "./components/Chat";
 const stripePromise = loadStripe("pk_test_51K8pKeAHoHtEwtN5PmpH89COOO1E8kd0TT27PiU2NovDU5RPHP20Q2EXUjzstNx6yhBMwir9egTX1tCwO3D3ebvD00QujcIxos");
@@ -138,6 +141,10 @@ function App() {
         element={<ResetPasswordPatient/>}/>
         <Route path="/resetpassworddoctor"
         element={<ResetPasswordDoctor/>}/>
+        <Route path="/resetpassword1"
+        element={<Resetpassword/>}/>
+        <Route path="/resetpassword2"
+        element={<Resetpassword2/>}/>
          <Route path="/viewhealthpackages"
         element={<ViewHealthPackage/>}/>
         <Route path="/subscribetohealthpackage"

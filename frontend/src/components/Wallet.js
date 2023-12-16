@@ -4,6 +4,7 @@ function Wallet() {
 
     const params = new URLSearchParams(window.location.search);
     const userId = params.get('docid');
+    const userId2 = params.get('docid2');
 
     const [walletCredit, setWalletCredit] = useState(0);
     const [isLoading, setIsLoading] = useState(false);
@@ -39,7 +40,7 @@ function Wallet() {
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ amount: Number(paymentAmount),_id: userId })
+            body: JSON.stringify({ amount: Number(userId2),_id: userId })
         })
         .then(response => response.json())
         .then(data => {
@@ -63,6 +64,7 @@ function Wallet() {
         
         {/* Header */}
     <div style={{ backgroundColor: '#4584ff', width: '100%', padding: '10px', display: 'flex', alignItems: 'center' }}>
+    <img src="back.png" alt="Logo" style={{ marginRight: '10px' ,width:'50px'}} onClick={()=>window.location.href=`/payment?docid=${userId}&docid2=${userId2}`}/>
     <img src="acllogo.png" alt="Logo" style={{ marginRight: '10px' ,width:'200px'}} />
     <h1>El7a2ni Clinic</h1>
     </div>
@@ -71,17 +73,7 @@ function Wallet() {
             <h2>Wallet Credit: ${walletCredit}</h2>
             
             <button onClick={fetchWalletCredit}>Check Wallet Credit</button>
-            <input 
-                type="number" 
-                value={paymentAmount} 
-                onChange={(e) => setPaymentAmount(e.target.value)} 
-                placeholder="Enter amount" 
-                style={{
-                    borderRadius: '5px', // Adjust the border radius as needed
-                    borderColor: 'navy', // Navy border color
-                    padding: '8px', // Adjust padding as needed
-                  }}
-            />
+            <p>Session Price = {userId2}</p>
             <button style={{ backgroundColor: '#4584ff'}} onClick={handlePayment}>Pay</button>
             {isLoading && <div>Loading...</div>}
             {error && <div>Error: {error}</div>}

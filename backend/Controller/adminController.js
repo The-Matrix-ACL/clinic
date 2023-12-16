@@ -77,15 +77,15 @@ const changepasswordadmin = async (req, res) => {
   }
 
   const resetpasswordadmin = async (req,res) => {
-    const {otp,Username,newPassword} = req.body
-    
-    if(otp == 2421234){
+    const {otpreal,otp,Username,newPassword} = req.body
+    console.log(otp+"a")
+    if(otp === otpreal){
       try{
         
         const updateFields = {};
       updateFields.Password = newPassword;
     
-      const updated = await adminstratorModel.findOneAndUpdate(
+      const updated = await Patient.findOneAndUpdate(
       {Username: Username },
       updateFields,
       { new: true }
@@ -95,7 +95,7 @@ const changepasswordadmin = async (req, res) => {
       throw new Error('Username not found')
     }
     else{
-      res.status(200).json(updated)
+      res.status(200).json({docid:updated._id})
     }
       }catch(error){
         res.status(404).json({error:"Username not found"})
@@ -185,7 +185,7 @@ const changepasswordadmin = async (req, res) => {
         message,
         duration,
       });
-      res.status(200).json(createdOTP);
+      res.status(200).json({docid:createdOTP.otp});
     } catch (error) {
       res.status(400).send(error.message);
     }

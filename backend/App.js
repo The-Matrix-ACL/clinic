@@ -12,9 +12,9 @@ require('dotenv').config();
 // add MONGO_URI in .env file
 //Check db connection links in README file
 const MongoURI = 'mongodb+srv://thematrix:thematrix@el7a2nidb.lrjz9fm.mongodb.net/?retryWrites=true&w=majority';
-const {createUser, createDoctor, createAdminstrator, deleteDoctor, deleteAdminstrator, deleteUser, getDoctor,editDoctorInfo,filterByDateOrStatus,searchForPatient, getUsers, getDoctors, addPackage, updatePackage, deletePackage,addFamilyInfo,getFamilyMembers, searchForDoctor, searchForDoctorspeciality, searchForDoctordate, addHealthRecords, Loginuser,changepassworduser,addHealthRecord, resetpassword, getHealthRecords, removeHealthRecords, addfamilymemberpatient, getTimeSlots, reserveTimeSlot, addavaliabletime, getWalletCredit, payWithWallet, getappointments, createnotification, getnotificationsuser, getnotificationsdoctor, viewPatPres, reschedule}= require('./Controller/userController')
+const {createUser, createDoctor, createAdminstrator, deleteDoctor, deleteAdminstrator, deleteUser, getDoctor,editDoctorInfo,filterByDateOrStatus,searchForPatient, getUsers, getDoctors, addPackage, updatePackage, deletePackage,addFamilyInfo,getFamilyMembers, searchForDoctor, searchForDoctorspeciality, searchForDoctordate, addHealthRecords, Loginuser,changepassworduser,addHealthRecord, resetpassword, getHealthRecords, removeHealthRecords, addfamilymemberpatient, getTimeSlots, reserveTimeSlot, addavaliabletime, getWalletCredit, payWithWallet, getappointments, createnotification, getnotificationsuser, getnotificationsdoctor, viewPatPres, reschedule, getappointments2}= require('./Controller/userController')
 const {Login, changepasswordadmin, acceptdoctor, getRequests, resetpasswordadmin, rejectdoc, addHealthPackage, requestOTP} = require('./Controller/adminController');
-const {Logindoc, changepassworddoctor, resetpassworddoctor, addSlots, Followup, chat, allchat, rescheduleApp, getDrApp, addPres, viewDrPres} = require('./Controller/doctorController');
+const {Logindoc, changepassworddoctor, resetpassworddoctor, addSlots, Followup, chat, allchat, rescheduleApp, getDrApp, addPres, viewDrPres, editDrPres} = require('./Controller/doctorController');
 const {createBlog, getBlogs, editBlog} = require('./Controller/userControllerold');
 //App variables
 const app = express();
@@ -95,7 +95,7 @@ app.post("/rejectdoc", rejectdoc);
 app.get("/getRequests",getRequests);
 app.put("/resetpassword",resetpassword)
 app.put("/resetpassworddoctor",resetpassworddoctor)
-app.put("/resetpassword",resetpasswordadmin)
+app.put("/resetpasswordadmin",resetpasswordadmin)
 app.post("/followup",Followup)
 app.post("/addhealthpackage",addHealthPackage)
 app.post("/gethealthrecords",getHealthRecords)
@@ -115,6 +115,7 @@ app.post("/requestOTP",requestOTP)
 app.get("chat/:userId",allchat);
 app.post('/chat',chat)
 app.post("/getappointments",getappointments);
+app.post("/getappointments2",getappointments2);
 app.post("/createnotification",createnotification);
 app.post("/getnotificationsuser",getnotificationsuser)
 app.post("/getnotificationsdoctor",getnotificationsdoctor)
@@ -125,6 +126,7 @@ app.get("/getDrApp/:Did",getDrApp);
 app.post("/addPres",addPres);
 app.get("/viewDrPres/:Did",viewDrPres);
 app.get("/viewPatPres/:Pid",viewPatPres);
+app.put("/editdrpres",editDrPres)
 app.put("/reschedule",reschedule);
 app.post('/payment', async (req, res) => {
   try {

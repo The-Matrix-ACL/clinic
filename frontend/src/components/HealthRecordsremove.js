@@ -25,6 +25,8 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 const { useState } = require("react");
 
 const DoctorsList = () => {
+  const params = new URLSearchParams(window.location.search);
+  const userId = params.get('docid');
   const [authors, setAuthors] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filename, setfilename] = useState("");
@@ -37,7 +39,7 @@ const DoctorsList = () => {
   const getAuthors = async (e) => {
     e.preventDefault();
     const emailInput = document.getElementById("Username");
-    await axios.post('http://localhost:8000/gethealthrecords',{Username:emailInput.value}).then(
+    await axios.post('http://localhost:8000/gethealthrecords',{Username:"matrixcheck3"}).then(
       (res) => {
         const authors = res.data;
 
@@ -81,6 +83,15 @@ const DoctorsList = () => {
   }
 
   return (
+
+    <>
+        
+    {/* Header */}
+<div style={{ backgroundColor: '#4584ff', width: '100%', padding: '10px', display: 'flex', alignItems: 'center' }}>
+<img src="back.png" alt="Logo" style={{ marginRight: '10px' ,width:'50px'}} onClick={()=>window.location.href=`/homepagepatient?docid=${userId}`}/>
+<img src="acllogo.png" alt="Logo" style={{ marginRight: '10px' ,width:'200px'}} />
+<h1>El7a2ni Clinic</h1>
+</div>
     <div className="UsersList">
       <Box sx={{ marginBottom: 2 }}>
         <Button variant="contained"
@@ -93,10 +104,7 @@ const DoctorsList = () => {
       </Box>
 
      
-      <label for="Username">
-          Username
-          <input type="text" name="" id="Username" />
-        </label>
+      
 
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
@@ -137,6 +145,7 @@ const DoctorsList = () => {
         </Table>
       </TableContainer>
     </div>
+    </>
   );
 };
 

@@ -96,7 +96,7 @@ const AdminstratorForm = () => {
           <br />
 
           <button type="submit" >Login</button>
-          <a href="http://localhost:3000/resetpassworddoctor">Forgot Your Password?</a>
+          <a href="http://localhost:3000/resetpassword1">Forgot Your Password?</a>
       </form><img src="./acllogo.png"alt="logo" width="150px" height="80px"></img>
 
       

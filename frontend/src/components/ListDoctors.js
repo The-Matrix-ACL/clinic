@@ -46,11 +46,11 @@ const DoctorsList = () => {
     event.preventDefault();
   
     const doctor = event.target.value;
-    window.alert("Reservation completed with " + doctor);
+    //window.alert("Reservation completed with " + doctor);
   
     try {
       const date = new Date('2023-12-12');
-      window.alert(date);
+      //window.alert(date);
   
       // Use Promise.all to execute both fetch requests concurrently
       await Promise.all([
@@ -152,14 +152,14 @@ const DoctorsList = () => {
                 }}
                 
                 key={author._id}
-                onClick={() => window.location.href=`/payment?docid=${userId}&docid2=${author._id}`}
+                onClick={() => window.location.href=`/payment?docid=${userId}&docid2=${author.SessionPrice}`}
               >
                 <TableCell align="center">{author.Name}</TableCell>
                 <TableCell align="center">{author.Email}</TableCell>
                 <TableCell align="center">{author.Speciality}</TableCell>
                 <TableCell align="center">{author.SessionPrice}</TableCell>
                 <TableCell align="center">{author.DateOfBirth}</TableCell>
-                <TableCell align="center"><Button value={author._id} value2 ={author.Username} name='Username' type='submit' onClick={handlenotification} onSubmit={() => window.location.href=`/payment?docid=${userId}&docid2=${author._id}`}>Reserve</Button></TableCell>
+                <TableCell align="center"><Button value={author._id} value2 ={author.Username} name='Username' type='submit' onClick={handlenotification} onSubmit={() => window.location.href=`/payment?docid=${userId}&docid2=${author.SessionPrice}`}>Reserve</Button></TableCell>
               </TableRow>
             ))}
           </TableBody>

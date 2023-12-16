@@ -49,6 +49,7 @@ const FancyDateInput = () => {
       console.log(response2);
       //window.location.href=`/payment?docid=${userId}&docid2=${doctor}`
       //history.push('/filter');
+      window.alert("Reschedule Completed!")
       //window.location.href="http://localhost:8000/createAdminstrator"
     } catch (error) {
       console.error('Error submitting form:', error);

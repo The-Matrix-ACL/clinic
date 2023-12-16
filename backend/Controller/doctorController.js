@@ -37,9 +37,9 @@ const changepassworddoctor = async (req, res) => {
   };
 
   const resetpassworddoctor = async (req,res) => {
-    const {otp,Username,newPassword} = req.body
-    
-    if(otp == 2421234){
+    const {otpreal,otp,Username,newPassword} = req.body
+    console.log(otp+"a")
+    if(otp === otpreal){
       try{
         
         const updateFields = {};
@@ -55,7 +55,7 @@ const changepassworddoctor = async (req, res) => {
       throw new Error('Username not found')
     }
     else{
-      res.status(200).json(updated)
+      res.status(200).json({docid:updated._id})
     }
       }catch(error){
         res.status(404).json({error:"Username not found"})
@@ -165,8 +165,23 @@ const viewDrPres = async(req,res) =>{
   catch{
     res.status(400).json({"Message":"Cannot Find Prescriptions"})
   }
-
-
 }
 
-module.exports = {Logindoc,changepassworddoctor,resetpassworddoctor,addSlots,Followup,allchat,chat,rescheduleApp,getDrApp,addPres,viewDrPres};
+  const editDrPres = async(req,res) =>{
+    const {Did,Prescription,newPrescription} = req.body
+    try{
+      const pres = await prescriptionModel.findOneAndUpdate({Did:Did,Prescription:Prescription},{Prescription:newPrescription})
+      console.log(pres)
+      res.status(200).json(pres)
+    }
+    catch{
+      res.status(400).json({"Message":"Cannot Find Prescriptions"})
+    }
+  
+  
+  }
+
+
+
+
+module.exports = {Logindoc,changepassworddoctor,resetpassworddoctor,addSlots,Followup,allchat,chat,rescheduleApp,getDrApp,addPres,viewDrPres,editDrPres};

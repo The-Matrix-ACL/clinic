@@ -395,7 +395,12 @@ userModel.findOneAndUpdate({Username:Username},{$push:{HealthRecords:
 const Loginuser = async(req,res) => 
 {
   const {Username,Password} = req.body;
-  const reqdoctor = await userModel.findOne({ Username: Username});
+  var number = 200;
+  var reqdoctor = await userModel.findOne({ Username: Username});
+  if(!(reqdoctor)){
+    reqdoctor = await adminstratorModel.findOne({Username:Username});
+    number = 201;
+  }
   //console.log(Password!==reqdoctor.Password)
  if (!(reqdoctor)|| Password!=reqdoctor.Password) {
     return res.status(404).json({ error: 'No Account With this Username and Password were found!.' });
@@ -403,7 +408,7 @@ const Loginuser = async(req,res) =>
   
  console.log(reqdoctor._id);
  
- res.status(201).json({docid:reqdoctor._id});
+ res.status(number).json({docid:reqdoctor._id});
 }
 
 const changepassworduser = async (req, res) => {
@@ -640,6 +645,20 @@ const getappointments = async (req, res) => {
     }
   }
 }
+
+const getappointments2 = async (req, res) => {
+  const userid = req.body.userid;
+  console.log(userid);
+
+  const user = await notificationModel.find({ doctorid: userid, isdoctor: true,Status:'Active' });
+
+  if (user.length > 0) {
+    const user1Ids = user.map(notification => notification.userid);
+    const user1 = await userModel.find({ _id: { $in: user1Ids } });
+    console.log(user1 + 'b');
+    return res.status(200).json(user1);
+  } 
+}
 const createnotification = async (req,res) =>
 {
   const {userid,doctorid,subject,content} = req.body;
@@ -651,8 +670,8 @@ const createnotification = async (req,res) =>
   console.log(doctorname);
   var status = "Active";
   if(subject==="Appointment Cancelled"){
-    await notificationModel.findOneAndDelete({userid:userid,doctorid:doctorid,isuser:true});
-    await notificationModel.findOneAndDelete({userid:userid,doctorid:doctorid,isdoctor:true});
+    await notificationModel.deleteMany({userid:userid,doctorid:doctorid,isuser:true});
+    await notificationModel.deleteMany({userid:userid,doctorid:doctorid,isdoctor:true});
     await userModel.findOneAndUpdate({_id:userid},{WalletCredit:user.WalletCredit+doctor.SessionPrice})
     const deleted = await notificationModel.findOne({userid:userid,doctorid:doctorid,isdoctor:true});
     console.log(deleted+'e');
@@ -754,4 +773,4 @@ const reschedule = async(req,res) =>{
 
 
 
-module.exports ={createUser,createDoctor,createAdminstrator,deleteUser,deleteDoctor,deleteAdminstrator,getDoctor,editDoctorInfo,filterByDateOrStatus,searchForPatient,getUsers,getDoctors,addPackage,updatePackage,deletePackage,addFamilyInfo,getFamilyMembers,searchForDoctor,searchForDoctorspeciality,searchForDoctordate,addHealthRecords,Loginuser,changepassworduser,addHealthRecord,resetpassword,getHealthRecords,removeHealthRecords,addfamilymemberpatient,getTimeSlots,reserveTimeSlot,addavaliabletime,getWalletCredit,payWithWallet,getappointments,createnotification,getnotificationsuser,getnotificationsdoctor,viewPatPres,reschedule};
+module.exports ={createUser,createDoctor,createAdminstrator,deleteUser,deleteDoctor,deleteAdminstrator,getDoctor,editDoctorInfo,filterByDateOrStatus,searchForPatient,getUsers,getDoctors,addPackage,updatePackage,deletePackage,addFamilyInfo,getFamilyMembers,searchForDoctor,searchForDoctorspeciality,searchForDoctordate,addHealthRecords,Loginuser,changepassworduser,addHealthRecord,resetpassword,getHealthRecords,removeHealthRecords,addfamilymemberpatient,getTimeSlots,reserveTimeSlot,addavaliabletime,getWalletCredit,payWithWallet,getappointments,createnotification,getnotificationsuser,getnotificationsdoctor,viewPatPres,reschedule,getappointments2};

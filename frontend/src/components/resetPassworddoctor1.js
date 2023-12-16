@@ -66,7 +66,7 @@ const ResetPasswordPatient = () => {
           pathname: '/resetpasswordadmin',
           state: { docid: docid },
         });*/
-        window.location.href = `/resetpasswordadmin?docid=${docid}`
+        window.location.href = `/resetpassword2?docid=${docid}`
       }
     } catch (error) {
       console.log("here");

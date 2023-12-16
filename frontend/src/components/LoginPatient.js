@@ -37,9 +37,13 @@ const AdminstratorForm = () => {
       //window.alert(response);
       //history.push('/filter');
       
-      if(response.ok){
+      if(response.status == 200){
         window.alert("Login Successful");
         window.location.href = `/homepagePatient?docid=${docid}`
+      }
+      else if(response.status == 201){
+        window.alert("Login Successful");
+        window.location.href = `/homepageAdmin?docid=${docid}`
       }
       else{
         window.alert("No User With this Username and Password found")
