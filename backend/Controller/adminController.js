@@ -4,6 +4,11 @@ const doctorModel = require('../Models/Doctor.js');
 const  mongoose  = require('mongoose');
 const healthPackageModel = require('../Models/HealthPackage.js');
 
+const nodemailer = require("nodemailer");
+const OTP = require("../Models/OTP1.js");
+
+const Patient = require('../Models/User.js');
+
 const Login = async(req,res) => 
 {
   const {Username,Password} = req.body;
@@ -19,12 +24,12 @@ const Login = async(req,res) =>
 }
 
 const changepasswordadmin = async (req, res) => {
-    const { Username, Password, newPassword} = req.body;
+    const { userid, Password, newPassword} = req.body;
     const updateFields = {};
     updateFields.Password = newPassword;
     
     const updatedDoctor = await adminstratorModel.findOneAndUpdate(
-      {Username: Username },
+      {_id: userid },
       updateFields,
       { new: true }
     );
@@ -72,15 +77,15 @@ const changepasswordadmin = async (req, res) => {
   }
 
   const resetpasswordadmin = async (req,res) => {
-    const {otp,Username,newPassword} = req.body
-    
-    if(otp == 2421234){
+    const {otpreal,otp,Username,newPassword} = req.body
+    console.log(otp+"a")
+    if(otp === otpreal){
       try{
         
         const updateFields = {};
       updateFields.Password = newPassword;
     
-      const updated = await adminstratorModel.findOneAndUpdate(
+      const updated = await Patient.findOneAndUpdate(
       {Username: Username },
       updateFields,
       { new: true }
@@ -90,7 +95,7 @@ const changepasswordadmin = async (req, res) => {
       throw new Error('Username not found')
     }
     else{
-      res.status(200).json(updated)
+      res.status(200).json({docid:updated._id})
     }
       }catch(error){
         res.status(404).json({error:"Username not found"})
@@ -123,5 +128,132 @@ const changepasswordadmin = async (req, res) => {
     }
   };
 
+  const verify = async (req, res) => {
+    try {
+      console.log("xghs");
+      let { email, otp, newPassword } = req.body;
+      const otpValidity = await verifyOTP({ email, otp });
+      if (otpValidity) {
+        const user =Patient.findOneAndUpdate(
+          { Email:email },
+          { Password: newPassword }
+        );
 
-module.exports = {Login,changepasswordadmin,acceptdoctor,rejectdoc,getRequests,resetpasswordadmin,addHealthPackage};
+        
+        console.log(otpValidity);
+      }
+      res.status(200).json({ valid: otpValidity });
+    } catch (error) {
+      res.status(400).send(error.message);
+    }
+  };
+  
+  //helper functions
+  
+  const verifyOTP = async ({ email, otp }) => {
+    try {
+      if (!(email && otp)) {
+        throw Error("Provide values for Email and OTP");
+      }
+      const matchedOTPRecord = await OTP.findOne({ email:email });
+      if (!matchedOTPRecord) {
+        throw Error("No OTP Record Found");
+      }
+      const { expiresAt } = matchedOTPRecord;
+      if (expiresAt < Date.now()) {
+        await OTP.deleteOne({ email:email });
+        throw Error("OTP has expired. Please request another one");
+      }
+      const otpInRecord = matchedOTPRecord.otp;
+      if (otpInRecord == otp) {
+        return true;
+      } else return false;
+    } catch (error) {
+      throw error;
+    }
+  };
+  
+  const requestOTP =  async (req, res) => {
+    try {
+      const { email } = req.body;
+      const subject = "Email Verification";
+      message = "Verify your email with the code below";
+      duration = 1;
+      const createdOTP = await sendOTP({
+        email,
+        subject,
+        message,
+        duration,
+      });
+      res.status(200).json({docid:createdOTP.otp});
+    } catch (error) {
+      res.status(400).send(error.message);
+    }
+  };
+  
+  //helper functions
+  const sendOTP = async ({ email, subject, message, duration = 1 }) => {
+    try {
+      if (!(email && subject && message)) {
+        throw error("provide values for email, subject and message");
+      }
+      await OTP.deleteOne({ email });
+      const generatedOTP = await generateOTP();
+      console.log(generatedOTP);
+      const mailOptions = {
+        from: "el7a2niYaMeleegy@hotmail.com",
+        to: email,
+        subject,
+        html: `<p>${message}</p><p style="color:tomato; font-size:25px; letter-spacing:2px;"><b>${generatedOTP}</b></p>`,
+      };
+      await sendEmail(mailOptions);
+  
+      const newOTP = await new OTP({
+        email,
+        otp: generatedOTP,
+        createdAT: Date.now(),
+        expiresAt: Date.now() + 3600000 * +duration,
+      });
+      const createdOTPRecord = await newOTP.save();
+      return createdOTPRecord;
+    } catch (error) {
+      throw error;
+    }
+  };
+  
+  const generateOTP = async () => {
+    try {
+      return `${Math.floor(1000 + Math.random() * 9000)}`;
+    } catch (error) {
+      throw error;
+    }
+  };
+  
+  let transporter = nodemailer.createTransport({
+    host: "smtp-mail.outlook.com",
+    auth: {
+      user: "el7a2niYaMeleegy@hotmail.com",
+      pass: "PASSWORD12345678",
+    },
+  });
+  
+  transporter.verify((error, success) => {
+    if (error) {
+      console.log(error);
+    } else {
+      console.log("ready for message");
+      console.log(success);
+    }
+  });
+  
+  const sendEmail = async (mailOption) => {
+    try {
+      await transporter.sendMail(mailOption);
+      return;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+
+module.exports = {Login,changepasswordadmin,acceptdoctor,rejectdoc,getRequests,resetpasswordadmin,addHealthPackage,verify,requestOTP};

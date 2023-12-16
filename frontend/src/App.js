@@ -1,4 +1,5 @@
 import './App.css';
+//import './components/chat.css'
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 import CreateAdmin from './components/FormAdminstrator';
 import CreateDoctor from './components/FormDoctor';
@@ -31,7 +32,9 @@ import ViewHealthPackage from './components/viewHealthPackage';
 import SubscribeToHealthPkg from './components/SubscribeToHealthPkg'
 import PaymentForm1 from './components/PaymentForm1'
 import Emaildoctor from './components/Emaildoctor'
+import Emaildoctor2 from './components/emaildoctor2'
 import ResetPassword from './components/ResetPassword'
+import ResetPasswordPatient from './components/resetPasswordPatient'
 import ResetPasswordDoctor from './components/ResetPasswordDoctor'
 import ResetPasswordAdmin from './components/ResetPasswordAdmin'
 import PaymentForm from './components/PaymentForm'
@@ -42,17 +45,40 @@ import HealthRecordsremove from './components/HealthRecordsremove';
 import Contract from './components/Contract';
 import SelectTimeSlot from './components/Addavaliable';
 import DoctorScheduler from './components/Viewappointments';
+import DoctorScheduler2 from './components/viewappointments2';
 import HealthRecords from './components/HealthRecords';
 import WalletViewer from './components/WalletViewer';
+
+import DoctorAppointments from './components/DoctorAppointments';
+import DoctorPrescriptions from './components/DoctorPrescriptions';
+import PatientPrescriptions from './components/PatientPrescriptions';
+
+import RescheduleButton from './components/ResceduleButton';
+import RescheduleButton2 from './components/ResceduleButton2';
+
+import Resetpassword from './components/resetPassworddoctor1'
+import Resetpassword2 from './components/ResetPasswordDoctor'
+//import io from "socket.io-client";
+//import Chat from "./components/Chat";
 const stripePromise = loadStripe("pk_test_51K8pKeAHoHtEwtN5PmpH89COOO1E8kd0TT27PiU2NovDU5RPHP20Q2EXUjzstNx6yhBMwir9egTX1tCwO3D3ebvD00QujcIxos");
 
+//const socket = io.connect("http://localhost:5001");
+
+
 function App() {
+  
+  
+  
   return (
     <div className="App">
+
+
+
       <BrowserRouter>
       <Routes>
         <Route path="/AdminForm"
         element={<CreateAdmin/>}/>
+        
         <Route path="/DoctorForm"
         element={<CreateDoctor/>}/>
         <Route path="/PatientForm"
@@ -109,10 +135,16 @@ function App() {
         element={<Emailadmin/>}/>
         <Route path="/emaildoctor"
         element={<Emaildoctor/>}/>
+        <Route path="/emaildoctor2"
+        element={<Emaildoctor2/>}/>
         <Route path="/resetpassword"
-        element={<ResetPassword/>}/>
+        element={<ResetPasswordPatient/>}/>
         <Route path="/resetpassworddoctor"
         element={<ResetPasswordDoctor/>}/>
+        <Route path="/resetpassword1"
+        element={<Resetpassword/>}/>
+        <Route path="/resetpassword2"
+        element={<Resetpassword2/>}/>
          <Route path="/viewhealthpackages"
         element={<ViewHealthPackage/>}/>
         <Route path="/subscribetohealthpackage"
@@ -125,6 +157,8 @@ function App() {
         element={<Contract/>}/>
         <Route path="/viewappointments"
         element={<DoctorScheduler/>}/>
+        <Route path="/viewappointments2"
+        element={<DoctorScheduler2/>}/>
         <Route path="/addslot"
         element={<SelectTimeSlot/>}/>
         <Route path="/getWalletCredit"
@@ -133,6 +167,16 @@ function App() {
         element={<WalletViewer/>}/>
         <Route path="/getHealthRecords"
         element={<HealthRecords/>}/>
+        <Route path="/drapp"
+        element={<DoctorAppointments/>}/>
+        <Route path="/drpre"
+        element={<DoctorPrescriptions/>}/>
+        <Route path="/patientpre"
+        element={<PatientPrescriptions/>}/>
+        <Route path="/reschedule"
+        element={<RescheduleButton/>}/>
+        <Route path="/reschedule2"
+        element={<RescheduleButton2/>}/>
         <Route path="/payment" element={
           <Elements stripe={stripePromise}>
               <PaymentForm/>

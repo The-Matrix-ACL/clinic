@@ -2,6 +2,8 @@ const adminstratorModel = require('../Models/Doctor.js');
 const  mongoose  = require('mongoose');
 const doctorModel = require('../Models/Doctor.js');
 const userModel = require('../Models/User.js');
+const prescriptionModel = require('../Models/Prescriptions.js')
+const appointmentsModel = require('../Models/Appointments.js')
 
 const Logindoc = async(req,res) => 
 {
@@ -14,16 +16,16 @@ const Logindoc = async(req,res) =>
     
    console.log(reqdoctor);
    
-    res.status(200).json(reqdoctor);
+    res.status(200).json({docid:reqdoctor._id});
 }
 
 const changepassworddoctor = async (req, res) => {
-    const { Username, Password, newPassword} = req.body;
+    const { userid, Password, newPassword} = req.body;
     const updateFields = {};
     updateFields.Password = newPassword;
     
     const updatedDoctor = await doctorModel.findOneAndUpdate(
-        {Username: Username},
+        {_id: userid},
       updateFields,
       { new: true }
     );
@@ -35,9 +37,9 @@ const changepassworddoctor = async (req, res) => {
   };
 
   const resetpassworddoctor = async (req,res) => {
-    const {otp,Username,newPassword} = req.body
-    
-    if(otp == 2421234){
+    const {otpreal,otp,Username,newPassword} = req.body
+    console.log(otp+"a")
+    if(otp === otpreal){
       try{
         
         const updateFields = {};
@@ -53,7 +55,7 @@ const changepassworddoctor = async (req, res) => {
       throw new Error('Username not found')
     }
     else{
-      res.status(200).json(updated)
+      res.status(200).json({docid:updated._id})
     }
       }catch(error){
         res.status(404).json({error:"Username not found"})
@@ -88,12 +90,98 @@ const changepassworddoctor = async (req, res) => {
 
   }
   const Followup = async(req,res) =>{
-    const {Username,FollowUp} = req.body
+    const {userid,FollowUp} = req.body
     const date = new Date(FollowUp)
-    const result = await userModel.findOneAndUpdate({Username:Username},{FollowUp:date})
+    const result = await userModel.findOneAndUpdate({_id:userid},{FollowUp:date})
     console.log(result)
     res.status(200).json(result)
   }
 
+  const chatData = {
+    'user1': [
+      { senderName: 'user1', message: 'Hello there!' },
+      { senderName: 'user2', message: 'Hi! How are you?' },
+    ],
+    'user2': [
+      { senderName: 'user2', message: 'Hey! What\'s up?' },
+      { senderName: 'user1', message: 'Not much, just chilling.' },
+    ],
+  };
+  
+  const allchat = (req, res) => {
+    const userId = req.params.userId;
+    res.json(chatData[0] || []);
+  };
+  
+  const chat = (req, res) => {
+    const { userId, message } = req.body;
+    if (!chatData[userId]) {
+      chatData[userId] = [];
+    }
+    chatData[userId].push({ senderName: 'You', message });
+    res.json(chatData[userId]);
+  };
 
-module.exports = {Logindoc,changepassworddoctor,resetpassworddoctor,addSlots,Followup};
+
+  const getDrApp = async(req,res) =>{
+    const {Did} = req.params
+    try{
+      const app = await appointmentsModel.find({Did})    
+      res.status(200).json(app)
+
+    }
+    catch{
+      res.status(400).json({"Message":"Cannot Find Appointments"})
+    }
+  }
+
+  const rescheduleApp = async(req,res) =>{
+    const {appID,AppointmentDate,Did} = req.body
+    try{
+      const app = await appointmentsModel.findOneAndUpdate({_id:appID,Did},{AppointmentDate})
+      res.status(200).json(app)
+
+    }
+    catch{
+      res.status(400).json({"Message":"Cannot Change Appointment Date"})
+    }
+  }
+  const addPres = async(req,res) =>{
+    const {DName,PName,Did,Pid,AppointmentID,Prescription,AppointmentDate} = req.body
+    try{
+      const pres = await prescriptionModel.create({DName,PName,Did,Pid,AppointmentID,Prescription,AppointmentDate})
+      res.status(200).json(pres)
+    }
+    catch(err){
+      res.status(400).json(err)
+    }
+  }
+const viewDrPres = async(req,res) =>{
+  const {Did} = req.params
+  try{
+    const pres = await prescriptionModel.find({Did})
+    res.status(200).json(pres)
+  }
+  catch{
+    res.status(400).json({"Message":"Cannot Find Prescriptions"})
+  }
+}
+
+  const editDrPres = async(req,res) =>{
+    const {Did,Prescription,newPrescription} = req.body
+    try{
+      const pres = await prescriptionModel.findOneAndUpdate({Did:Did,Prescription:Prescription},{Prescription:newPrescription})
+      console.log(pres)
+      res.status(200).json(pres)
+    }
+    catch{
+      res.status(400).json({"Message":"Cannot Find Prescriptions"})
+    }
+  
+  
+  }
+
+
+
+
+module.exports = {Logindoc,changepassworddoctor,resetpassworddoctor,addSlots,Followup,allchat,chat,rescheduleApp,getDrApp,addPres,viewDrPres,editDrPres};

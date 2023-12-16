@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import './style.css'
 
 const DoctorForm = () => {
   const [formData, setFormData] = useState({
@@ -38,9 +39,37 @@ const DoctorForm = () => {
     }
   };
 
+  
+
   return (
+    <>
+
+    <div className="bot-bar2">
+    <div className="overlap-group">
+        <div className="rectangle2" />
+        <img className="acllogo2" alt="Acllogo" src="acllogo.png" />
+        <p className="text-wrapper2">© el7a2ni clinics and pharmacy 2023</p>
+    </div>
+    </div>
+
+    <div className="nav-bar2">
+        <div className="overlap-2">
+            <div className="rectangle-22" />
+            <div className="logo">
+                <div className="overlap-group-2">
+                    <img className="img2" alt="Acllogo" src="acllogo.png" />
+                    <div className="text-wrapper-22">clinic</div>
+                    <div className="logo-btn" />
+                </div>
+            </div>
+  </div>
+</div>
     
-    <form onSubmit={handleSubmit} encType='multipart/form-data'>
+    
+<div style={{ backgroundImage: 'url("background.jpg")', backgroundSize: 'cover', height: '500px' }}>
+ {/* Add your main content here */}
+    <form onSubmit={handleSubmit}  encType='multipart/form-data'>
+      <div className="formdoc">
       <label>
         Username:
         <input
@@ -49,7 +78,11 @@ const DoctorForm = () => {
           required
           value={formData.Username}
           onChange={handleChange}
-        />
+          style={{
+            borderRadius: '5px', // Adjust the border radius as needed
+            borderColor: 'navy', // Navy border color
+            padding: '8px', // Adjust padding as needed
+          }}/>
       </label>
       <br />
       <label>
@@ -60,7 +93,11 @@ const DoctorForm = () => {
           required
           value={formData.Name}
           onChange={handleChange}
-        />
+          style={{
+            borderRadius: '5px', // Adjust the border radius as needed
+            borderColor: 'navy', // Navy border color
+            padding: '8px', // Adjust padding as needed
+          }}/>
       </label>
       <br />
       <label>
@@ -71,7 +108,11 @@ const DoctorForm = () => {
           required
           value={formData.Email}
           onChange={handleChange}
-        />
+          style={{
+            borderRadius: '5px', // Adjust the border radius as needed
+            borderColor: 'navy', // Navy border color
+            padding: '8px', // Adjust padding as needed
+          }}/>
       </label>
       <br />
       <label>
@@ -82,7 +123,11 @@ const DoctorForm = () => {
           required
           value={formData.DateOfBirth}
           onChange={handleChange}
-        />
+          style={{
+            borderRadius: '5px', // Adjust the border radius as needed
+            borderColor: 'navy', // Navy border color
+            padding: '8px', // Adjust padding as needed
+          }}/>
       </label>
       <br />
       <label>
@@ -93,7 +138,11 @@ const DoctorForm = () => {
           required
           value={formData.Password}
           onChange={handleChange}
-        />
+          style={{
+            borderRadius: '5px', // Adjust the border radius as needed
+            borderColor: 'navy', // Navy border color
+            padding: '8px', // Adjust padding as needed
+          }}/>
       </label>
       <br />
       <label>
@@ -104,7 +153,11 @@ const DoctorForm = () => {
           required
           value={formData.Hospital}
           onChange={handleChange}
-        />
+          style={{
+            borderRadius: '5px', // Adjust the border radius as needed
+            borderColor: 'navy', // Navy border color
+            padding: '8px', // Adjust padding as needed
+          }}/>
       </label>
       <br />
       <label>
@@ -115,7 +168,11 @@ const DoctorForm = () => {
           required
           value={formData.HourlyRate}
           onChange={handleChange}
-        />
+          style={{
+            borderRadius: '5px', // Adjust the border radius as needed
+            borderColor: 'navy', // Navy border color
+            padding: '8px', // Adjust padding as needed
+          }}/>
       </label>
       <br />
       <label>
@@ -126,7 +183,11 @@ const DoctorForm = () => {
           required
           value={formData.EducationalBackground}
           onChange={handleChange}
-        />
+          style={{
+            borderRadius: '5px', // Adjust the border radius as needed
+            borderColor: 'navy', // Navy border color
+            padding: '8px', // Adjust padding as needed
+          }}/>
       </label>
       <br />
       <label>
@@ -137,7 +198,11 @@ const DoctorForm = () => {
           required
           value={formData.Speciality}
           onChange={handleChange}
-        />
+          style={{
+            borderRadius: '5px', // Adjust the border radius as needed
+            borderColor: 'navy', // Navy border color
+            padding: '8px', // Adjust padding as needed
+          }}/>
       </label>
       <br />
       <label>
@@ -148,7 +213,11 @@ const DoctorForm = () => {
           required
           value={formData.ID}
           onChange={handleChange}
-        />
+          style={{
+            borderRadius: '5px', // Adjust the border radius as needed
+            borderColor: 'navy', // Navy border color
+            padding: '8px', // Adjust padding as needed
+          }}/>
       </label>
       <br />
       <label>
@@ -159,7 +228,11 @@ const DoctorForm = () => {
           required
           
           onChange={handleChange}
-        />
+          style={{
+            borderRadius: '5px', // Adjust the border radius as needed
+            borderColor: 'navy', // Navy border color
+            padding: '8px', // Adjust padding as needed
+          }}/>
       </label>
       <br />
       <label>
@@ -170,12 +243,20 @@ const DoctorForm = () => {
           required
           
           onChange={handleChange}
-        />
+          style={{
+            borderRadius: '5px', // Adjust the border radius as needed
+            borderColor: 'navy', // Navy border color
+            padding: '8px', // Adjust padding as needed
+          }}/>
       </label>
       <br />
-      <button type="submit"  onClick={() => window.alert("Submission Completed,Wating For Approval From The Adminstrator")}>Register</button>
+      <button type="submit"  style={{ backgroundColor: '#4584ff'}} onClick={() => window.alert("Submission Completed,Wating For Approval From The Adminstrator")}>Register</button>
       <a href="http://localhost:3000/logindoctor">Already have an Account</a>
+      </div>
     </form>
+    </div>
+    
+    </>
   );
 };
 

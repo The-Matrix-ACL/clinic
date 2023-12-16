@@ -26,6 +26,11 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    /* position: absolute;
+    width: 502.02px;
+    height: 1380px;
+    left: 451.98px;
+    top: 288px; */
     
   }
   
@@ -35,7 +40,7 @@
     padding-left:20px;
     padding-right:20px;
     border-bottom: 1px solid white;
-    background-color: cyan;
+    background-color: '#4584ff';
   }
   header img{
     padding-top: 10px;
@@ -100,3 +105,10 @@
   border-radius: 4px;
   cursor: pointer;
 }
+
+/* formBounds */
+
+
+
+
+

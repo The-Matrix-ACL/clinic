@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 
 const UpdateDoctorForm = () => {
+  const params = new URLSearchParams(window.location.search);
+    const userId = params.get('docid');
+  
   const [formData, setFormData] = useState({
     
-    Email: '',newEmail:'',newHospital:'',newHourlyRate:0 
+    userid: userId,newEmail:'',newHospital:'',newHourlyRate:0 
   });
 
   const handleChange = (event) => {
@@ -24,25 +27,25 @@ const UpdateDoctorForm = () => {
       });
 
       // Handle the response as needed
-      console.log(response);
+      window.alert("Date Updated Succesfully")
     } catch (error) {
       console.error('Error submitting form:', error);
     }
   };
 
   return (
-    
+    <>
+        {/* Header */}
+    <div style={{ backgroundColor: '#4584ff', width: '100%', padding: '10px', display: 'flex', alignItems: 'center' }}>
+    <img src="back.png" alt="Logo" style={{ marginRight: '10px' ,width:'50px'}} onClick={()=>window.location.href=`/homepagedoctor?docid=${userId}`}/>
+    <img src="acllogo.png" alt="Logo" style={{ marginRight: '10px' ,width:'200px'}} />
+    <h1>El7a2ni Clinic</h1>
+    </div>
+         {/* Page Content */}
+ <div style={{ backgroundImage: 'url("background.jpg")', backgroundSize: 'cover', height: '500px' }}>
+ {/* Add your main content here */}
     <form onSubmit={handleSubmit}>
-      <label>
-        Email:
-        <input
-          type="email"
-          name="Email"
-          required
-          value={formData.Email}
-          onChange={handleChange}
-        />
-      </label>
+      
       <br />
       <label>
         New Email:
@@ -52,7 +55,11 @@ const UpdateDoctorForm = () => {
           required
           value={formData.newEmail}
           onChange={handleChange}
-        />
+          style={{
+            borderRadius: '5px', // Adjust the border radius as needed
+            borderColor: 'navy', // Navy border color
+            padding: '8px', // Adjust padding as needed
+          }}/>
       </label>
       <br />
       <label>
@@ -63,7 +70,11 @@ const UpdateDoctorForm = () => {
           required
           value={formData.newHospital}
           onChange={handleChange}
-        />
+          style={{
+            borderRadius: '5px', // Adjust the border radius as needed
+            borderColor: 'navy', // Navy border color
+            padding: '8px', // Adjust padding as needed
+          }}/>
       </label>
       <br />
       <label>
@@ -74,12 +85,24 @@ const UpdateDoctorForm = () => {
           required
           value={formData.newHourlyRate}
           onChange={handleChange}
-        />
+          style={{
+            borderRadius: '5px', // Adjust the border radius as needed
+            borderColor: 'navy', // Navy border color
+            padding: '8px', // Adjust padding as needed
+          }}/>
       </label>
       <br />
       
       <button type="submit">Update info</button>
     </form>
+    </div>
+    {/* Footer */}
+<div style={{ backgroundColor: '#4584ff', width: '100%', padding: '10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <img src="acllogo.png" alt="Footer Logo" style={{ marginRight: '10px' ,width:'200px'}} />
+        <p style={{ marginRight: '10px',left:'-1000px'}}>© el7a2ni clinics and pharmacy 2023</p>
+      </div>
+      
+        </>
   );
 };
 

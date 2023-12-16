@@ -13,7 +13,7 @@ import Input from '@mui/material/Input';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.black,
+    backgroundColor: '#4584ff',
     color: theme.palette.common.white,
   },
   [`&.${tableCellClasses.body}`]: {
@@ -100,6 +100,14 @@ const DoctorsList = () => {
   }
 
   return (
+    <>
+        
+    {/* Header */}
+<div style={{ backgroundColor: '#4584ff', width: '100%', padding: '10px', display: 'flex', alignItems: 'center' }}>
+<img src="back.png" alt="Logo" style={{ marginRight: '10px' ,width:'50px'}} onClick={()=>window.location.href=`/homepagepatient?docid=${userId}`}/>
+<img src="acllogo.png" alt="Logo" style={{ marginRight: '10px' ,width:'200px'}} />
+<h1>El7a2ni Clinic</h1>
+</div>
     <div className="UsersList">
       <Box sx={{ marginBottom: 2 }}>
         <Button variant="contained"
@@ -160,6 +168,7 @@ const DoctorsList = () => {
         </Table>
       </TableContainer>
     </div>
+    </>
   );
 };
 

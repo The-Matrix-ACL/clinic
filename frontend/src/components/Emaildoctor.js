@@ -1,32 +1,51 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const MailInbox = () => {
+  
+  const params = new URLSearchParams(window.location.search);
+  const userId = params.get('docid');
+
   const [selectedMessage, setSelectedMessage] = useState(null);
+  const [authors, setAuthors] = useState([]);
+
+  const getAuthors = async () => {
+    await axios.post('http://localhost:8000/getnotificationsuser',{docid:userId}).then(
+      (res) => {
+        const authors = res.data;
+        console.log(authors);
+        setAuthors(authors);
+      }
+    );
+  };
+
+  getAuthors();
+  
+
 
   const messages = [
-    { id: 1, sender: 'El7a2ni Team', subject: 'OTP 1', content: 'Your OTP: 2421234' },
-    { id: 2, sender: 'Sender 2', subject: 'Subject 2', content: 'Message content 2' },
-    { id: 3, sender: 'Sender 3', subject: 'Subject 3', content: 'Message content 3' },
+    
   ];
 
   const showMessage = (messageId) => {
-    const message = messages.find((msg) => msg.id === messageId);
+    const message = authors.find((msg) => msg._id === messageId);
     setSelectedMessage(message);
   };
 
   return (
+    
     <div style={{ display: 'flex', height: '100vh' }}>
       <div style={{ width: '300px', backgroundColor: '#fff', borderRight: '1px solid #ccc', overflowY: 'auto' }}>
-        {messages.map((message) => (
+        {authors.map((message) => (
           <div
-            key={message.id}
+            key={message._id}
             style={{
               cursor: 'pointer',
               padding: '10px',
               borderBottom: '1px solid #ccc',
               transition: 'background-color 0.3s',
             }}
-            onClick={() => showMessage(message.id)}
+            onClick={() => showMessage(message._id)}
           >
             <strong>{message.sender}:</strong> {message.subject}
           </div>
@@ -38,7 +57,8 @@ const MailInbox = () => {
           <h2>{selectedMessage.subject}</h2>
           <p>From: {selectedMessage.sender}</p>
           <div>{selectedMessage.content}</div>
-          <a href="http://localhost:3000/resetpassworddoctor">Reset Password</a>
+          {selectedMessage.subject === 'Chat Request' && (<a href="https://app.zoom.us/wc/join">Accept Invitation</a>)}
+          
         </div>
       )}
     </div>
@@ -46,3 +66,4 @@ const MailInbox = () => {
 };
 
 export default MailInbox;
+

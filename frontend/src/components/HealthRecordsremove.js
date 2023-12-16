@@ -10,10 +10,11 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import Input from '@mui/material/Input';
+import HealthRecords from './HealthRecords';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.black,
+    backgroundColor: '#4584ff',
     color: theme.palette.common.white,
   },
   [`&.${tableCellClasses.body}`]: {
@@ -24,21 +25,27 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 const { useState } = require("react");
 
 const DoctorsList = () => {
+  const params = new URLSearchParams(window.location.search);
+  const userId = params.get('docid');
   const [authors, setAuthors] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
+  const [filename, setfilename] = useState("");
   const [filteredAuthors, setFilteredAuthors] = useState([]);
   const [formData, setFormData] = useState({
     Username: '',
     
   });
-
+  //var filename =""; 
   const getAuthors = async (e) => {
     e.preventDefault();
     const emailInput = document.getElementById("Username");
-    await axios.post('http://localhost:8000/gethealthrecords',{Username:emailInput.value}).then(
+    await axios.post('http://localhost:8000/gethealthrecords',{Username:"matrixcheck3"}).then(
       (res) => {
         const authors = res.data;
-        window.alert(authors._id);
+
+        window.alert(authors.HealthRecords[0].dtype +" loaded sucessfuly");
+        const  filename = authors.HealthRecords[0].dtype;
+        setfilename(filename);
         setAuthors(authors);
         
       }
@@ -76,6 +83,15 @@ const DoctorsList = () => {
   }
 
   return (
+
+    <>
+        
+    {/* Header */}
+<div style={{ backgroundColor: '#4584ff', width: '100%', padding: '10px', display: 'flex', alignItems: 'center' }}>
+<img src="back.png" alt="Logo" style={{ marginRight: '10px' ,width:'50px'}} onClick={()=>window.location.href=`/homepagepatient?docid=${userId}`}/>
+<img src="acllogo.png" alt="Logo" style={{ marginRight: '10px' ,width:'200px'}} />
+<h1>El7a2ni Clinic</h1>
+</div>
     <div className="UsersList">
       <Box sx={{ marginBottom: 2 }}>
         <Button variant="contained"
@@ -88,15 +104,15 @@ const DoctorsList = () => {
       </Box>
 
      
-      <label for="Username">
-          Username
-          <input type="text" name="" id="Username" />
-        </label>
+      
 
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
           <TableHead>
             <TableRow>
+            
+            <StyledTableCell align="center">Name</StyledTableCell>
+
             <StyledTableCell align="center"></StyledTableCell>
             
               <StyledTableCell align="center">File Name</StyledTableCell>
@@ -111,16 +127,16 @@ const DoctorsList = () => {
                 sx={{
                   "&:hover": {
                     cursor: "pointer",
-                    backgroundColor: "#f5f5f5",
+                    backgroundColor: "#000080",
                     width: "100%"
                   },
                 }}
                 
                 key={authors._id}
               >
-
+                <TableCell align="center">{authors.Name}</TableCell>
                 <TableCell align="center"><Button value={authors._id} onClick={handleReject}>Remove</Button></TableCell>
-                <TableCell align="center">{authors.HealthRecords[0].dtype}</TableCell>
+                <TableCell align="center">{filename}</TableCell>
                 
                 
               </TableRow>
@@ -129,6 +145,7 @@ const DoctorsList = () => {
         </Table>
       </TableContainer>
     </div>
+    </>
   );
 };
 

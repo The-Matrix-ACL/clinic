@@ -2,11 +2,18 @@ const userModel = require('../Models/User.js');
 const doctorModel = require('../Models/Doctor.js');
 const adminstratorModel = require('../Models/Adminstrator.js');
 const requestModel = require('../Models/Requests.js');
+const notificationModel = require('../Models/Notifications.js');
 const appointmentsModel = require('../Models/Appointments.js');
 const  mongoose  = require('mongoose');
 const fs = require('fs');
 const multer = require('multer');
 const upload = multer();
+
+const nodemailer = require("nodemailer");
+
+const prescriptionModel = require('../Models/Prescriptions.js');
+
+
 
 //var id;
 
@@ -22,7 +29,7 @@ const createUser = async(req,res) => {
    try{
       const user = await userModel.create({Username,Name,Email, Password,DateOfBirth,Gender,MobileNumber,EmergencyContactFullName,EmergencyContactNumber});
       console.log(user);
-      //res.status(200).json(user)
+      res.status(200).json({docid:user._id})
       //res.redirect('/homepagePatient');
       //HealthRecords:randomrecords
    }catch(error){
@@ -55,8 +62,8 @@ const createAdminstrator = async(req,res) => {
    try{
       const adminstrator = await adminstratorModel.create({Username,Password});
       console.log(adminstrator);
-      //res.status(200).json(adminstrator)
-      console.log(adminstrator);
+      res.status(200).json({docid:adminstrator._id})
+      //console.log(adminstrator);
       //res.redirect('http://localhost:3000/filter');
    }catch(error){
       res.status(400).json({error:error.message})
@@ -67,25 +74,19 @@ const createAdminstrator = async(req,res) => {
 const deleteDoctor = async (req, res) => {
    //delete a user from the database
    const Username = req.body.Username;
-   const deletedDoctor = await doctorModel.findOneAndDelete({Username});
-   if (!deletedDoctor) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-    console.log("del1");
-   //res.status(204).send();
-   res.status(201).json({ Message:Username+ ' deleted successfully' });
-   console.log("del2");
+   const deletedUser = await doctorModel.findOneAndDelete({Username:Username});
+   console.log(deletedUser);
+    res.status(201).json(deletedUser);
+    //res.status(204).send();
 
   }
 
 const deleteUser = async (req, res) => {
    //delete a user from the database
    const Username = req.body.Username;
-   const deletedUser = await userModel.findOneAndDelete({Username});
-   if (!deletedUser) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-    res.status(201).json({ Message:Username+ ' deleted successfully' });
+   const deletedUser = await userModel.findOneAndDelete({Username:Username});
+   console.log(deletedUser);
+    res.status(201).json(deletedUser);
     //res.status(204).send();
 
 }
@@ -93,11 +94,9 @@ const deleteUser = async (req, res) => {
 const deleteAdminstrator = async (req, res) => {
    //delete a user from the database
    const Username = req.body.Username;
-   const deletedAdminstrator = await userModel.findOneAndDelete({Username});
-   if (!deletedAdminstrator) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-    res.status(201).json({ Message:Username+ ' deleted successfully' });
+   const deletedUser = await adminstratorModel.findOneAndDelete({Username:Username});
+   console.log(deletedUser);
+    res.status(201).json(deletedUser);
     //res.status(204).send();
 
 }
@@ -118,13 +117,13 @@ const getDoctor = async (req, res) => {
 }
 
 const editDoctorInfo = async (req, res) => {
-   const { Email, newHourlyRate, newHospital,newEmail} = req.body;
+   const { userid, newHourlyRate, newHospital,newEmail} = req.body;
    const updateFields = {};
    updateFields.HourlyRate = newHourlyRate;
    updateFields.Email = newEmail;
    updateFields.Hospital = newHospital;
    const updatedDoctor = await doctorModel.findOneAndUpdate(
-     {Email: Email },
+     {_id: userid },
      updateFields,
      { new: true }
    );
@@ -186,6 +185,12 @@ const editDoctorInfo = async (req, res) => {
    const doctors = await doctorModel.find();
    res.status(200).json(doctors);
   }
+
+  const getAdminstrators = async (req, res) => {
+    //retrieve all users from the database
+    const users = await adminstratorModel.find();
+    res.status(200).json(users);
+   }
 
  const filterByApp = async (req, res) => {
    const upcoming_appointments = req.query.appointments;
@@ -280,13 +285,13 @@ const deletePackage = async (req, res) => {
 };
 
 const addFamilyInfo = async (req,res) => {
-  const {Username,Name,NationalID,Age,Gender,Relation}=req.body
-  const {id}=req.params
-  console.log(id);
-  setID(id);
+  const {userid,Name,NationalID,Age,Gender,Relation}=req.body
+  //const {id}=req.params
+  //console.log(id);
+  //setID(id);
   try{
-     const user = await userModel.findOneAndUpdate({Username:Username},{$push:{FamilyMembers:{
-        Name,NationalID,Age,Gender,Relation
+     const user = await userModel.findOneAndUpdate({_id:userid},{$push:{FamilyMembers:{
+        Name:Name,NationalID:NationalID,Age:Age,Gender:Gender,Relation:Relation
      }}})
      console.log(user);
      await res.status(200).json(user)
@@ -388,24 +393,29 @@ userModel.findOneAndUpdate({Username:Username},{$push:{HealthRecords:
 const Loginuser = async(req,res) => 
 {
   const {Username,Password} = req.body;
-  const reqdoctor = await userModel.findOne({ Username: Username});
+  var number = 200;
+  var reqdoctor = await userModel.findOne({ Username: Username});
+  if(!(reqdoctor)){
+    reqdoctor = await adminstratorModel.findOne({Username:Username});
+    number = 201;
+  }
   //console.log(Password!==reqdoctor.Password)
  if (!(reqdoctor)|| Password!=reqdoctor.Password) {
     return res.status(404).json({ error: 'No Account With this Username and Password were found!.' });
   }
   
- console.log(reqdoctor);
+ console.log(reqdoctor._id);
  
- res.status(200).json(reqdoctor);
+ res.status(number).json({docid:reqdoctor._id});
 }
 
 const changepassworduser = async (req, res) => {
-  const { Username, Password, newPassword} = req.body;
+  const { userid, Password, newPassword} = req.body;
   const updateFields = {};
   updateFields.Password = newPassword;
   
   const updatedDoctor = await userModel.findOneAndUpdate(
-    {Username: Username},
+    {_id: userid},
     updateFields,
     { new: true }
   );
@@ -424,7 +434,7 @@ const addHealthRecord = async (req,res) => {
   try{
     const HealthRecords  = req.files;
     //console.log(HealthRecords)
-    const Username = req.body.Username
+    const userid = req.body.userid
 
     if (!HealthRecords) {
       console.log("jbk2")
@@ -436,7 +446,7 @@ const addHealthRecord = async (req,res) => {
     console.log(documentData)
     const documenttype =HealthRecords[0].mimetype;
     console.log("aaa"+documenttype)
-    const result =await userModel.findOneAndUpdate({Username:Username},{$push:{HealthRecords:{data: documentData,dtype:documenttype}}})
+    const result =await userModel.findOneAndUpdate({_id:userid},{$push:{HealthRecords:{data: documentData,dtype:documenttype}}})
     console.log(result)
     
     // Add the new health record
@@ -526,7 +536,7 @@ const addavaliabletime = async (req, res) => {
     res.status(200).json(user)*/
     const Username = req.body.Username
     const Avaliable =new Date('2023-11-14');
-    const result = await userModel.findOneAndUpdate({Username:Username},{$push :{Reserved:Avaliable}},
+    const result = await userModel.findOneAndUpdate({Username:Username},{$push :{Available:Avaliable}},
       { new: true })
       res.status(200).json(result)
 };
@@ -560,11 +570,13 @@ const getTimeSlots = async (req,res) => {
   }
 }
 const reserveTimeSlot = async (req,res) =>{
-  const{Dusername,Pusername,Did,Pid,PFamilyMemberName,PFamilyMemberID,ADate} = req.body;
+  const{Did,Pid,ADate} = req.body;
   const date=new Date(ADate)
-
+  const user = await userModel.findOne({_id:Pid});
+  const doctor = await doctorModel.findOne({_id:Did});
   try{
-    const appointment = await appointmentsModel.create({DName:Dusername,PName:Pusername,Did,Pid,PFamilyMemberName,PFamilyMemberID,AppointmentDate:date})
+    const appointment = await appointmentsModel.create({DName:doctor.Name,PName:user.Name,Did,Pid,AppointmentDate:date})
+    console.log(appointment)
     await res.status(200).json(appointment)
   }
   catch(err){
@@ -573,13 +585,13 @@ const reserveTimeSlot = async (req,res) =>{
 }
 
 const getWalletCredit = async (req, res) => {
-  const Username = req.body.username; // Retrieve username from request body
-  console.log(Username);
+  const _id = req.body._id; // Retrieve username from request body
+  //console.log(Username);
   try {
       console.log("start");
-      console.log(Username);
+      //console.log(Username);
       console.log("end");
-      const user = await userModel.findOne({ Username: Username }); // Use the retrieved username
+      const user = await userModel.findOne({ _id: _id }); // Use the retrieved username
       console.log(user)
       await res.status(200).json(user);
   } catch (err) {
@@ -588,8 +600,8 @@ const getWalletCredit = async (req, res) => {
 };
 const payWithWallet = async (req, res) => {
   try {
-    const { amount, username } = req.body; 
-      const user = await userModel.findOne({ Username: username });
+    const { amount, _id } = req.body; 
+      const user = await userModel.findOne({ _id: _id });
 
       if (!user) {
           return res.status(404).json({ message: "User not found" });
@@ -607,7 +619,156 @@ const payWithWallet = async (req, res) => {
   }
 };
 
+const getappointments = async (req, res) => {
+  const userid = req.body.userid;
+  console.log(userid);
+
+  const user = await notificationModel.find({ doctorid: userid, isdoctor: true,Status:'Active' });
+
+  if (user.length > 0) {
+    const user1Ids = user.map(notification => notification.userid);
+    const user1 = await userModel.find({ _id: { $in: user1Ids } });
+    console.log(user1 + 'b');
+    return res.status(200).json(user1);
+  } else {
+    const user2 = await notificationModel.find({ userid: userid, isuser: true,Status:'Active' });
+    
+    if (user2.length > 0) {
+      const user2Ids = user2.map(notification => notification.doctorid);
+      const user3 = await doctorModel.find({ _id: { $in: user2Ids } });
+      console.log(user3 + 'd');
+      return res.status(200).json(user3);
+    } else {
+      return res.status(404).json("User not found");
+    }
+  }
+}
+
+const getappointments2 = async (req, res) => {
+  const userid = req.body.userid;
+  console.log(userid);
+
+  const user = await notificationModel.find({ doctorid: userid, isdoctor: true,Status:'Active' });
+
+  if (user.length > 0) {
+    const user1Ids = user.map(notification => notification.userid);
+    const user1 = await userModel.find({ _id: { $in: user1Ids } });
+    console.log(user1 + 'b');
+    return res.status(200).json(user1);
+  } 
+}
+const createnotification = async (req,res) =>
+{
+  const {userid,doctorid,subject,content} = req.body;
+  const user = await userModel.findOne({_id:userid});
+  const doctor = await doctorModel.findOne({_id:doctorid});
+  const username = user.Username;
+  console.log(username);
+  const doctorname = doctor.Username;
+  console.log(doctorname);
+  var status = "Active";
+  if(subject==="Appointment Cancelled"){
+    await notificationModel.deleteMany({userid:userid,doctorid:doctorid,isuser:true});
+    await notificationModel.deleteMany({userid:userid,doctorid:doctorid,isdoctor:true});
+    await userModel.findOneAndUpdate({_id:userid},{WalletCredit:user.WalletCredit+doctor.SessionPrice})
+    const deleted = await notificationModel.findOne({userid:userid,doctorid:doctorid,isdoctor:true});
+    console.log(deleted+'e');
+    status = "Cancelled"
+  }
+  else if(subject === "Followup Request"){
+    status = "Pending"
+  }
+  const notification = await notificationModel.create({userid:userid , doctorid:doctorid , sender:doctorname,subject:subject,content:content +doctorname,isuser:true,Status:status});
+  const notification2 = await notificationModel.create({userid:userid , doctorid:doctorid , sender:username,subject:subject,content:content +username,isdoctor:true,Status:status});
+  console.log(notification);
+  console.log(notification2);
+  const mailOptions = {
+    from: "el7a2niYaMeleegy@hotmail.com",
+    to: "mazendarwish69@gmail.com",
+    subject:subject,
+    html: `<p>${content}</p><p style="color:tomato; font-size:25px; letter-spacing:2px;">${username +" & "+doctorname}</p>`,
+  };
+  await sendEmail(mailOptions);
+  res.status(200).json([notification,notification2]);
+}
+
+
+let transporter = nodemailer.createTransport({
+  host: "smtp-mail.outlook.com",
+  auth: {
+    user: "el7a2niYaMeleegy@hotmail.com",
+    pass: "PASSWORD12345678",
+  },
+});
+
+const sendEmail = async (mailOption) => {
+  try {
+    await transporter.sendMail(mailOption);
+    return;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getnotificationsuser = async (req,res) =>
+{
+  const docid = req.body.docid;
+  
+
+  const user = await notificationModel.find({userid:docid,isuser:true}) 
+  console.log(user);
+  res.status(200).json(user);
+
+}
+
+const getnotificationsdoctor = async (req,res) =>
+{
+  const docid = req.body.docid;
+  
+
+  const user = await notificationModel.find({doctorid:docid,isdoctor:true}) 
+  console.log(user);
+  res.status(200).json(user);
+
+}
+
+
+const viewPatPres = async(req,res) =>{
+  const {Pid} = req.params
+  try{
+    const pres = await prescriptionModel.find({Pid})
+    res.status(200).json(pres)
+  }
+  catch(err){
+    res.status(400).json(err)
+  }
+
+
+}
+
+const reschedule = async(req,res) =>{
+  const{userid,docid,DateOfBirth} = req.body;
+  const updateFields = {};
+    updateFields.DateOfBirth = DateOfBirth;
+    
+    const user = await userModel.findOneAndUpdate(
+      {_id: userid },
+      updateFields,
+      { new: true }
+    );
+    console.log(user);
+    const doctor = await doctorModel.findOneAndUpdate(
+      {_id: docid },
+      updateFields,
+      { new: true }
+    );
+    console.log(doctor)
+    res.status(200).json({user,doctor})
+}
 
 
 
-module.exports ={createUser,createDoctor,createAdminstrator,deleteUser,deleteDoctor,deleteAdminstrator,getDoctor,editDoctorInfo,filterByDateOrStatus,searchForPatient,getUsers,getDoctors,addPackage,updatePackage,deletePackage,addFamilyInfo,getFamilyMembers,searchForDoctor,searchForDoctorspeciality,searchForDoctordate,addHealthRecords,Loginuser,changepassworduser,addHealthRecord,resetpassword,getHealthRecords,removeHealthRecords,addfamilymemberpatient,getTimeSlots,reserveTimeSlot,addavaliabletime,getWalletCredit,payWithWallet};
+
+
+
+module.exports ={createUser,createDoctor,createAdminstrator,deleteUser,deleteDoctor,deleteAdminstrator,getDoctor,editDoctorInfo,filterByDateOrStatus,searchForPatient,getUsers,getDoctors,addPackage,updatePackage,deletePackage,addFamilyInfo,getFamilyMembers,searchForDoctor,searchForDoctorspeciality,searchForDoctordate,addHealthRecords,Loginuser,changepassworduser,addHealthRecord,resetpassword,getHealthRecords,removeHealthRecords,addfamilymemberpatient,getTimeSlots,reserveTimeSlot,addavaliabletime,getWalletCredit,payWithWallet,getappointments,createnotification,getnotificationsuser,getnotificationsdoctor,viewPatPres,reschedule,getappointments2,getAdminstrators};

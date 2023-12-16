@@ -47,7 +47,7 @@ const userSchema = new Schema({
     required: true,
   },
   HealthRecords :
-    [ {
+     [{
       data: {type:Buffer},
       dtype: {type:String},
        
@@ -65,7 +65,7 @@ const userSchema = new Schema({
   },
   WalletCredit: {
     type: Number,
-    default: 100, // Default value set to 100
+    default: 10000, // Default value set to 100
   },
   FamilyMembers:[{
     Name:{type:String},

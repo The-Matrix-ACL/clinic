@@ -4,9 +4,8 @@ const MailInbox = () => {
   const [selectedMessage, setSelectedMessage] = useState(null);
 
   const messages = [
-    { id: 1, sender: 'El7a2ni Team', subject: 'OTP 1', content: 'Your OTP: 2421234' },
-    { id: 2, sender: 'Sender 2', subject: 'Subject 2', content: 'Message content 2' },
-    { id: 3, sender: 'Sender 3', subject: 'Subject 3', content: 'Message content 3' },
+    { id: 1, sender: 'El7a2ni Team', subject: 'Live Meeting', content: 'Dr dr requested to make a live meeting with you'+'\n' +'invitation id: 8011145782'+' pass: weYr3F' },
+    
   ];
 
   const showMessage = (messageId) => {
@@ -38,7 +37,7 @@ const MailInbox = () => {
           <h2>{selectedMessage.subject}</h2>
           <p>From: {selectedMessage.sender}</p>
           <div>{selectedMessage.content}</div>
-          <a href="http://localhost:3000/resetpasswordadmin">Reset Password</a>
+          <a href="https://app.zoom.us/wc/join">Accept invitation</a>
         </div>
       )}
     </div>

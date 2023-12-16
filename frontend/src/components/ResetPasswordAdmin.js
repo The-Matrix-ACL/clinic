@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 
 const UpdateDoctorForm = () => {
+  const params = new URLSearchParams(window.location.search);
+  const otpp = params.get('docid');
+
   const [formData, setFormData] = useState({
     
-    Username: '',otp:0,newPassword:''
+    Username: '',otpreal:otpp,otp:'',newPassword:''
   });
 
   const handleChange = (event) => {
@@ -24,29 +27,49 @@ const UpdateDoctorForm = () => {
       });
 
       // Handle the response as needed
-      console.log(response);
-      window.alert(response.statusText);
-      if(response.status==200){
-        window.location.href = '/homepageAdmin'
+      //console.log(response);
+      const responseData = await response.json();
+      const {docid} = responseData;
+      //window.alert(response.status);
+      if(response.ok){
+        window.alert("Password Changed Sucessfully")
+        window.location.href = `/homepagePatient?docid=${docid}`
+      }
+      else{
+        window.alert('Error submitting form', error);
       }
       
     } catch (error) {
-      window.alert('Error submitting form:', error);
+      window.alert('Error submitting form', error);
     }
   };
 
   return (
+
+    <>
+    {/* Header */}
+    <div style={{ backgroundColor: '#4584ff', width: '100%', padding: '10px', display: 'flex', alignItems: 'center' }}>
+    <img src="acllogo.png" alt="Logo" style={{ marginRight: '10px' ,width:'200px'}} />
+    <h1>El7a2ni Clinic</h1>
+    </div>
+    {/* Page Content */}
+ <div style={{ backgroundImage: 'url("background.jpg")', backgroundSize: 'cover', height: '500px' }}>
+ {/* Add your main content here */}
     
     <form onSubmit={handleSubmit}>
       <label>
         OTP:
         <input
-          type="number"
+          type="text"
           name="otp"
           required
           value={formData.otp}
           onChange={handleChange}
-        />
+          style={{
+            borderRadius: '5px', // Adjust the border radius as needed
+            borderColor: 'navy', // Navy border color
+            padding: '8px', // Adjust padding as needed
+          }}/>
       </label>
       <br />
       <label>
@@ -57,7 +80,11 @@ const UpdateDoctorForm = () => {
           required
           value={formData.Username}
           onChange={handleChange}
-        />
+          style={{
+            borderRadius: '5px', // Adjust the border radius as needed
+            borderColor: 'navy', // Navy border color
+            padding: '8px', // Adjust padding as needed
+          }}/>
       </label>
       <br />
       <label>
@@ -68,14 +95,27 @@ const UpdateDoctorForm = () => {
           required
           value={formData.newPassword}
           onChange={handleChange}
-        />
+          style={{
+            borderRadius: '5px', // Adjust the border radius as needed
+            borderColor: 'navy', // Navy border color
+            padding: '8px', // Adjust padding as needed
+          }}/>
       </label>
       <br />
      
       
       
-      <button type="submit">Update Password</button>
+      <button type="submit" style={{ backgroundColor: '#4584ff'}}>Update Password</button>
     </form>
+
+    </div>
+    {/* Footer */}
+<div style={{ backgroundColor: '#4584ff', width: '100%', padding: '10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <img src="acllogo.png" alt="Footer Logo" style={{ marginRight: '10px' ,width:'200px'}} />
+        <p style={{ marginRight: '10px',left:'-1000px'}}>© el7a2ni clinics and pharmacy 2023</p>
+      </div>
+      
+        </>
   );
 };
 

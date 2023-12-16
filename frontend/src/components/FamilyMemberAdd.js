@@ -2,9 +2,11 @@
 import React, { useState } from 'react';
 
 const FamilyMemberForm = () => {
+  const params = new URLSearchParams(window.location.search);
+  const userId = params.get('docid');
   const [formData, setFormData] = useState({
     
-    Username: '',Name:'',NationalID:0,Age:0,Gender:'',Relation:''
+    Name:'',NationalID:0,Age:0,Gender:'',Relation:''
   });
 
   const handleChange = (event) => {
@@ -21,7 +23,7 @@ const FamilyMemberForm = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({userid:userId,formData}),
       });
 
       // Handle the response as needed
@@ -32,19 +34,18 @@ const FamilyMemberForm = () => {
   };
 
   return (
-    
+    <>
+    {/* Header */}
+<div style={{ backgroundColor: '#4584ff', width: '100%', padding: '10px', display: 'flex', alignItems: 'center' }}>
+<img src="back.png" alt="Logo" style={{ marginRight: '10px' ,width:'50px'}} onClick={()=>window.location.href=`/homepagepatient?docid=${userId}`}/>
+<img src="acllogo.png" alt="Logo" style={{ marginRight: '10px' ,width:'200px'}} />
+<h1>El7a2ni Clinic</h1>
+</div>
+  {/* Page Content */}
+  <div style={{ backgroundImage: 'url("background.jpg")', backgroundSize: 'cover', height: '500px' }}>
+ {/* Add your main content here */}
     <form onSubmit={handleSubmit}>
-      <label>
-        Username:
-        <input
-          type="text"
-          name="Username"
-          required
-          value={formData.Username}
-          onChange={handleChange}
-        />
-      </label>
-      <br />
+      
       <label>
         Name:
         <input
@@ -53,7 +54,11 @@ const FamilyMemberForm = () => {
           required
           value={formData.Name}
           onChange={handleChange}
-        />
+          style={{
+            borderRadius: '5px', // Adjust the border radius as needed
+            borderColor: 'navy', // Navy border color
+            padding: '8px', // Adjust padding as needed
+          }}/>
       </label>
       <br />
       <label>
@@ -64,7 +69,11 @@ const FamilyMemberForm = () => {
           required
           value={formData.NationalID}
           onChange={handleChange}
-        />
+          style={{
+            borderRadius: '5px', // Adjust the border radius as needed
+            borderColor: 'navy', // Navy border color
+            padding: '8px', // Adjust padding as needed
+          }}/>
       </label>
       <br />
       <label>
@@ -75,7 +84,11 @@ const FamilyMemberForm = () => {
           required
           value={formData.Age}
           onChange={handleChange}
-        />
+          style={{
+            borderRadius: '5px', // Adjust the border radius as needed
+            borderColor: 'navy', // Navy border color
+            padding: '8px', // Adjust padding as needed
+          }}/>
       </label>
       <br />
       <label>
@@ -86,7 +99,11 @@ const FamilyMemberForm = () => {
           required
           value={formData.Gender}
           onChange={handleChange}
-        />
+          style={{
+            borderRadius: '5px', // Adjust the border radius as needed
+            borderColor: 'navy', // Navy border color
+            padding: '8px', // Adjust padding as needed
+          }}/>
       </label>
       <br />
       <label>
@@ -97,13 +114,24 @@ const FamilyMemberForm = () => {
           required
           value={formData.Relation}
           onChange={handleChange}
-        />
+          style={{
+            borderRadius: '5px', // Adjust the border radius as needed
+            borderColor: 'navy', // Navy border color
+            padding: '8px', // Adjust padding as needed
+          }}/>
       </label>
       <br />
       
       <button type="submit">Add Family Member</button>
-      <a href="http://localhost:3000/addFamilyMemberpatient">The family member have an account here</a>
+      <a href={`http://localhost:3000/addFamilyMemberpatient?docid=${userId}`}>The family member have an account here</a>
     </form>
+    </div>
+    {/* Footer */}
+    <div style={{ backgroundColor: '#4584ff', width: '100%', padding: '10px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <img src="acllogo.png" alt="Footer Logo" style={{ marginRight: '10px' ,width:'200px'}} />
+        <p style={{ marginRight: '10px',left:'-1000px'}}>© el7a2ni clinics and pharmacy 2023</p>
+      </div>
+    </>
   );
 };
 
