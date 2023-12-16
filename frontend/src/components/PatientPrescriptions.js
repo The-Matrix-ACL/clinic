@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import html2canvas from 'html2canvas'
+import jsPDF from 'jspdf'
 
 
 const PrescriptionItem = ({ prescription }) => (
@@ -18,6 +20,7 @@ const PatientPrescriptions = () => {
 
     const [prescriptions, setPrescriptions] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [loader,setLoader] = useState(false);
 
     
 
@@ -36,7 +39,17 @@ const PatientPrescriptions = () => {
         fetchPatientPrescriptions();
     }, []);
 
-   
+   const handledownload = () =>{
+    const capture = document.querySelector('.selectedprescription')
+    html2canvas(capture).then((canvas)=>{
+        const imgData = canvas.toDataURL('img/png');
+        const doc = new jsPDF('p','mm','a4')
+        const componentWidth = doc.internal.pageSize.getWidth();
+        const componentHeight = doc.internal.pageSize.getHeight();
+        doc.addImage(imgData,'PNG',0,0,componentWidth,componentHeight);
+        doc.save('prescription.pdf')
+    })
+   }
 
     return (
         <>
@@ -47,19 +60,19 @@ const PatientPrescriptions = () => {
         <h1>El7a2ni Clinic</h1>
         </div>
         
-        <div>
+        <div className="downloadpdf">
             <h2>Patient Prescriptions</h2>
             {loading ? (
                 <p>Loading prescriptions...</p>
             ) : (
                 <ul>
                     {prescriptions.map((prescription) => (
-                        <li key={prescription._id}>
+                        <li className='selectedprescription' key={prescription._id}>
                             <p>Doctor Name : {prescription.DName}</p>
                             <p>Appointment Date : {prescription.AppointmentDate}</p>
                             <p>Prescription: {prescription.Prescription}</p>
                             <p>Status: {prescription.Status}</p>
-               
+                            <button style={{ backgroundColor: '#4584ff'}} onClick={handledownload}>Download</button>
                         </li>
                     ))}
                 </ul>

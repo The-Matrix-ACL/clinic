@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import html2canvas from 'html2canvas'
+import jsPDF from 'jspdf'
 //import Prescriptions from '../../../src/Models/Prescriptions';
 
 const DoctorPrescriptions = () => {
@@ -45,6 +47,17 @@ const DoctorPrescriptions = () => {
             // Handle error, show an error message to the user, etc.
         }
     };
+    const handledownload = () =>{
+        const capture = document.querySelector('.selectedprescription')
+        html2canvas(capture).then((canvas)=>{
+            const imgData = canvas.toDataURL('img/png');
+            const doc = new jsPDF('p','mm','a4')
+            const componentWidth = doc.internal.pageSize.getWidth();
+            const componentHeight = doc.internal.pageSize.getHeight();
+            doc.addImage(imgData,'PNG',0,0,componentWidth,componentHeight);
+            doc.save('prescription.pdf')
+        })
+       }
 
     return (
         <>
@@ -64,11 +77,12 @@ const DoctorPrescriptions = () => {
             ) : (
                 <ul>
                     {prescriptions.map((prescription) => (
-                        <li key={prescription._id}>
+                        <li className='selectedprescription' key={prescription._id}>
                             <p>Patient Name : {prescription.PName}</p>
                             <p>Appointment Date : {prescription.AppointmentDate}</p>
                             <p>Prescription: {prescription.Prescription}</p>
                             <p>Status: {prescription.Status}</p>
+                            <button style={{ backgroundColor: '#4584ff'}} onClick={handledownload}>Download</button>
                             <button style={{ backgroundColor: '#4584ff'}} type="submit" name="Prescription" value={prescription.Prescription} onClick={()=>{
             
             setFormData({ ...FormData, Prescription: prescription.Prescription });;setPres(true);;setpreid(prescription._id)
